@@ -22,5 +22,6 @@ public class Author {
 	private String authorName;
 	private String authorBio;
 	private String authorSocial;
+	private String authorImage;
 
 }
