@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,10 +30,10 @@ public class BookController {
 	
 	
 	@Autowired
-	public BookController(BookServices bookService, BookRepository bookRepository) {
+	public BookController(BookServices bookService) {
 		super();
-		this.bookService = bookService;
 		this.bookRepository = bookRepository;
+		this.bookService = bookService;
 	}
 
 	@PostMapping
@@ -69,10 +70,22 @@ public class BookController {
 		return ResponseEntity.ok(bookService.getBooksByAuthorId(authorId));
 	}
 
-	@GetMapping("/category/{categoryId}")
-	public ResponseEntity<List<Book>> getBooksByCategoryId(@PathVariable("categoryId") Long categoryId) {
-		return ResponseEntity.ok(bookService.getBooksByCategoryId(categoryId));
+//	@GetMapping("/category/{categoryId}")
+//	public ResponseEntity<List<Book>> getBooksByCategoryId(@PathVariable("categoryId") Long categoryId) {
+//		return ResponseEntity.ok(bookService.getBooksByCategoryId(categoryId));
+//	}
+	
+	@PostMapping("/{categoryId}/assign/{bookId}")
+	public ResponseEntity<Void> assignBook(@PathVariable("categoryId") Long categoryId,@PathVariable("bookId") Long bookId){
+		bookService.assignBook(categoryId, bookId);
+		return ResponseEntity.status(HttpStatus.OK).build();
 	}
+	
+	@PostMapping("/{categoryId}/enroll")
+	public ResponseEntity<Book> assignBook(@PathVariable("categoryId") Long categoryId, @RequestBody Book book){
+		return ResponseEntity.status(HttpStatus.CREATED).body(bookService.addBook(categoryId, book));
+	}
+	
 
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, path = "/profile")
 	public ResponseEntity<Book> uploadImage(@RequestParam Long bookId, @RequestParam MultipartFile image)
