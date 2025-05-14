@@ -34,6 +34,8 @@ public class User {
 	@Positive(message= "Contact cannot be negative")
 	private Long userContact;
 	
+	private String userImage;
+	
 	
 	@NotBlank(message = "User Type is required")
 	private String userType;
