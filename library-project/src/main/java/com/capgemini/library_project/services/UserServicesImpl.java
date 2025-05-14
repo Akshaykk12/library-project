@@ -3,10 +3,11 @@ package com.capgemini.library_project.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.stereotype.Service;
 import com.capgemini.library_project.entities.User;
 import com.capgemini.library_project.repositories.UserRepository;
 
+@Service
 public class UserServicesImpl implements UserServices{
 	
 	private final UserRepository userRepository;
