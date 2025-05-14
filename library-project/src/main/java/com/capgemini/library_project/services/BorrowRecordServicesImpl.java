@@ -7,6 +7,10 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.capgemini.library_project.entities.BorrowRecord;
@@ -60,14 +64,15 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 		return borrowRecordRepository.findAllByBorrowStatus(status);
 	}
 
-//	// get all borrow records that are overdue
-//	@Override
-//	public List<BorrowRecord> getAllOverdueRecords() {
-//		LocalDate today = LocalDate.now();
-//		return borrowRecordRepository.findAll().stream().filter(
-//				record -> record.getBorrowReturnDate().isBefore(today) && record.getBorrowStatus().equals("Borrowed"))
-//				.collect(Collectors.toList());
-//	}
+	// get all borrow records that are overdue
+	@Override
+	public List<BorrowRecord> getAllOverdueRecords() {
+		LocalDate today = LocalDate.now();
+		return borrowRecordRepository.findAll().stream()
+				.filter(record -> record.getBorrowReturnDate() != null && record.getBorrowReturnDate().isBefore(today)
+						&& "Borrowed".equalsIgnoreCase(record.getBorrowStatus()))
+				.collect(Collectors.toList());
+	}
 
 	// quick mark as returned
 	@Override
@@ -88,15 +93,28 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 		return borrowRecordRepository.save(record);
 	}
 
-//	// fine based on return date
-//	@Override
-//	public Integer calculateFine(Long borrowId) {
-//		BorrowRecord record = borrowRecordRepository.findById(borrowId)
-//				.orElseThrow(() -> new RuntimeException("Record not found"));
-//		// fine is Rs.5 per day overdue
-//		long daysOverdue = ChronoUnit.DAYS.between(record.getBorrowReturnDate(), LocalDate.now());
-//		return daysOverdue > 0 ? (int) (daysOverdue * 5) : 0;
-//	}
+	// fine based on return date
+	@Override
+	public Integer calculateFine(Long borrowId) {
+		BorrowRecord record = borrowRecordRepository.findById(borrowId)
+				.orElseThrow(() -> new RuntimeException("Record not found"));
+
+		LocalDate dueDate = record.getBorrowDate().plusDays(allowedReturnDays);
+		LocalDate returnDate = record.getBorrowReturnDate() != null ? record.getBorrowReturnDate() : LocalDate.now();
+
+		if (returnDate.isAfter(dueDate)) {
+			long overdueDays = ChronoUnit.DAYS.between(dueDate, returnDate);
+			return (int) (overdueDays * finePerDay);
+		} else {
+			return 0;
+		}
+	}
+
+	// Count Records by Status (like "Returned", "Borrowed")
+	@Override
+	public long countBorrowRecordsByStatus(String status) {
+		return borrowRecordRepository.countByBorrowStatus(status);
+	}
 
 	@Override
 	public BorrowRecord updateBorrowRecord(Long borrowId, BorrowRecord updatedBorrowRecord) {
@@ -113,4 +131,5 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 		borrowRecordRepository.deleteById(borrowId);
 
 	}
+
 }
