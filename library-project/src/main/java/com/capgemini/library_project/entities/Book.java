@@ -55,7 +55,6 @@ public class Book {
 	
 	private String bookCover;
 	
-	
 	@JsonManagedReference(value = "book-review")
 	@OneToMany(mappedBy = "book", cascade = CascadeType.PERSIST)
 	List<Review> reviews;
