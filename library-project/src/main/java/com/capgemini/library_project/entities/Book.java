@@ -2,6 +2,8 @@ package com.capgemini.library_project.entities;
 
 import java.util.List;
 
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -30,14 +32,15 @@ public class Book {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long bookId;
 
-	@NotNull(message = "Author ID is required")
-	@Positive(message = "Author ID cannot be negative")
-	private Long authorId;
-
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "category_id")
-	@JsonBackReference
+	@JsonBackReference(value = "category-book")
 	Category category;
+	
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "authorId")
+	@JsonBackReference(value = "author-book")
+	Author author;
 
 	@NotBlank(message = "Book Title is required")
 	private String bookTitle;
@@ -51,5 +54,19 @@ public class Book {
 	private Integer availableCopies;
 	
 	private String bookCover;
+	
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "category_id")
+	@JsonBackReference
+	Category category;
+	
+	@JsonManagedReference(value = "book-review")
+	@OneToMany(mappedBy = "book", cascade = CascadeType.PERSIST)
+	List<Review> reviews;
+
+	@OneToMany(mappedBy = "book")
+//	@JsonManagedReference
+	@JsonIgnore
+	private List<BorrowRecord> borrowRecords;
 
 }
