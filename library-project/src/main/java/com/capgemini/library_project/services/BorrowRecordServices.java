@@ -4,8 +4,6 @@ import java.util.List;
 
 import com.capgemini.library_project.entities.BorrowRecord;
 
-import org.springframework.data.domain.Page;
-
 public interface BorrowRecordServices {
 
 	BorrowRecord createBorrowRecord(BorrowRecord borrowRecord);
