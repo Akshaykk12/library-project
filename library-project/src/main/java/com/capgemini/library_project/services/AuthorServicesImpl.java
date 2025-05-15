@@ -1,6 +1,8 @@
 package com.capgemini.library_project.services;
 
 import com.capgemini.library_project.entities.Author;
+import com.capgemini.library_project.exceptions.AuthorAlreadyExistsException;
+import com.capgemini.library_project.exceptions.AuthorNotFoundException;
 import com.capgemini.library_project.repositories.AuthorRepository;
 
 import org.slf4j.Logger;
@@ -29,6 +31,10 @@ public class AuthorServicesImpl implements AuthorServices {
 
 	@Override
 	public Author createAuthor(Author a) {
+		// TODO Auto-generated method stub
+		if(authorRepository.findByAuthorName(a.getAuthorName()).isPresent()) {
+			throw new AuthorAlreadyExistsException("Author Already Exists");
+		}
 		logger.info("Creating new author: {}", a.getAuthorName());
 		return authorRepository.save(a);
 	}
@@ -45,7 +51,7 @@ public class AuthorServicesImpl implements AuthorServices {
 		Author author = authorRepository.findById(id)
 				.orElseThrow(() -> {
 					logger.error("Author with ID {} not found", id);
-					return new RuntimeException("Author with this id not found " + id);
+					return new AuthorNotFoundException(id);
 				});
 		author.setAuthorName(a.getAuthorName());
 		author.setAuthorBio(a.getAuthorBio());
@@ -59,8 +65,8 @@ public class AuthorServicesImpl implements AuthorServices {
 		return authorRepository.findById(id)
 				.orElseThrow(() -> {
 					logger.error("Author with ID {} not found", id);
-					return new RuntimeException("Author with this id not found " + id);
-				});
+					return new AuthorNotFoundException(id);				
+					});
 	}
 
 	@Override
@@ -69,7 +75,7 @@ public class AuthorServicesImpl implements AuthorServices {
 		Author author = authorRepository.findById(id)
 				.orElseThrow(() -> {
 					logger.error("Author with ID {} not found", id);
-					return new RuntimeException("Author with this id not found " + id);
+					return new AuthorNotFoundException(id);
 				});
 		authorRepository.delete(author);
 		return true;
@@ -92,7 +98,7 @@ public class AuthorServicesImpl implements AuthorServices {
 		Author author = authorRepository.findById(authorId)
 				.orElseThrow(() -> {
 					logger.error("Author with ID {} not found for image update", authorId);
-					return new RuntimeException("Author with id " + authorId + " not found");
+					return new AuthorNotFoundException(authorId);
 				});
 
 		// Update the Author image path
@@ -107,7 +113,7 @@ public class AuthorServicesImpl implements AuthorServices {
 		logger.info("Fetching image for author ID: {}", authorid);
 		return authorRepository.findById(authorid).orElseThrow(() -> {
 			logger.error("Author with ID {} not found while fetching image", authorid);
-			return new RuntimeException();
+			return new AuthorNotFoundException(authorid);
 		});
 	}
 }

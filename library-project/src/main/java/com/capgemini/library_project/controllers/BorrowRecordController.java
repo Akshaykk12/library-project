@@ -5,6 +5,7 @@ import java.util.List;
 import com.capgemini.library_project.entities.BorrowRecord;
 import com.capgemini.library_project.services.BorrowRecordServices;
 
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -30,8 +32,12 @@ public class BorrowRecordController {
 
 	// issue a book
 	@PostMapping
-	public ResponseEntity<BorrowRecord> createBorrowRecord(@RequestBody BorrowRecord borrowRecord) {
+	public ResponseEntity<BorrowRecord> createBorrowRecord(@Valid @RequestBody BorrowRecord borrowRecord,
+			BindingResult bindingResult) {
 		logger.info("POST: Creating borrow record");
+		if (bindingResult.hasErrors()) {
+			throw new IllegalArgumentException("Invalid Data");
+		}
 		return ResponseEntity.status(HttpStatus.CREATED).body(borrowRecordServices.createBorrowRecord(borrowRecord));
 	}
 
@@ -103,8 +109,11 @@ public class BorrowRecordController {
 	// manually update all the details of any issue
 	@PutMapping("/{borrowId}")
 	public ResponseEntity<BorrowRecord> updateBorrowRecord(@PathVariable Long borrowId,
-			@RequestBody BorrowRecord updatedBorrowRecord) {
+			@Valid @RequestBody BorrowRecord updatedBorrowRecord, BindingResult bindingResult) {
 		logger.info("PUT: Updating borrow record {}", borrowId);
+		if (bindingResult.hasErrors()) {
+			throw new IllegalArgumentException("Invalid Data");
+		}
 		return ResponseEntity.ok(borrowRecordServices.updateBorrowRecord(borrowId, updatedBorrowRecord));
 	}
 
