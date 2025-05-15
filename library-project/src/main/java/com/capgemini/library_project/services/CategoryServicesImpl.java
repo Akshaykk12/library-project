@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.capgemini.library_project.entities.Category;
+import com.capgemini.library_project.exceptions.CategoryNotFoundException;
 import com.capgemini.library_project.repositories.CategoryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +35,7 @@ public class CategoryServicesImpl implements CategoryServices {
         return categoryRepository.findById(categoryId)
                 .orElseThrow(() -> {
                     logger.error("Category with ID {} not found", categoryId);
-                    return new RuntimeException("Category with ID " + categoryId + " Not Found !!");
+                    return  new CategoryNotFoundException("Category with ID " + categoryId + " Not Found !!");
                 });
     }
 
@@ -48,6 +49,7 @@ public class CategoryServicesImpl implements CategoryServices {
     public Category updateCategoryById(Long categoryId, Category updatedCategory) {
         logger.info("Updating category with ID: {}", categoryId);
         Optional<Category> optional = categoryRepository.findById(categoryId);
+        		
         if (optional.isPresent()) {
             Category category = optional.get();
             category.setCategoryName(updatedCategory.getCategoryName());
