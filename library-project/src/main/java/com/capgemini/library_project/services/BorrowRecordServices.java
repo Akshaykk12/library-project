@@ -20,14 +20,16 @@ public interface BorrowRecordServices {
 	// show all "Returned" or "Overdue" records
 	List<BorrowRecord> getBorrowRecordsByStatus(String status);
 
-//	// get all borrow records that are overdue
+	// get all borrow records that are overdue
 	List<BorrowRecord> getAllOverdueRecords();
-	
+
 	// quick mark as returned
 	BorrowRecord markAsReturned(Long borrowId);
 
 //	// fine based on return date
 	Integer calculateFine(Long borrowId);
+	// Count Records by Status (like "Returned", "Borrowed")
+	long countBorrowRecordsByStatus(String status);
 
 	BorrowRecord updateBorrowRecord(Long borrowId, BorrowRecord updatedBorrowRecord);
 

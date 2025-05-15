@@ -1,7 +1,12 @@
 package com.capgemini.library_project.services;
 
+import com.capgemini.library_project.entities.Author;
 import com.capgemini.library_project.entities.Book;
+import com.capgemini.library_project.entities.Category;
+import com.capgemini.library_project.repositories.AuthorRepository;
 import com.capgemini.library_project.repositories.BookRepository;
+import com.capgemini.library_project.repositories.CategoryRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,12 +25,61 @@ public class BookServicesImpl implements BookServices {
 
 	private final String UPLOAD_DIR = "uploads/";
 
-	@Autowired
-	private BookRepository bookRepository;
+	private final BookRepository bookRepository;
+	private final CategoryRepository categoryRepository;
+	private final AuthorRepository authorRepository;
+
+	public BookServicesImpl(BookRepository bookRepository, CategoryRepository categoryRepository, AuthorRepository authorRepository) {
+	
+		this.bookRepository = bookRepository;
+		this.categoryRepository = categoryRepository;
+		this.authorRepository = authorRepository;
+	}
 
 	@Override
 	public Book addBook(Book book) {
 		return bookRepository.save(book);
+	}
+
+	@Override
+	public Book addBook(Long categoryId, Book book) {
+		Category category = categoryRepository.findById(categoryId)
+				.orElseThrow(() -> new RuntimeException("Category Not Found"));
+		book.setCategory(category);
+		category.getBooks().add(book);
+		return bookRepository.save(book);
+	}
+
+	@Override
+	public void assignBook(Long categoryId, Long bookId) {
+		Category category = categoryRepository.findById(categoryId)
+				.orElseThrow(() -> new RuntimeException("Category Not Found"));
+		Book book = bookRepository.findById(bookId).orElseThrow(() -> new RuntimeException("Category Not Found"));
+		category.getBooks().add(book);
+		book.setCategory(category);
+		categoryRepository.save(category);
+
+	}
+
+	@Override
+	public Book addBookToAuthor(Long authorId, Book book) {
+		Author author = authorRepository.findById(authorId)
+				.orElseThrow(() -> new RuntimeException("Category Not Found"));
+		book.setAuthor(author);
+		author.getBooks().add(book);
+		return bookRepository.save(book);
+	}
+
+	@Override
+	public void assignBookToAuthor(Long authorId, Long bookId) {
+		Author author = authorRepository.findById(authorId)
+				.orElseThrow(() -> new RuntimeException("Category Not Found"));
+		Book book = bookRepository.findById(bookId).orElseThrow(() -> new RuntimeException("Category Not Found"));
+		;
+		author.getBooks().add(book);
+		book.setAuthor(author);
+		authorRepository.save(author);
+
 	}
 
 	@Override
@@ -57,12 +111,7 @@ public class BookServicesImpl implements BookServices {
 
 	@Override
 	public List<Book> getBooksByAuthorId(Long authorId) {
-		return bookRepository.findByAuthorId(authorId);
-	}
-
-	@Override
-	public List<Book> getBooksByCategoryId(Long categoryId) {
-		return bookRepository.findByCategoryId(categoryId);
+		return bookRepository.findByAuthor_AuthorId(authorId);
 	}
 
 	@Override

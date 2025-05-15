@@ -1,9 +1,15 @@
 package com.capgemini.library_project.entities;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,5 +28,11 @@ public class Author {
 	private String authorName;
 	private String authorBio;
 	private String authorSocial;
+	private String authorImage;
+	
+	@JsonManagedReference(value = "author-book")
+	@OneToMany(mappedBy = "author", cascade = CascadeType.PERSIST)
+	List<Book> books;
+	
 
 }
