@@ -36,11 +36,6 @@ public class Book {
 	@Positive(message = "Author ID cannot be negative")
 	private Long authorId;
 
-	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(name = "category_id")
-	@JsonBackReference
-	Category category;
-
 	@NotBlank(message = "Book Title is required")
 	private String bookTitle;
 
@@ -54,6 +49,15 @@ public class Book {
 	
 	private String bookCover;
 	
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "category_id")
+	@JsonBackReference
+	Category category;
+	
+	@JsonManagedReference(value = "book-review")
+	@OneToMany(mappedBy = "book", cascade = CascadeType.PERSIST)
+	List<Review> reviews;
+
 	@OneToMany(mappedBy = "book")
 //	@JsonManagedReference
 	@JsonIgnore

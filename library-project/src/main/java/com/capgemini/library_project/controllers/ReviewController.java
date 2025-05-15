@@ -58,4 +58,26 @@ public class ReviewController {
 		reviewServices.deleteReview(id);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
+	
+	@PostMapping("/{bookId}/assignBook/{reviewId}")
+	public ResponseEntity<Void> assignReviewToBook(@PathVariable("bookId") Long bookId, @PathVariable("reviewId") Long reviewId){
+		reviewServices.assignReviewToBook(bookId, reviewId);
+		return ResponseEntity.status(HttpStatus.OK).build();
+	}
+	
+	@PostMapping("/{bookId}/enrollBook")
+	public ResponseEntity<Review> assignReviewToBook(@PathVariable("bookId") Long bookId, @RequestBody Review review){
+		return ResponseEntity.status(HttpStatus.CREATED).body(reviewServices.addReviewToBook(bookId, review));
+	}
+	
+	@PostMapping("/{userId}/assignUser/{reviewId}")
+	public ResponseEntity<Void> assignReviewToUser(@PathVariable("userId") Long userId, @PathVariable("reviewId") Long reviewId){
+		reviewServices.assignReviewToUser(userId, reviewId);
+		return ResponseEntity.status(HttpStatus.OK).build();
+	}
+	
+	@PostMapping("/{userId}/enrollUser")
+	public ResponseEntity<Review> assignReviewToUser(@PathVariable("userId") Long userId, @RequestBody Review review){
+		return ResponseEntity.status(HttpStatus.CREATED).body(reviewServices.addReviewToUser(userId, review));
+	}
 }

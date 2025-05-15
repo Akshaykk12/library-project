@@ -30,8 +30,7 @@ public class BookController {
 	
 	
 	@Autowired
-	public BookController(BookServices bookService) {
-		super();
+	public BookController(BookServices bookService, BookRepository bookRepository) {
 		this.bookRepository = bookRepository;
 		this.bookService = bookService;
 	}
