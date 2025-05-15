@@ -60,8 +60,8 @@ public class Book {
 	List<Review> reviews;
 
 	@OneToMany(mappedBy = "book")
-//	@JsonManagedReference
-	@JsonIgnore
+	@JsonManagedReference(value = "book-borrowRecord")
+//	@JsonIgnore
 	private List<BorrowRecord> borrowRecords;
 
 }

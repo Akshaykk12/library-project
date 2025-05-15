@@ -52,7 +52,7 @@ public class User {
 	private List<Review> reviews;
 
 	@OneToMany(mappedBy = "user")
-//	@JsonManagedReference
-	@JsonIgnore
+	@JsonManagedReference(value = "user-borrowRecord")
+//	@JsonIgnore
 	private List<BorrowRecord> borrowRecords;
 }

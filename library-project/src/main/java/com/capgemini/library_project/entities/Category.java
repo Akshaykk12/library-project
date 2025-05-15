@@ -30,7 +30,7 @@ public class Category {
 	private String categoryName;
 	private String categoryDescription;
 	
-	@JsonManagedReference
+	@JsonManagedReference(value = "category-book")
 	@OneToMany(mappedBy = "category", cascade = CascadeType.PERSIST)
 	List<Book> books;
 	
