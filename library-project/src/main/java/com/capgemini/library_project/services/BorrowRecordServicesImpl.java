@@ -25,10 +25,10 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 	private final BookRepository bookRepository;
 
 	@Value("${borrow.return.days}")
-	private int allowedReturnDays;
+	public int allowedReturnDays;
 
 	@Value("${borrow.fine.per.day}")
-	private int finePerDay;
+	public int finePerDay;
 
 	@Autowired
 	public BorrowRecordServicesImpl(BorrowRecordRepository borrowRecordRepository, UserRepository userRepository,
@@ -117,11 +117,11 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 		return borrowRecordRepository.save(record);
 	}
 
-	// fine based on return date
 	@Override
 	public Integer calculateFine(Long borrowId) {
 		BorrowRecord record = borrowRecordRepository.findById(borrowId)
 				.orElseThrow(() -> new RuntimeException("Record not found"));
+
 
 		LocalDate dueDate = record.getBorrowDate().plusDays(allowedReturnDays);
 		LocalDate returnDate = record.getBorrowReturnDate() != null ? record.getBorrowReturnDate() : LocalDate.now();

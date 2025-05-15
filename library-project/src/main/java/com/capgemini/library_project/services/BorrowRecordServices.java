@@ -28,7 +28,6 @@ public interface BorrowRecordServices {
 
 //	// fine based on return date
 	Integer calculateFine(Long borrowId);
-
 	// Count Records by Status (like "Returned", "Borrowed")
 	long countBorrowRecordsByStatus(String status);
 
