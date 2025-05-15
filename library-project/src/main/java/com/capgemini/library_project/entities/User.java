@@ -1,9 +1,15 @@
 package com.capgemini.library_project.entities;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -36,7 +42,12 @@ public class User {
 	
 	private String userImage;
 	
-	
 	@NotBlank(message = "User Type is required")
 	private String userType;
+	
+	@JsonManagedReference(value = "user-review")
+	@OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
+	private List<Review> reviews;
+
+
 }
