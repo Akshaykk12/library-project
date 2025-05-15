@@ -2216,3 +2216,530 @@ List of constraint violations:[
 2025-05-15T16:29:32.085+05:30  INFO 22240 --- [library-project] [http-nio-8080-exec-8] c.c.l.services.UserServicesImpl          : Fetching all users
 2025-05-15T16:40:09.394+05:30  INFO 22240 --- [library-project] [http-nio-8080-exec-10] c.c.l.controllers.UserController         : Received request to get all users
 2025-05-15T16:40:09.394+05:30  INFO 22240 --- [library-project] [http-nio-8080-exec-10] c.c.l.services.UserServicesImpl          : Fetching all users
+2025-05-15T16:48:09.596+05:30  INFO 22240 --- [library-project] [File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 2 class path changes (0 additions, 0 deletions, 2 modifications)
+2025-05-15T16:48:09.599+05:30  INFO 22240 --- [library-project] [Thread-39] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-15T16:48:09.607+05:30  INFO 22240 --- [library-project] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-05-15T16:48:09.616+05:30  INFO 22240 --- [library-project] [Thread-39] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-05-15T16:48:09.617+05:30  INFO 22240 --- [library-project] [Thread-39] com.zaxxer.hikari.HikariDataSource       : HikariPool-10 - Shutdown initiated...
+2025-05-15T16:48:11.690+05:30  INFO 22240 --- [library-project] [Thread-39] com.zaxxer.hikari.HikariDataSource       : HikariPool-10 - Shutdown completed.
+2025-05-15T16:48:11.915+05:30  INFO 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : Starting LibraryProjectApplication using Java 21.0.2 with PID 22240 (C:\Users\aksha\git\repository\library-project\target\classes started by aksha in C:\Users\aksha\git\repository\library-project)
+2025-05-15T16:48:11.916+05:30 DEBUG 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : Running with Spring Boot v3.4.5, Spring v6.2.6
+2025-05-15T16:48:11.916+05:30  INFO 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : No active profile set, falling back to 1 default profile: "default"
+2025-05-15T16:48:12.239+05:30  INFO 22240 --- [library-project] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-05-15T16:48:12.290+05:30  INFO 22240 --- [library-project] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 49 ms. Found 6 JPA repository interfaces.
+2025-05-15T16:48:12.469+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-05-15T16:48:12.471+05:30  INFO 22240 --- [library-project] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-05-15T16:48:12.471+05:30  INFO 22240 --- [library-project] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.40]
+2025-05-15T16:48:12.508+05:30  INFO 22240 --- [library-project] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-05-15T16:48:12.508+05:30  INFO 22240 --- [library-project] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 588 ms
+2025-05-15T16:48:12.553+05:30  INFO 22240 --- [library-project] [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-15T16:48:12.557+05:30  INFO 22240 --- [library-project] [restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-05-15T16:48:12.588+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-15T16:48:12.591+05:30  INFO 22240 --- [library-project] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-11 - Starting...
+2025-05-15T16:48:15.675+05:30  INFO 22240 --- [library-project] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-11 - Added connection com.mysql.cj.jdbc.ConnectionImpl@5411c31c
+2025-05-15T16:48:15.676+05:30  INFO 22240 --- [library-project] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-11 - Start completed.
+2025-05-15T16:48:15.880+05:30  INFO 22240 --- [library-project] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-11)']
+	Database driver: undefined/unknown
+	Database version: 8.0.35
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-05-15T16:48:16.083+05:30  INFO 22240 --- [library-project] [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-05-15T16:48:19.566+05:30  INFO 22240 --- [library-project] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-15T16:48:19.786+05:30  WARN 22240 --- [library-project] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-05-15T16:48:19.876+05:30  WARN 22240 --- [library-project] [restartedMain] ion$DefaultTemplateResolverConfiguration : Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2025-05-15T16:48:19.917+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2025-05-15T16:48:19.928+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2025-05-15T16:48:19.931+05:30  INFO 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : Started LibraryProjectApplication in 8.068 seconds (process running for 3982.461)
+2025-05-15T16:48:19.932+05:30  INFO 22240 --- [library-project] [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2025-05-15T18:07:13.283+05:30  WARN 22240 --- [library-project] [HikariPool-11 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-11 - Thread starvation or clock leap detected (housekeeper delta=41m57s102ms376µs800ns).
+2025-05-15T18:13:53.186+05:30  WARN 22240 --- [library-project] [HikariPool-11 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-11 - Thread starvation or clock leap detected (housekeeper delta=6m10s71ms127µs).
+2025-05-15T18:20:50.573+05:30  INFO 22240 --- [library-project] [http-nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-05-15T18:20:50.574+05:30  INFO 22240 --- [library-project] [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-05-15T18:20:50.575+05:30  INFO 22240 --- [library-project] [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2025-05-15T18:20:50.580+05:30  INFO 22240 --- [library-project] [http-nio-8080-exec-2] c.c.l.controllers.BookController         : GET: Fetching all books
+2025-05-15T18:20:50.581+05:30  INFO 22240 --- [library-project] [http-nio-8080-exec-2] c.c.l.services.BookServicesImpl          : Fetching all books
+2025-05-15T18:20:58.040+05:30  INFO 22240 --- [library-project] [http-nio-8080-exec-3] c.c.l.controllers.BookController         : GET: Fetching all books
+2025-05-15T18:20:58.040+05:30  INFO 22240 --- [library-project] [http-nio-8080-exec-3] c.c.l.services.BookServicesImpl          : Fetching all books
+2025-05-15T18:21:03.909+05:30  INFO 22240 --- [library-project] [http-nio-8080-exec-5] c.c.l.controllers.BookController         : GET: Fetching all books
+2025-05-15T18:21:03.909+05:30  INFO 22240 --- [library-project] [http-nio-8080-exec-5] c.c.l.services.BookServicesImpl          : Fetching all books
+2025-05-15T18:23:36.616+05:30  INFO 22240 --- [library-project] [http-nio-8080-exec-9] c.c.l.controllers.BookController         : GET: Fetching all books
+2025-05-15T18:23:36.616+05:30  INFO 22240 --- [library-project] [http-nio-8080-exec-9] c.c.l.services.BookServicesImpl          : Fetching all books
+2025-05-15T18:24:28.881+05:30  INFO 22240 --- [library-project] [http-nio-8080-exec-10] c.c.l.controllers.UserController         : Received request to get all users
+2025-05-15T18:24:28.881+05:30  INFO 22240 --- [library-project] [http-nio-8080-exec-10] c.c.l.services.UserServicesImpl          : Fetching all users
+2025-05-15T18:25:10.356+05:30  INFO 22240 --- [library-project] [http-nio-8080-exec-1] c.c.l.controllers.BookController         : GET: Fetching book with ID 1
+2025-05-15T18:25:10.356+05:30  INFO 22240 --- [library-project] [http-nio-8080-exec-1] c.c.l.services.BookServicesImpl          : Fetching book with ID: 1
+2025-05-15T18:26:45.803+05:30  INFO 22240 --- [library-project] [http-nio-8080-exec-3] c.c.l.controllers.BookController         : POST: Adding new book
+2025-05-15T18:26:45.803+05:30  INFO 22240 --- [library-project] [http-nio-8080-exec-3] c.c.l.services.BookServicesImpl          : Saving new book: Mrutunjay
+2025-05-15T18:30:55.818+05:30  INFO 22240 --- [library-project] [File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 1 class path change (1 addition, 0 deletions, 0 modifications)
+2025-05-15T18:30:55.824+05:30  INFO 22240 --- [library-project] [Thread-43] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-15T18:30:55.835+05:30  INFO 22240 --- [library-project] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-05-15T18:30:55.844+05:30  INFO 22240 --- [library-project] [Thread-43] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-05-15T18:30:55.849+05:30  INFO 22240 --- [library-project] [Thread-43] com.zaxxer.hikari.HikariDataSource       : HikariPool-11 - Shutdown initiated...
+2025-05-15T18:30:58.810+05:30  INFO 22240 --- [library-project] [Thread-43] com.zaxxer.hikari.HikariDataSource       : HikariPool-11 - Shutdown completed.
+2025-05-15T18:30:59.116+05:30  INFO 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : Starting LibraryProjectApplication using Java 21.0.2 with PID 22240 (C:\Users\aksha\git\repository\library-project\target\classes started by aksha in C:\Users\aksha\git\repository\library-project)
+2025-05-15T18:30:59.117+05:30 DEBUG 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : Running with Spring Boot v3.4.5, Spring v6.2.6
+2025-05-15T18:30:59.117+05:30  INFO 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : No active profile set, falling back to 1 default profile: "default"
+2025-05-15T18:30:59.586+05:30  INFO 22240 --- [library-project] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-05-15T18:30:59.627+05:30  INFO 22240 --- [library-project] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 39 ms. Found 6 JPA repository interfaces.
+2025-05-15T18:30:59.847+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-05-15T18:30:59.854+05:30  INFO 22240 --- [library-project] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-05-15T18:30:59.854+05:30  INFO 22240 --- [library-project] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.40]
+2025-05-15T18:30:59.901+05:30  INFO 22240 --- [library-project] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-05-15T18:30:59.901+05:30  INFO 22240 --- [library-project] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 778 ms
+2025-05-15T18:30:59.972+05:30  INFO 22240 --- [library-project] [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-15T18:30:59.978+05:30  INFO 22240 --- [library-project] [restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-05-15T18:31:00.000+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-15T18:31:00.002+05:30  INFO 22240 --- [library-project] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-12 - Starting...
+2025-05-15T18:31:04.318+05:30  INFO 22240 --- [library-project] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-12 - Added connection com.mysql.cj.jdbc.ConnectionImpl@282aa3d
+2025-05-15T18:31:04.318+05:30  INFO 22240 --- [library-project] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-12 - Start completed.
+2025-05-15T18:31:04.527+05:30  INFO 22240 --- [library-project] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-12)']
+	Database driver: undefined/unknown
+	Database version: 8.0.35
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-05-15T18:31:04.924+05:30  INFO 22240 --- [library-project] [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-05-15T18:31:11.280+05:30  INFO 22240 --- [library-project] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-15T18:31:11.532+05:30  WARN 22240 --- [library-project] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-05-15T18:31:11.669+05:30  WARN 22240 --- [library-project] [restartedMain] ion$DefaultTemplateResolverConfiguration : Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2025-05-15T18:31:11.746+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2025-05-15T18:31:11.762+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2025-05-15T18:31:11.767+05:30  INFO 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : Started LibraryProjectApplication in 12.715 seconds (process running for 10154.645)
+2025-05-15T18:31:11.770+05:30  INFO 22240 --- [library-project] [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2025-05-15T18:33:31.031+05:30  INFO 22240 --- [library-project] [File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 3 class path changes (0 additions, 0 deletions, 3 modifications)
+2025-05-15T18:33:31.033+05:30  INFO 22240 --- [library-project] [Thread-47] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-15T18:33:31.059+05:30  INFO 22240 --- [library-project] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-05-15T18:33:31.063+05:30  INFO 22240 --- [library-project] [Thread-47] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-05-15T18:33:31.065+05:30  INFO 22240 --- [library-project] [Thread-47] com.zaxxer.hikari.HikariDataSource       : HikariPool-12 - Shutdown initiated...
+2025-05-15T18:33:34.140+05:30  INFO 22240 --- [library-project] [Thread-47] com.zaxxer.hikari.HikariDataSource       : HikariPool-12 - Shutdown completed.
+2025-05-15T18:33:34.321+05:30  INFO 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : Starting LibraryProjectApplication using Java 21.0.2 with PID 22240 (C:\Users\aksha\git\repository\library-project\target\classes started by aksha in C:\Users\aksha\git\repository\library-project)
+2025-05-15T18:33:34.322+05:30 DEBUG 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : Running with Spring Boot v3.4.5, Spring v6.2.6
+2025-05-15T18:33:34.322+05:30  INFO 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : No active profile set, falling back to 1 default profile: "default"
+2025-05-15T18:33:34.622+05:30  INFO 22240 --- [library-project] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-05-15T18:33:34.692+05:30  INFO 22240 --- [library-project] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 68 ms. Found 6 JPA repository interfaces.
+2025-05-15T18:33:34.834+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-05-15T18:33:34.834+05:30  INFO 22240 --- [library-project] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-05-15T18:33:34.835+05:30  INFO 22240 --- [library-project] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.40]
+2025-05-15T18:33:34.860+05:30  INFO 22240 --- [library-project] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-05-15T18:33:34.860+05:30  INFO 22240 --- [library-project] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 535 ms
+2025-05-15T18:33:34.895+05:30  INFO 22240 --- [library-project] [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-15T18:33:34.900+05:30  INFO 22240 --- [library-project] [restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-05-15T18:33:34.924+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-15T18:33:34.926+05:30  INFO 22240 --- [library-project] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-13 - Starting...
+2025-05-15T18:33:39.460+05:30  INFO 22240 --- [library-project] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-13 - Added connection com.mysql.cj.jdbc.ConnectionImpl@12e6f03d
+2025-05-15T18:33:39.460+05:30  INFO 22240 --- [library-project] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-13 - Start completed.
+2025-05-15T18:33:39.766+05:30  INFO 22240 --- [library-project] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-13)']
+	Database driver: undefined/unknown
+	Database version: 8.0.35
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-05-15T18:33:40.034+05:30  INFO 22240 --- [library-project] [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-05-15T18:33:45.602+05:30  INFO 22240 --- [library-project] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-15T18:33:45.891+05:30  WARN 22240 --- [library-project] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-05-15T18:33:45.979+05:30  WARN 22240 --- [library-project] [restartedMain] ion$DefaultTemplateResolverConfiguration : Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2025-05-15T18:33:46.021+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2025-05-15T18:33:46.032+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2025-05-15T18:33:46.035+05:30  INFO 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : Started LibraryProjectApplication in 11.749 seconds (process running for 10308.914)
+2025-05-15T18:33:46.037+05:30  INFO 22240 --- [library-project] [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2025-05-15T18:34:05.115+05:30  INFO 22240 --- [library-project] [File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2025-05-15T18:34:05.117+05:30  INFO 22240 --- [library-project] [Thread-51] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-15T18:34:05.138+05:30  INFO 22240 --- [library-project] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-05-15T18:34:05.151+05:30  INFO 22240 --- [library-project] [Thread-51] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-05-15T18:34:05.151+05:30  INFO 22240 --- [library-project] [Thread-51] com.zaxxer.hikari.HikariDataSource       : HikariPool-13 - Shutdown initiated...
+2025-05-15T18:34:07.728+05:30  INFO 22240 --- [library-project] [Thread-51] com.zaxxer.hikari.HikariDataSource       : HikariPool-13 - Shutdown completed.
+2025-05-15T18:34:07.918+05:30  INFO 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : Starting LibraryProjectApplication using Java 21.0.2 with PID 22240 (C:\Users\aksha\git\repository\library-project\target\classes started by aksha in C:\Users\aksha\git\repository\library-project)
+2025-05-15T18:34:07.918+05:30 DEBUG 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : Running with Spring Boot v3.4.5, Spring v6.2.6
+2025-05-15T18:34:07.919+05:30  INFO 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : No active profile set, falling back to 1 default profile: "default"
+2025-05-15T18:34:08.295+05:30  INFO 22240 --- [library-project] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-05-15T18:34:08.356+05:30  INFO 22240 --- [library-project] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 57 ms. Found 6 JPA repository interfaces.
+2025-05-15T18:34:08.548+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-05-15T18:34:08.549+05:30  INFO 22240 --- [library-project] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-05-15T18:34:08.550+05:30  INFO 22240 --- [library-project] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.40]
+2025-05-15T18:34:08.595+05:30  INFO 22240 --- [library-project] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-05-15T18:34:08.595+05:30  INFO 22240 --- [library-project] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 673 ms
+2025-05-15T18:34:08.650+05:30  INFO 22240 --- [library-project] [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-15T18:34:08.654+05:30  INFO 22240 --- [library-project] [restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-05-15T18:34:08.674+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-15T18:34:08.676+05:30  INFO 22240 --- [library-project] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-14 - Starting...
+2025-05-15T18:34:11.816+05:30  INFO 22240 --- [library-project] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-14 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3eb20999
+2025-05-15T18:34:11.816+05:30  INFO 22240 --- [library-project] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-14 - Start completed.
+2025-05-15T18:34:12.023+05:30  INFO 22240 --- [library-project] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-14)']
+	Database driver: undefined/unknown
+	Database version: 8.0.35
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-05-15T18:34:12.376+05:30  INFO 22240 --- [library-project] [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-05-15T18:34:16.327+05:30  INFO 22240 --- [library-project] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-15T18:34:16.673+05:30  WARN 22240 --- [library-project] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-05-15T18:34:16.816+05:30  WARN 22240 --- [library-project] [restartedMain] ion$DefaultTemplateResolverConfiguration : Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2025-05-15T18:34:16.860+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2025-05-15T18:34:16.874+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2025-05-15T18:34:16.878+05:30  INFO 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : Started LibraryProjectApplication in 9.005 seconds (process running for 10339.756)
+2025-05-15T18:34:16.880+05:30  INFO 22240 --- [library-project] [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2025-05-15T18:36:00.411+05:30  INFO 22240 --- [library-project] [File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2025-05-15T18:36:00.413+05:30  INFO 22240 --- [library-project] [Thread-55] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-15T18:36:00.418+05:30  INFO 22240 --- [library-project] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-05-15T18:36:00.420+05:30  INFO 22240 --- [library-project] [Thread-55] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-05-15T18:36:00.421+05:30  INFO 22240 --- [library-project] [Thread-55] com.zaxxer.hikari.HikariDataSource       : HikariPool-14 - Shutdown initiated...
+2025-05-15T18:36:02.924+05:30  INFO 22240 --- [library-project] [Thread-55] com.zaxxer.hikari.HikariDataSource       : HikariPool-14 - Shutdown completed.
+2025-05-15T18:36:03.143+05:30  INFO 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : Starting LibraryProjectApplication using Java 21.0.2 with PID 22240 (C:\Users\aksha\git\repository\library-project\target\classes started by aksha in C:\Users\aksha\git\repository\library-project)
+2025-05-15T18:36:03.143+05:30 DEBUG 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : Running with Spring Boot v3.4.5, Spring v6.2.6
+2025-05-15T18:36:03.143+05:30  INFO 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : No active profile set, falling back to 1 default profile: "default"
+2025-05-15T18:36:03.434+05:30  INFO 22240 --- [library-project] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-05-15T18:36:03.470+05:30  INFO 22240 --- [library-project] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 34 ms. Found 6 JPA repository interfaces.
+2025-05-15T18:36:03.657+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-05-15T18:36:03.658+05:30  INFO 22240 --- [library-project] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-05-15T18:36:03.659+05:30  INFO 22240 --- [library-project] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.40]
+2025-05-15T18:36:03.694+05:30  INFO 22240 --- [library-project] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-05-15T18:36:03.694+05:30  INFO 22240 --- [library-project] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 548 ms
+2025-05-15T18:36:03.752+05:30  INFO 22240 --- [library-project] [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-15T18:36:03.756+05:30  INFO 22240 --- [library-project] [restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-05-15T18:36:03.780+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-15T18:36:03.782+05:30  INFO 22240 --- [library-project] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-15 - Starting...
+2025-05-15T18:36:06.414+05:30  INFO 22240 --- [library-project] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-15 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3e2f496f
+2025-05-15T18:36:06.415+05:30  INFO 22240 --- [library-project] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-15 - Start completed.
+2025-05-15T18:36:06.675+05:30  INFO 22240 --- [library-project] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-15)']
+	Database driver: undefined/unknown
+	Database version: 8.0.35
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-05-15T18:36:06.987+05:30  INFO 22240 --- [library-project] [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-05-15T18:36:10.426+05:30  INFO 22240 --- [library-project] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-15T18:36:10.605+05:30  WARN 22240 --- [library-project] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-05-15T18:36:10.681+05:30  WARN 22240 --- [library-project] [restartedMain] ion$DefaultTemplateResolverConfiguration : Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2025-05-15T18:36:10.721+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2025-05-15T18:36:10.733+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2025-05-15T18:36:10.736+05:30  INFO 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : Started LibraryProjectApplication in 7.652 seconds (process running for 10453.614)
+2025-05-15T18:36:10.738+05:30  INFO 22240 --- [library-project] [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2025-05-15T18:36:36.065+05:30  INFO 22240 --- [library-project] [File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 36 class path changes (0 additions, 36 deletions, 0 modifications)
+2025-05-15T18:36:36.066+05:30  INFO 22240 --- [library-project] [Thread-59] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-15T18:36:36.073+05:30  INFO 22240 --- [library-project] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-05-15T18:36:36.076+05:30  INFO 22240 --- [library-project] [Thread-59] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-05-15T18:36:36.076+05:30  INFO 22240 --- [library-project] [Thread-59] com.zaxxer.hikari.HikariDataSource       : HikariPool-15 - Shutdown initiated...
+2025-05-15T18:36:38.792+05:30  INFO 22240 --- [library-project] [Thread-59] com.zaxxer.hikari.HikariDataSource       : HikariPool-15 - Shutdown completed.
+2025-05-15T18:49:55.074+05:30  INFO 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : Starting LibraryProjectApplication using Java 21.0.2 with PID 22240 (C:\Users\aksha\git\repository\library-project\target\classes started by aksha in C:\Users\aksha\git\repository\library-project)
+2025-05-15T18:49:55.076+05:30 DEBUG 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : Running with Spring Boot v3.4.5, Spring v6.2.6
+2025-05-15T18:49:55.076+05:30  INFO 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : No active profile set, falling back to 1 default profile: "default"
+2025-05-15T18:49:55.442+05:30  INFO 22240 --- [library-project] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-05-15T18:49:55.445+05:30  INFO 22240 --- [library-project] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 1 ms. Found 0 JPA repository interfaces.
+2025-05-15T18:49:55.580+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-05-15T18:49:55.584+05:30  INFO 22240 --- [library-project] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-05-15T18:49:55.584+05:30  INFO 22240 --- [library-project] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.40]
+2025-05-15T18:49:55.613+05:30  INFO 22240 --- [library-project] [restartedMain] o.a.c.c.C.[Tomcat-1].[localhost].[/]     : Initializing Spring embedded WebApplicationContext
+2025-05-15T18:49:55.613+05:30  INFO 22240 --- [library-project] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 532 ms
+2025-05-15T18:49:55.657+05:30  INFO 22240 --- [library-project] [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-15T18:49:55.662+05:30  INFO 22240 --- [library-project] [restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-05-15T18:49:55.675+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-15T18:49:55.676+05:30  INFO 22240 --- [library-project] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-16 - Starting...
+2025-05-15T18:49:58.421+05:30  INFO 22240 --- [library-project] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-16 - Added connection com.mysql.cj.jdbc.ConnectionImpl@59f74329
+2025-05-15T18:49:58.421+05:30  INFO 22240 --- [library-project] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-16 - Start completed.
+2025-05-15T18:49:58.629+05:30  INFO 22240 --- [library-project] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-16)']
+	Database driver: undefined/unknown
+	Database version: 8.0.35
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-05-15T18:49:58.673+05:30  INFO 22240 --- [library-project] [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-05-15T18:49:58.674+05:30  INFO 22240 --- [library-project] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-15T18:49:58.706+05:30  WARN 22240 --- [library-project] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-05-15T18:49:58.783+05:30  WARN 22240 --- [library-project] [restartedMain] ion$DefaultTemplateResolverConfiguration : Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2025-05-15T18:49:58.829+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2025-05-15T18:49:58.840+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2025-05-15T18:49:58.843+05:30  INFO 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : Started LibraryProjectApplication in 3.808 seconds (process running for 11281.721)
+2025-05-15T18:49:58.845+05:30  INFO 22240 --- [library-project] [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2025-05-15T18:51:54.091+05:30  INFO 22240 --- [library-project] [File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 4 class path changes (3 additions, 0 deletions, 1 modification)
+2025-05-15T18:51:54.093+05:30  INFO 22240 --- [library-project] [Thread-63] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-15T18:51:54.103+05:30  INFO 22240 --- [library-project] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-05-15T18:51:54.105+05:30  INFO 22240 --- [library-project] [Thread-63] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-05-15T18:51:54.107+05:30  INFO 22240 --- [library-project] [Thread-63] com.zaxxer.hikari.HikariDataSource       : HikariPool-16 - Shutdown initiated...
+2025-05-15T18:51:56.481+05:30  INFO 22240 --- [library-project] [Thread-63] com.zaxxer.hikari.HikariDataSource       : HikariPool-16 - Shutdown completed.
+2025-05-15T18:51:56.706+05:30  INFO 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : Starting LibraryProjectApplication using Java 21.0.2 with PID 22240 (C:\Users\aksha\git\repository\library-project\target\classes started by aksha in C:\Users\aksha\git\repository\library-project)
+2025-05-15T18:51:56.707+05:30 DEBUG 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : Running with Spring Boot v3.4.5, Spring v6.2.6
+2025-05-15T18:51:56.707+05:30  INFO 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : No active profile set, falling back to 1 default profile: "default"
+2025-05-15T18:51:56.918+05:30  INFO 22240 --- [library-project] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-05-15T18:51:56.919+05:30  INFO 22240 --- [library-project] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 0 ms. Found 0 JPA repository interfaces.
+2025-05-15T18:51:57.008+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-05-15T18:51:57.008+05:30  INFO 22240 --- [library-project] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-05-15T18:51:57.010+05:30  INFO 22240 --- [library-project] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.40]
+2025-05-15T18:51:57.047+05:30  INFO 22240 --- [library-project] [restartedMain] o.a.c.c.C.[Tomcat-1].[localhost].[/]     : Initializing Spring embedded WebApplicationContext
+2025-05-15T18:51:57.047+05:30  INFO 22240 --- [library-project] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 338 ms
+2025-05-15T18:51:57.108+05:30  INFO 22240 --- [library-project] [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-15T18:51:57.114+05:30  INFO 22240 --- [library-project] [restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-05-15T18:51:57.142+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-15T18:51:57.144+05:30  INFO 22240 --- [library-project] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-17 - Starting...
+2025-05-15T18:51:59.563+05:30  INFO 22240 --- [library-project] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-17 - Added connection com.mysql.cj.jdbc.ConnectionImpl@127c581e
+2025-05-15T18:51:59.564+05:30  INFO 22240 --- [library-project] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-17 - Start completed.
+2025-05-15T18:51:59.887+05:30  INFO 22240 --- [library-project] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-17)']
+	Database driver: undefined/unknown
+	Database version: 8.0.35
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-05-15T18:51:59.912+05:30  INFO 22240 --- [library-project] [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-05-15T18:51:59.912+05:30  INFO 22240 --- [library-project] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-15T18:51:59.948+05:30  WARN 22240 --- [library-project] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-05-15T18:52:00.050+05:30  WARN 22240 --- [library-project] [restartedMain] ion$DefaultTemplateResolverConfiguration : Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2025-05-15T18:52:00.135+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2025-05-15T18:52:00.160+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2025-05-15T18:52:00.165+05:30  INFO 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : Started LibraryProjectApplication in 3.526 seconds (process running for 11403.043)
+2025-05-15T18:52:00.167+05:30  INFO 22240 --- [library-project] [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2025-05-15T18:53:57.328+05:30  INFO 22240 --- [library-project] [File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2025-05-15T18:53:57.329+05:30  INFO 22240 --- [library-project] [Thread-70] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-15T18:53:57.335+05:30  INFO 22240 --- [library-project] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-05-15T18:53:57.337+05:30  INFO 22240 --- [library-project] [Thread-70] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-05-15T18:53:57.337+05:30  INFO 22240 --- [library-project] [Thread-70] com.zaxxer.hikari.HikariDataSource       : HikariPool-17 - Shutdown initiated...
+2025-05-15T18:53:59.783+05:30  INFO 22240 --- [library-project] [Thread-70] com.zaxxer.hikari.HikariDataSource       : HikariPool-17 - Shutdown completed.
+2025-05-15T18:54:00.003+05:30  INFO 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : Starting LibraryProjectApplication using Java 21.0.2 with PID 22240 (C:\Users\aksha\git\repository\library-project\target\classes started by aksha in C:\Users\aksha\git\repository\library-project)
+2025-05-15T18:54:00.004+05:30 DEBUG 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : Running with Spring Boot v3.4.5, Spring v6.2.6
+2025-05-15T18:54:00.004+05:30  INFO 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : No active profile set, falling back to 1 default profile: "default"
+2025-05-15T18:54:00.317+05:30  INFO 22240 --- [library-project] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-05-15T18:54:00.320+05:30  INFO 22240 --- [library-project] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 0 ms. Found 0 JPA repository interfaces.
+2025-05-15T18:54:00.449+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-05-15T18:54:00.450+05:30  INFO 22240 --- [library-project] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-05-15T18:54:00.451+05:30  INFO 22240 --- [library-project] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.40]
+2025-05-15T18:54:00.486+05:30  INFO 22240 --- [library-project] [restartedMain] o.a.c.c.C.[Tomcat-1].[localhost].[/]     : Initializing Spring embedded WebApplicationContext
+2025-05-15T18:54:00.486+05:30  INFO 22240 --- [library-project] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 478 ms
+2025-05-15T18:54:00.530+05:30  INFO 22240 --- [library-project] [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-15T18:54:00.536+05:30  INFO 22240 --- [library-project] [restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-05-15T18:54:00.555+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-15T18:54:00.557+05:30  INFO 22240 --- [library-project] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-18 - Starting...
+2025-05-15T18:54:04.006+05:30  INFO 22240 --- [library-project] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-18 - Added connection com.mysql.cj.jdbc.ConnectionImpl@2acd6e8
+2025-05-15T18:54:04.006+05:30  INFO 22240 --- [library-project] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-18 - Start completed.
+2025-05-15T18:54:04.310+05:30  INFO 22240 --- [library-project] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-18)']
+	Database driver: undefined/unknown
+	Database version: 8.0.35
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-05-15T18:54:04.357+05:30  INFO 22240 --- [library-project] [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-05-15T18:54:04.358+05:30  INFO 22240 --- [library-project] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-15T18:54:04.397+05:30  WARN 22240 --- [library-project] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-05-15T18:54:04.533+05:30  WARN 22240 --- [library-project] [restartedMain] ion$DefaultTemplateResolverConfiguration : Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2025-05-15T18:54:04.598+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2025-05-15T18:54:04.610+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2025-05-15T18:54:04.614+05:30  INFO 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : Started LibraryProjectApplication in 4.679 seconds (process running for 11527.493)
+2025-05-15T18:54:04.616+05:30  INFO 22240 --- [library-project] [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2025-05-15T18:54:43.351+05:30  INFO 22240 --- [library-project] [File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 4 class path changes (0 additions, 3 deletions, 1 modification)
+2025-05-15T18:54:43.354+05:30  INFO 22240 --- [library-project] [Thread-74] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-15T18:54:43.361+05:30  INFO 22240 --- [library-project] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-05-15T18:54:43.363+05:30  INFO 22240 --- [library-project] [Thread-74] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-05-15T18:54:43.364+05:30  INFO 22240 --- [library-project] [Thread-74] com.zaxxer.hikari.HikariDataSource       : HikariPool-18 - Shutdown initiated...
+2025-05-15T18:54:45.969+05:30  INFO 22240 --- [library-project] [Thread-74] com.zaxxer.hikari.HikariDataSource       : HikariPool-18 - Shutdown completed.
+2025-05-15T18:54:46.098+05:30  INFO 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : Starting LibraryProjectApplication using Java 21.0.2 with PID 22240 (C:\Users\aksha\git\repository\library-project\target\classes started by aksha in C:\Users\aksha\git\repository\library-project)
+2025-05-15T18:54:46.099+05:30 DEBUG 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : Running with Spring Boot v3.4.5, Spring v6.2.6
+2025-05-15T18:54:46.099+05:30  INFO 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : No active profile set, falling back to 1 default profile: "default"
+2025-05-15T18:54:46.300+05:30  INFO 22240 --- [library-project] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-05-15T18:54:46.302+05:30  INFO 22240 --- [library-project] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 0 ms. Found 0 JPA repository interfaces.
+2025-05-15T18:54:46.419+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-05-15T18:54:46.422+05:30  INFO 22240 --- [library-project] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-05-15T18:54:46.422+05:30  INFO 22240 --- [library-project] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.40]
+2025-05-15T18:54:46.460+05:30  INFO 22240 --- [library-project] [restartedMain] o.a.c.c.C.[Tomcat-1].[localhost].[/]     : Initializing Spring embedded WebApplicationContext
+2025-05-15T18:54:46.460+05:30  INFO 22240 --- [library-project] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 358 ms
+2025-05-15T18:54:46.505+05:30  INFO 22240 --- [library-project] [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-15T18:54:46.509+05:30  INFO 22240 --- [library-project] [restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-05-15T18:54:46.527+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-15T18:54:46.529+05:30  INFO 22240 --- [library-project] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-19 - Starting...
+2025-05-15T18:54:49.455+05:30  INFO 22240 --- [library-project] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-19 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3ded4c9
+2025-05-15T18:54:49.455+05:30  INFO 22240 --- [library-project] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-19 - Start completed.
+2025-05-15T18:54:49.642+05:30  INFO 22240 --- [library-project] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-19)']
+	Database driver: undefined/unknown
+	Database version: 8.0.35
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-05-15T18:54:49.674+05:30  INFO 22240 --- [library-project] [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-05-15T18:54:49.674+05:30  INFO 22240 --- [library-project] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-15T18:54:49.710+05:30  WARN 22240 --- [library-project] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-05-15T18:54:49.880+05:30  WARN 22240 --- [library-project] [restartedMain] ion$DefaultTemplateResolverConfiguration : Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2025-05-15T18:54:49.958+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2025-05-15T18:54:49.974+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2025-05-15T18:54:49.979+05:30  INFO 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : Started LibraryProjectApplication in 3.92 seconds (process running for 11572.857)
+2025-05-15T18:54:49.981+05:30  INFO 22240 --- [library-project] [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2025-05-15T18:55:00.937+05:30  INFO 22960 --- [library-project] [main] c.c.l.LibraryProjectApplicationTests     : Starting LibraryProjectApplicationTests using Java 21.0.2 with PID 22960 (started by aksha in C:\Users\aksha\git\repository\library-project)
+2025-05-15T18:55:00.939+05:30 DEBUG 22960 --- [library-project] [main] c.c.l.LibraryProjectApplicationTests     : Running with Spring Boot v3.4.5, Spring v6.2.6
+2025-05-15T18:55:00.942+05:30  INFO 22960 --- [library-project] [main] c.c.l.LibraryProjectApplicationTests     : No active profile set, falling back to 1 default profile: "default"
+2025-05-15T18:55:02.702+05:30  INFO 22960 --- [library-project] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-05-15T18:55:02.932+05:30  INFO 22960 --- [library-project] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 202 ms. Found 6 JPA repository interfaces.
+2025-05-15T18:55:04.056+05:30  INFO 22960 --- [library-project] [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-15T18:55:04.226+05:30  INFO 22960 --- [library-project] [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.13.Final
+2025-05-15T18:55:04.307+05:30  INFO 22960 --- [library-project] [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-05-15T18:55:04.664+05:30  INFO 22960 --- [library-project] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-15T18:55:04.788+05:30  INFO 22960 --- [library-project] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-05-15T18:55:09.009+05:30  INFO 22960 --- [library-project] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@4866e0a7
+2025-05-15T18:55:09.013+05:30  INFO 22960 --- [library-project] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-05-15T18:55:09.718+05:30  INFO 22960 --- [library-project] [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.35
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-05-15T18:55:12.118+05:30  INFO 22960 --- [library-project] [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-05-15T18:55:17.920+05:30  INFO 22960 --- [library-project] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-15T18:55:18.887+05:30  INFO 22960 --- [library-project] [main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-05-15T18:55:20.683+05:30  WARN 22960 --- [library-project] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-05-15T18:55:21.547+05:30  WARN 22960 --- [library-project] [main] ion$DefaultTemplateResolverConfiguration : Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2025-05-15T18:55:21.878+05:30  INFO 22960 --- [library-project] [main] c.c.l.LibraryProjectApplicationTests     : Started LibraryProjectApplicationTests in 21.753 seconds (process running for 28.548)
+2025-05-15T18:55:21.975+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.AuthorServicesImpl        : Fetching image for author ID: 1
+2025-05-15T18:55:21.981+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.AuthorServicesImpl        : Fetching all authors
+2025-05-15T18:55:21.994+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.AuthorServicesImpl        : Updating image for author ID: 1
+2025-05-15T18:55:22.008+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.AuthorServicesImpl        : Deleting author with ID: 1
+2025-05-15T18:55:22.014+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.AuthorServicesImpl        : Updating author with ID: 1
+2025-05-15T18:55:22.019+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.AuthorServicesImpl        : Fetching author with ID: 1
+2025-05-15T18:55:22.028+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.AuthorServicesImpl        : Creating new author: Test Author
+2025-05-15T18:55:22.192+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.BookServicesImpl          : Fetching image for book ID: 1
+2025-05-15T18:55:22.199+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.BookServicesImpl          : Saving new book: Test Book
+2025-05-15T18:55:22.207+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.BookServicesImpl          : Updating image for book ID: 1
+2025-05-15T18:55:22.217+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.BookServicesImpl          : Fetching all books
+2025-05-15T18:55:22.222+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.BookServicesImpl          : Fetching books by author ID: 1
+2025-05-15T18:55:22.228+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.BookServicesImpl          : Updating book with ID: 1
+2025-05-15T18:55:22.235+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.BookServicesImpl          : Assigning book ID 1 to author ID 1
+2025-05-15T18:55:22.245+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.BookServicesImpl          : Fetching book with ID: 1
+2025-05-15T18:55:22.251+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.BookServicesImpl          : Assigning book ID 1 to category ID 1
+2025-05-15T18:55:22.261+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.BookServicesImpl          : Adding book to category ID: 1
+2025-05-15T18:55:22.269+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.BookServicesImpl          : Deleting book with ID: 1
+2025-05-15T18:55:22.276+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.BookServicesImpl          : Adding book to author ID: 1
+2025-05-15T18:55:22.469+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.BorrowRecordServicesImpl  : Fetching borrow record with ID: 1
+2025-05-15T18:55:22.477+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.BorrowRecordServicesImpl  : Creating borrow record for user ID 1 and book ID 1
+2025-05-15T18:55:22.479+05:30 DEBUG 22960 --- [library-project] [main] c.c.l.services.BorrowRecordServicesImpl  : Borrow record created: BorrowRecord(borrowId=1, user=User(userId=1, userName=null, userEmail=null, userPassword=null, userContact=null, userImage=null, userType=null, reviews=null, borrowRecords=null), book=Book(bookId=1, author=null, bookTitle=null, totalCopies=null, availableCopies=null, bookCover=null, category=null, reviews=null, borrowRecords=null), borrowDate=2025-05-05, borrowReturnDate=2025-05-12, fine=0, borrowStatus=Borrowed)
+2025-05-15T18:55:22.499+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.BorrowRecordServicesImpl  : Marking borrow record as returned for ID 1
+2025-05-15T18:55:22.499+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.BorrowRecordServicesImpl  : Fetching borrow record with ID: 1
+2025-05-15T18:55:22.500+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.BorrowRecordServicesImpl  : Fine calculated for overdue: 3 days, fine: 30
+2025-05-15T18:55:22.507+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.BorrowRecordServicesImpl  : Deleting borrow record with ID 1
+2025-05-15T18:55:22.507+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.BorrowRecordServicesImpl  : Fetching borrow record with ID: 1
+2025-05-15T18:55:22.515+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.BorrowRecordServicesImpl  : Calculating fine for borrow record ID 1
+2025-05-15T18:55:22.516+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.BorrowRecordServicesImpl  : Overdue fine: 3 days x 10 = 30
+2025-05-15T18:55:22.524+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.BorrowRecordServicesImpl  : Updating borrow record ID 1
+2025-05-15T18:55:22.525+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.BorrowRecordServicesImpl  : Fetching borrow record with ID: 1
+2025-05-15T18:55:22.533+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.BorrowRecordServicesImpl  : Fetching all overdue borrow records
+2025-05-15T18:55:22.547+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.CategoryServicesImpl      : Updating category with ID: 1
+2025-05-15T18:55:22.551+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.CategoryServicesImpl      : Fetching all categories
+2025-05-15T18:55:22.557+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.CategoryServicesImpl      : Deleting category with ID: 1
+2025-05-15T18:55:22.559+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.CategoryServicesImpl      : Category with ID 1 successfully deleted
+2025-05-15T18:55:22.565+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.CategoryServicesImpl      : Patching category with ID: 1
+2025-05-15T18:55:22.570+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.CategoryServicesImpl      : Patching category with ID: 1
+2025-05-15T18:55:22.571+05:30  WARN 22960 --- [library-project] [main] c.c.l.services.CategoryServicesImpl      : Category with ID 1 not found for patching
+2025-05-15T18:55:22.578+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.CategoryServicesImpl      : Creating new category: Fiction
+2025-05-15T18:55:22.584+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.CategoryServicesImpl      : Updating category with ID: 1
+2025-05-15T18:55:22.585+05:30  WARN 22960 --- [library-project] [main] c.c.l.services.CategoryServicesImpl      : Category with ID 1 not found for update
+2025-05-15T18:55:22.590+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.CategoryServicesImpl      : Deleting category with ID: 1
+2025-05-15T18:55:22.592+05:30  WARN 22960 --- [library-project] [main] c.c.l.services.CategoryServicesImpl      : Category with ID 1 not found for deletion
+2025-05-15T18:55:22.598+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.CategoryServicesImpl      : Fetching category by ID: 1
+2025-05-15T18:55:22.748+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.ReviewServicesImpl        : Deleting review with ID: 1
+2025-05-15T18:55:22.749+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.ReviewServicesImpl        : Review with ID 1 successfully deleted
+2025-05-15T18:55:22.755+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.ReviewServicesImpl        : Creating new review
+2025-05-15T18:55:22.760+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.ReviewServicesImpl        : Deleting review with ID: 1
+2025-05-15T18:55:22.761+05:30  WARN 22960 --- [library-project] [main] c.c.l.services.ReviewServicesImpl        : Review with ID 1 not found for deletion
+2025-05-15T18:55:22.766+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.ReviewServicesImpl        : Fetching review by ID: 1
+2025-05-15T18:55:22.772+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.ReviewServicesImpl        : Fetching all reviews
+2025-05-15T18:55:22.784+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.ReviewServicesImpl        : Updating review with ID: 1
+2025-05-15T18:55:22.819+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.UserServicesImpl          : Getting image for user ID: 1
+2025-05-15T18:55:23.145+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.UserServicesImpl          : Updating image for user ID: 1
+2025-05-15T18:55:23.187+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.UserServicesImpl          : Fetching all users
+2025-05-15T18:55:23.199+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.UserServicesImpl          : Updating user with ID: 1
+2025-05-15T18:55:23.210+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.UserServicesImpl          : Creating new user: Test User
+2025-05-15T18:55:23.220+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.UserServicesImpl          : Deleting user with ID: 1
+2025-05-15T18:55:23.237+05:30  INFO 22960 --- [library-project] [main] c.c.l.services.UserServicesImpl          : Fetching user by ID: 1
+2025-05-15T18:55:23.310+05:30  INFO 22960 --- [library-project] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-05-15T18:55:23.318+05:30  INFO 22960 --- [library-project] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-05-15T18:55:25.245+05:30  INFO 22960 --- [library-project] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2025-05-15T18:58:16.866+05:30  INFO 22240 --- [library-project] [File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2025-05-15T18:58:16.867+05:30  INFO 22240 --- [library-project] [Thread-78] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-15T18:58:16.873+05:30  INFO 22240 --- [library-project] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-05-15T18:58:16.877+05:30  INFO 22240 --- [library-project] [Thread-78] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-05-15T18:58:16.877+05:30  INFO 22240 --- [library-project] [Thread-78] com.zaxxer.hikari.HikariDataSource       : HikariPool-19 - Shutdown initiated...
+2025-05-15T18:58:19.478+05:30  INFO 22240 --- [library-project] [Thread-78] com.zaxxer.hikari.HikariDataSource       : HikariPool-19 - Shutdown completed.
+2025-05-15T18:58:19.642+05:30  INFO 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : Starting LibraryProjectApplication using Java 21.0.2 with PID 22240 (C:\Users\aksha\git\repository\library-project\target\classes started by aksha in C:\Users\aksha\git\repository\library-project)
+2025-05-15T18:58:19.642+05:30 DEBUG 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : Running with Spring Boot v3.4.5, Spring v6.2.6
+2025-05-15T18:58:19.643+05:30  INFO 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : No active profile set, falling back to 1 default profile: "default"
+2025-05-15T18:58:19.973+05:30  INFO 22240 --- [library-project] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-05-15T18:58:20.053+05:30  INFO 22240 --- [library-project] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 78 ms. Found 6 JPA repository interfaces.
+2025-05-15T18:58:20.175+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-05-15T18:58:20.177+05:30  INFO 22240 --- [library-project] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-05-15T18:58:20.177+05:30  INFO 22240 --- [library-project] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.40]
+2025-05-15T18:58:20.253+05:30  INFO 22240 --- [library-project] [restartedMain] o.a.c.c.C.[Tomcat-1].[localhost].[/]     : Initializing Spring embedded WebApplicationContext
+2025-05-15T18:58:20.253+05:30  INFO 22240 --- [library-project] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 608 ms
+2025-05-15T18:58:20.308+05:30  INFO 22240 --- [library-project] [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-15T18:58:20.312+05:30  INFO 22240 --- [library-project] [restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-05-15T18:58:20.330+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-15T18:58:20.332+05:30  INFO 22240 --- [library-project] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-20 - Starting...
+2025-05-15T18:58:23.469+05:30  INFO 22240 --- [library-project] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-20 - Added connection com.mysql.cj.jdbc.ConnectionImpl@2e85d582
+2025-05-15T18:58:23.469+05:30  INFO 22240 --- [library-project] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-20 - Start completed.
+2025-05-15T18:58:23.685+05:30  INFO 22240 --- [library-project] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-20)']
+	Database driver: undefined/unknown
+	Database version: 8.0.35
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-05-15T18:58:24.261+05:30  INFO 22240 --- [library-project] [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-05-15T18:58:28.795+05:30  INFO 22240 --- [library-project] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-15T18:58:29.203+05:30  WARN 22240 --- [library-project] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-05-15T18:58:29.343+05:30  WARN 22240 --- [library-project] [restartedMain] ion$DefaultTemplateResolverConfiguration : Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2025-05-15T18:58:29.386+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2025-05-15T18:58:29.399+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2025-05-15T18:58:29.402+05:30  INFO 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : Started LibraryProjectApplication in 9.803 seconds (process running for 11792.28)
+2025-05-15T18:58:29.403+05:30  INFO 22240 --- [library-project] [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2025-05-15T21:48:48.301+05:30  WARN 22240 --- [library-project] [HikariPool-20 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-20 - Thread starvation or clock leap detected (housekeeper delta=2h27m54s510ms86µs600ns).
+2025-05-15T22:21:10.756+05:30  INFO 22240 --- [library-project] [File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 1 class path change (1 addition, 0 deletions, 0 modifications)
+2025-05-15T22:21:10.761+05:30  INFO 22240 --- [library-project] [Thread-82] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-15T22:21:10.766+05:30  INFO 22240 --- [library-project] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-05-15T22:21:10.775+05:30  INFO 22240 --- [library-project] [Thread-82] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-05-15T22:21:10.778+05:30  INFO 22240 --- [library-project] [Thread-82] com.zaxxer.hikari.HikariDataSource       : HikariPool-20 - Shutdown initiated...
+2025-05-15T22:21:12.986+05:30  INFO 22240 --- [library-project] [Thread-82] com.zaxxer.hikari.HikariDataSource       : HikariPool-20 - Shutdown completed.
+2025-05-15T22:21:13.175+05:30  INFO 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : Starting LibraryProjectApplication using Java 21.0.2 with PID 22240 (C:\Users\aksha\git\repository\library-project\target\classes started by aksha in C:\Users\aksha\git\repository\library-project)
+2025-05-15T22:21:13.176+05:30 DEBUG 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : Running with Spring Boot v3.4.5, Spring v6.2.6
+2025-05-15T22:21:13.176+05:30  INFO 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : No active profile set, falling back to 1 default profile: "default"
+2025-05-15T22:21:13.549+05:30  INFO 22240 --- [library-project] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-05-15T22:21:13.610+05:30  INFO 22240 --- [library-project] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 59 ms. Found 6 JPA repository interfaces.
+2025-05-15T22:21:13.822+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-05-15T22:21:13.829+05:30  INFO 22240 --- [library-project] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-05-15T22:21:13.829+05:30  INFO 22240 --- [library-project] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.40]
+2025-05-15T22:21:13.862+05:30  INFO 22240 --- [library-project] [restartedMain] o.a.c.c.C.[Tomcat-1].[localhost].[/]     : Initializing Spring embedded WebApplicationContext
+2025-05-15T22:21:13.862+05:30  INFO 22240 --- [library-project] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 680 ms
+2025-05-15T22:21:13.927+05:30  INFO 22240 --- [library-project] [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-15T22:21:13.931+05:30  INFO 22240 --- [library-project] [restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-05-15T22:21:13.948+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-15T22:21:13.951+05:30  INFO 22240 --- [library-project] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-21 - Starting...
+2025-05-15T22:21:17.176+05:30  INFO 22240 --- [library-project] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-21 - Added connection com.mysql.cj.jdbc.ConnectionImpl@475603da
+2025-05-15T22:21:17.176+05:30  INFO 22240 --- [library-project] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-21 - Start completed.
+2025-05-15T22:21:17.497+05:30  INFO 22240 --- [library-project] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-21)']
+	Database driver: undefined/unknown
+	Database version: 8.0.35
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-05-15T22:21:17.841+05:30  INFO 22240 --- [library-project] [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-05-15T22:21:22.973+05:30  INFO 22240 --- [library-project] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-15T22:21:23.156+05:30  WARN 22240 --- [library-project] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-05-15T22:21:23.267+05:30  WARN 22240 --- [library-project] [restartedMain] ion$DefaultTemplateResolverConfiguration : Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2025-05-15T22:21:23.310+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2025-05-15T22:21:23.330+05:30  INFO 22240 --- [library-project] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2025-05-15T22:21:23.334+05:30  INFO 22240 --- [library-project] [restartedMain] c.c.l.LibraryProjectApplication          : Started LibraryProjectApplication in 10.212 seconds (process running for 23966.387)
+2025-05-15T22:21:23.336+05:30  INFO 22240 --- [library-project] [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
