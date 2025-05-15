@@ -21,13 +21,13 @@ public interface BorrowRecordServices {
 	List<BorrowRecord> getBorrowRecordsByStatus(String status);
 
 //	// get all borrow records that are overdue
-//	List<BorrowRecord> getAllOverdueRecords();
+	List<BorrowRecord> getAllOverdueRecords();
 	
 	// quick mark as returned
 	BorrowRecord markAsReturned(Long borrowId);
 
 //	// fine based on return date
-//	Integer calculateFine(Long borrowId);
+	Integer calculateFine(Long borrowId);
 
 	BorrowRecord updateBorrowRecord(Long borrowId, BorrowRecord updatedBorrowRecord);
 

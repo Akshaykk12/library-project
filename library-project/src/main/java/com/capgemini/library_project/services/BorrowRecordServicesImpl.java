@@ -18,10 +18,10 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 	private final BorrowRecordRepository borrowRecordRepository;
 
 	@Value("${borrow.return.days}")
-	private int allowedReturnDays;
+	public int allowedReturnDays;
 
 	@Value("${borrow.fine.per.day}")
-	private int finePerDay;
+	public int finePerDay;
 
 	@Autowired
 	public BorrowRecordServicesImpl(BorrowRecordRepository borrowRecordRepository) {
@@ -61,13 +61,13 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 	}
 
 //	// get all borrow records that are overdue
-//	@Override
-//	public List<BorrowRecord> getAllOverdueRecords() {
-//		LocalDate today = LocalDate.now();
-//		return borrowRecordRepository.findAll().stream().filter(
-//				record -> record.getBorrowReturnDate().isBefore(today) && record.getBorrowStatus().equals("Borrowed"))
-//				.collect(Collectors.toList());
-//	}
+	@Override
+	public List<BorrowRecord> getAllOverdueRecords() {
+		LocalDate today = LocalDate.now();
+		return borrowRecordRepository.findAll().stream().filter(
+				record -> record.getBorrowReturnDate().isBefore(today) && record.getBorrowStatus().equals("Borrowed"))
+				.collect(Collectors.toList());
+	}
 
 	// quick mark as returned
 	@Override
@@ -89,14 +89,14 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 	}
 
 //	// fine based on return date
-//	@Override
-//	public Integer calculateFine(Long borrowId) {
-//		BorrowRecord record = borrowRecordRepository.findById(borrowId)
-//				.orElseThrow(() -> new RuntimeException("Record not found"));
-//		// fine is Rs.5 per day overdue
-//		long daysOverdue = ChronoUnit.DAYS.between(record.getBorrowReturnDate(), LocalDate.now());
-//		return daysOverdue > 0 ? (int) (daysOverdue * 5) : 0;
-//	}
+	@Override
+	public Integer calculateFine(Long borrowId) {
+		BorrowRecord record = borrowRecordRepository.findById(borrowId)
+				.orElseThrow(() -> new RuntimeException("Record not found"));
+		// fine is Rs.5 per day overdue
+		long daysOverdue = ChronoUnit.DAYS.between(record.getBorrowReturnDate(), LocalDate.now());
+		return daysOverdue > 0 ? (int) (daysOverdue * 5) : 0;
+	}
 
 	@Override
 	public BorrowRecord updateBorrowRecord(Long borrowId, BorrowRecord updatedBorrowRecord) {
