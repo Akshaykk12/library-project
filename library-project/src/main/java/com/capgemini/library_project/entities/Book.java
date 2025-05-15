@@ -30,14 +30,16 @@ public class Book {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long bookId;
 
-	@NotNull(message = "Author ID is required")
-	@Positive(message = "Author ID cannot be negative")
-	private Long authorId;
-
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "category_id")
-	@JsonBackReference
+	@JsonBackReference(value = "category-book")
 	Category category;
+	
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "authorId")
+	@JsonBackReference(value = "author-book")
+	Author author;
+
 
 	@NotBlank(message = "Book Title is required")
 	private String bookTitle;
