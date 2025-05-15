@@ -25,6 +25,8 @@ import com.capgemini.library_project.entities.User;
 import com.capgemini.library_project.repositories.UserRepository;
 import com.capgemini.library_project.services.UserServices;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -34,7 +36,6 @@ public class UserController {
 
 	@Autowired
 	public UserController(UserServices userServices, UserRepository userRepository) {
-		super();
 		this.userServices = userServices;
 		this.userRepository = userRepository;
 	}
@@ -56,7 +57,7 @@ public class UserController {
 	}
 
 	@PostMapping
-	public ResponseEntity<User> createUser(@RequestBody User user) {
+	public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
 		User saved = userServices.createUser(user);
 		return ResponseEntity.status(HttpStatus.CREATED).body(saved);
 	}
