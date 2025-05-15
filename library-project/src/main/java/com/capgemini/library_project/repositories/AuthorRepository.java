@@ -1,5 +1,7 @@
 package com.capgemini.library_project.repositories;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,7 +16,8 @@ import jakarta.transaction.Transactional;
 @Repository
 public interface AuthorRepository extends JpaRepository<Author, Long> {
 	
-	Author findByAuthorName(String authorName);
+	//Author findByAuthorName(String authorName);
+	 Optional<Author> findByAuthorName(String authorName);
 	
 	@Modifying
 	@Transactional
