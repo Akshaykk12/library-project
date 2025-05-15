@@ -25,34 +25,33 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class User {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long userId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long userId;
 
-	@NotBlank(message = "User Name is required")
-	private String userName;
+    @NotBlank(message = "User Name is required")
+    private String userName;
 
-	@NotBlank(message = "Email is required")
-	private String userEmail;
+    @NotBlank(message = "Email is required")
+    private String userEmail;
 
-	@NotBlank(message = "Password is required")
-	private String userPassword;
+    @NotBlank(message = "Password is required")
+    private String userPassword;
 
-	@NotNull(message = "Contact is required")
-	@Positive(message = "Contact cannot be negative")
-	private Long userContact;
+    @NotNull(message = "Contact is required")
+    @Positive(message = "Contact cannot be negative")
+    private Long userContact;
 
-	private String userImage;
-	
-	@NotBlank(message = "User Type is required")
-	private String userType;
-	
-	@JsonManagedReference(value = "user-review")
-	@OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
-	private List<Review> reviews;
+    private String userImage;
 
-	@OneToMany(mappedBy = "user")
-//	@JsonManagedReference
-	@JsonIgnore
-	private List<BorrowRecord> borrowRecords;
+    @NotBlank(message = "User Type is required")
+    private String userType;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
+    @JsonManagedReference(value = "user-review")
+    private List<Review> reviews;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
+    @JsonManagedReference(value = "user-borrow")
+    private List<BorrowRecord> borrowRecords;
 }

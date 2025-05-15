@@ -26,7 +26,6 @@ public class AuthorServicesImpl implements AuthorServices {
 
 	@Autowired
 	public AuthorServicesImpl(AuthorRepository authorRepository) {
-		// TODO Auto-generated constructor stub
 		this.authorRepository = authorRepository;
 	}
 
@@ -42,14 +41,12 @@ public class AuthorServicesImpl implements AuthorServices {
 
 	@Override
 	public List<Author> findAllAuthors() {
-		// TODO Auto-generated method stub
 		logger.info("Fetching all authors");
 		return authorRepository.findAll();
 	}
 
 	@Override
 	public Author updateAuthorById(Long id, Author a) {
-		// TODO Auto-generated method stub
 		logger.info("Updating author with ID: {}", id);
 		Author author = authorRepository.findById(id)
 				.orElseThrow(() -> {
@@ -64,7 +61,6 @@ public class AuthorServicesImpl implements AuthorServices {
 
 	@Override
 	public Author findAuthorById(Long id) {
-		// TODO Auto-generated method stub
 		logger.info("Fetching author with ID: {}", id);
 		return authorRepository.findById(id)
 				.orElseThrow(() -> {
@@ -75,7 +71,6 @@ public class AuthorServicesImpl implements AuthorServices {
 
 	@Override
 	public Boolean deleteAuthorById(Long id) {
-		// TODO Auto-generated method stub
 		logger.info("Deleting author with ID: {}", id);
 		Author author = authorRepository.findById(id)
 				.orElseThrow(() -> {

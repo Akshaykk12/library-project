@@ -13,26 +13,28 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Category {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long categoryId;
-	
-	private String categoryName;
-	private String categoryDescription;
-	
-	@JsonManagedReference
-	@OneToMany(mappedBy = "category", cascade = CascadeType.PERSIST)
-	List<Book> books;
-	
-	
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long categoryId;
+
+    @NotBlank(message = "Category Name is required")
+    private String categoryName;
+    
+    @NotBlank(message = "Category Description is required")
+    private String categoryDescription;
+
+    @OneToMany(mappedBy = "category", cascade = CascadeType.PERSIST)
+    @JsonManagedReference(value = "category-book")
+    private List<Book> books;
 }

@@ -10,6 +10,7 @@ import static org.mockito.Mockito.*;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,81 +19,87 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ReviewControllerTest {
 
-    @Mock
-    private ReviewServices reviewServices;
+	@Mock
+	private ReviewServices reviewServices;
 
-    @InjectMocks
-    private ReviewController reviewController;
+	@InjectMocks
+	private ReviewController reviewController;
 
-    private Review sampleReview;
+	private Review sampleReview;
 
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
+	@Mock
+	private BindingResult bindingResult;
 
-        sampleReview = new Review();
-        sampleReview.setReviewId(1L);
-        sampleReview.setFeedback("Excellent");
-        sampleReview.setRating(5);
-    }
+	@BeforeEach
+	public void setUp() {
+		MockitoAnnotations.openMocks(this);
 
-    @Test
-    public void testGetAllReviews() {
-        when(reviewServices.getAllReviews()).thenReturn(Arrays.asList(sampleReview));
+		sampleReview = new Review();
+		sampleReview.setReviewId(1L);
+		sampleReview.setFeedback("Excellent");
+		sampleReview.setRating(5);
+	}
 
-        ResponseEntity<List<Review>> response = reviewController.getAllReviews();
+	@Test
+	public void testGetAllReviews() {
+		when(reviewServices.getAllReviews()).thenReturn(Arrays.asList(sampleReview));
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(1, response.getBody().size());
-        assertEquals("Excellent", response.getBody().get(0).getFeedback());
-    }
+		ResponseEntity<List<Review>> response = reviewController.getAllReviews();
 
-    @Test
-    public void testGetReviewById() {
-        when(reviewServices.getReviewById(1L)).thenReturn(sampleReview);
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertEquals(1, response.getBody().size());
+		assertEquals("Excellent", response.getBody().get(0).getFeedback());
+	}
 
-        ResponseEntity<Review> response = reviewController.getReviewById(1L);
+	@Test
+	public void testGetReviewById() {
+		when(reviewServices.getReviewById(1L)).thenReturn(sampleReview);
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("Excellent", response.getBody().getFeedback());
-    }
+		ResponseEntity<Review> response = reviewController.getReviewById(1L);
 
-    @Test
-    public void testCreateReview() {
-        when(reviewServices.createReview(sampleReview)).thenReturn(sampleReview);
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertEquals("Excellent", response.getBody().getFeedback());
+	}
 
-        ResponseEntity<Review> response = reviewController.createReview(sampleReview);
+	@Test
+	public void testCreateReview() {
+		when(bindingResult.hasErrors()).thenReturn(false);
+		when(reviewServices.createReview(sampleReview)).thenReturn(sampleReview);
 
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals("Excellent", response.getBody().getFeedback());
-    }
+		ResponseEntity<Review> response = reviewController.createReview(sampleReview, bindingResult);
 
-    @Test
-    public void testUpdateReview_Found() {
-        when(reviewServices.updateReview(eq(1L), any(Review.class))).thenReturn(sampleReview);
+		assertEquals(HttpStatus.CREATED, response.getStatusCode());
+		assertEquals("Excellent", response.getBody().getFeedback());
+	}
 
-        ResponseEntity<Review> response = reviewController.updateReview(1L, sampleReview);
+	@Test
+	public void testUpdateReview_Found() {
+		when(bindingResult.hasErrors()).thenReturn(false);
+		when(reviewServices.updateReview(eq(1L), any(Review.class))).thenReturn(sampleReview);
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("Excellent", response.getBody().getFeedback());
-    }
+		ResponseEntity<Review> response = reviewController.updateReview(1L, sampleReview, bindingResult);
 
-    @Test
-    public void testUpdateReview_NotFound() {
-        when(reviewServices.updateReview(eq(2L), any(Review.class))).thenReturn(null);
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertEquals("Excellent", response.getBody().getFeedback());
+	}
 
-        ResponseEntity<Review> response = reviewController.updateReview(2L, sampleReview);
+	@Test
+	public void testUpdateReview_NotFound() {
+		when(bindingResult.hasErrors()).thenReturn(false);
+		when(reviewServices.updateReview(eq(2L), any(Review.class))).thenReturn(null);
 
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertNull(response.getBody());
-    }
+		ResponseEntity<Review> response = reviewController.updateReview(2L, sampleReview, bindingResult);
 
-    @Test
-    public void testDeleteReview() {
-        doNothing().when(reviewServices).deleteReview(1L);
+		assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+		assertNull(response.getBody());
+	}
 
-        ResponseEntity<Review> response = reviewController.deleteCourse(1L);
+	@Test
+	public void testDeleteReview() {
+		doNothing().when(reviewServices).deleteReview(1L);
 
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-    }
+		ResponseEntity<Review> response = reviewController.deleteCourse(1L);
+
+		assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+	}
 }
