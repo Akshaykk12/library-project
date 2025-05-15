@@ -1,9 +1,20 @@
 package com.capgemini.library_project.entities;
 
+import java.util.List;
+
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -21,13 +32,15 @@ public class Book {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long bookId;
 
-	@NotNull(message = "Author ID is required")
-	@Positive(message = "Author ID cannot be negative")
-	private Long authorId;
-
-	@NotNull(message = "Category ID is required")
-	@Positive(message = "User ID cannot be negative")
-	private Long categoryId;
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "category_id")
+	@JsonBackReference(value = "category-book")
+	Category category;
+	
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "authorId")
+	@JsonBackReference(value = "author-book")
+	Author author;
 
 	@NotBlank(message = "Book Title is required")
 	private String bookTitle;
@@ -35,11 +48,25 @@ public class Book {
 	@NotNull(message = "Total Copies is required")
 	@Positive(message = "Total Copies cannot be negative")
 	private Integer totalCopies;
-
+	
 	@NotNull(message = "Available Copies is required")
 	@Positive(message = "Available Copies cannot be negative")
 	private Integer availableCopies;
 	
 	private String bookCover;
+	
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "category_id")
+	@JsonBackReference
+	Category category;
+	
+	@JsonManagedReference(value = "book-review")
+	@OneToMany(mappedBy = "book", cascade = CascadeType.PERSIST)
+	List<Review> reviews;
+
+	@OneToMany(mappedBy = "book")
+//	@JsonManagedReference
+	@JsonIgnore
+	private List<BorrowRecord> borrowRecords;
 
 }

@@ -3,6 +3,7 @@ package com.capgemini.library_project.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+
 import org.springframework.web.bind.annotation.RestController;
 
 import com.capgemini.library_project.entities.BorrowRecord;
@@ -28,21 +30,25 @@ public class BorrowRecordController {
 		this.borrowRecordServices = borrowRecordServices;
 	}
 
+	// issue a book
 	@PostMapping
 	public ResponseEntity<BorrowRecord> createBorrowRecord(@RequestBody BorrowRecord borrowRecord) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(borrowRecordServices.createBorrowRecord(borrowRecord));
 	}
 
+	// display all issued book records
 	@GetMapping
 	public ResponseEntity<List<BorrowRecord>> getAllBorrowRecords() {
 		return ResponseEntity.ok(borrowRecordServices.getAllBorrowRecord());
 	}
 
+	// display a single issue by borrowId
 	@GetMapping("/{borrowId}")
 	public ResponseEntity<BorrowRecord> getBorrowRecordById(@PathVariable Long borrowId) {
 		return ResponseEntity.ok(borrowRecordServices.getBorrowRecordById(borrowId));
 	}
 
+	// display all issue records of a single user by userId
 	@GetMapping("/user/{userId}")
 	public ResponseEntity<List<BorrowRecord>> getAllBorrowRecordByUser(@PathVariable Long userId) {
 		return ResponseEntity.ok(borrowRecordServices.getAllBorrowRecordByUser(userId));
@@ -60,11 +66,11 @@ public class BorrowRecordController {
 		return ResponseEntity.ok(borrowRecordServices.getBorrowRecordsByStatus(status));
 	}
 
-//	// get all borrow records that are overdue
-//	@GetMapping("/overdue")
-//	public ResponseEntity<List<BorrowRecord>> getAllOverdueRecords() {
-//		return ResponseEntity.ok(borrowRecordServices.getAllOverdueRecords());
-//	}
+	// get all borrow records that are overdue
+	@GetMapping("/overdue")
+	public ResponseEntity<List<BorrowRecord>> getAllOverdueRecords() {
+		return ResponseEntity.ok(borrowRecordServices.getAllOverdueRecords());
+	}
 
 	// quick mark as returned
 	@PutMapping("/markReturned/{borrowId}")
@@ -73,18 +79,27 @@ public class BorrowRecordController {
 		return ResponseEntity.ok(updatedRecord);
 	}
 
-//	// fine based on return date
-//	@GetMapping("/calculateFine/{borrowId}")
-//	public ResponseEntity<Integer> calculateFine(@PathVariable Long borrowId) {
-//		return ResponseEntity.ok(borrowRecordServices.calculateFine(borrowId));
-//	}
+	// fine based on return date
+	@GetMapping("/calculateFine/{borrowId}")
+	public ResponseEntity<Integer> calculateFine(@PathVariable Long borrowId) {
+		return ResponseEntity.ok(borrowRecordServices.calculateFine(borrowId));
+	}
 
+	// Count Records by Status (like "Returned", "Borrowed")
+	@GetMapping("/countByStatus/{status}")
+	public ResponseEntity<Long> countByStatus(@PathVariable String status) {
+		long count = borrowRecordServices.countBorrowRecordsByStatus(status);
+		return ResponseEntity.ok(count);
+	}
+
+	// manually update all the details of any issue
 	@PutMapping("/{borrowId}")
 	public ResponseEntity<BorrowRecord> updateBorrowRecord(@PathVariable Long borrowId,
 			@RequestBody BorrowRecord updatedBorrowRecord) {
 		return ResponseEntity.ok(borrowRecordServices.updateBorrowRecord(borrowId, updatedBorrowRecord));
 	}
 
+	// delete a borrow record
 	@DeleteMapping("/{borrowId}")
 	public ResponseEntity<Void> deleteBorrowRecord(@PathVariable Long borrowId) {
 		borrowRecordServices.deleteBorrowRecord(borrowId);

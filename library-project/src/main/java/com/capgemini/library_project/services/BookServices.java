@@ -21,9 +21,18 @@ public interface BookServices {
 
 	List<Book> getBooksByAuthorId(Long authorId);
 
-	List<Book> getBooksByCategoryId(Long categoryId);
+//	List<Book> getBooksByCategoryId(Long categoryId);
 
 	Book updateImage(Long bookId, MultipartFile image) throws IOException;
 
 	public Book getImage(Long bookId);
+
+	Book addBook(Long categoryId, Book book);
+	
+	void assignBook(Long categoryId, Long bookId);
+	
+	Book addBookToAuthor(Long authorId, Book book);
+	
+	void assignBookToAuthor(Long authorId, Long bookId);
+
 }

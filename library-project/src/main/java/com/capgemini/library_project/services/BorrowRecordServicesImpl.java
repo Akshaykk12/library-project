@@ -7,15 +7,22 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.stereotype.Service;
 
+import com.capgemini.library_project.entities.Book;
 import com.capgemini.library_project.entities.BorrowRecord;
+import com.capgemini.library_project.entities.User;
+import com.capgemini.library_project.repositories.BookRepository;
 import com.capgemini.library_project.repositories.BorrowRecordRepository;
+import com.capgemini.library_project.repositories.UserRepository;
 
 @Service
 public class BorrowRecordServicesImpl implements BorrowRecordServices {
 
 	private final BorrowRecordRepository borrowRecordRepository;
+	private final UserRepository userRepository;
+	private final BookRepository bookRepository;
 
 	@Value("${borrow.return.days}")
 	public int allowedReturnDays;
@@ -24,13 +31,34 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 	public int finePerDay;
 
 	@Autowired
-	public BorrowRecordServicesImpl(BorrowRecordRepository borrowRecordRepository) {
+	public BorrowRecordServicesImpl(BorrowRecordRepository borrowRecordRepository, UserRepository userRepository,
+			BookRepository bookRepository) {
 		this.borrowRecordRepository = borrowRecordRepository;
+		this.userRepository = userRepository;
+		this.bookRepository = bookRepository;
 	}
 
 	@Override
 	public BorrowRecord createBorrowRecord(BorrowRecord borrowRecord) {
-		return borrowRecordRepository.save(borrowRecord);
+	    Long userId = borrowRecord.getUser().getUserId();
+	    Long bookId = borrowRecord.getBook().getBookId();
+
+	    User user = userRepository.findById(userId)
+	            .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+
+	    Book book = bookRepository.findById(bookId)
+	            .orElseThrow(() -> new RuntimeException("Book not found with ID: " + bookId));
+
+	    borrowRecord.setUser(user);
+	    borrowRecord.setBook(book);
+	    borrowRecord.setBorrowStatus("Borrowed");
+	    borrowRecord.setFine(0);
+
+	    if (borrowRecord.getBorrowReturnDate() == null) {
+	        borrowRecord.setBorrowReturnDate(borrowRecord.getBorrowDate().plusDays(7));
+	    }
+
+	    return borrowRecordRepository.save(borrowRecord);
 	}
 
 	@Override
@@ -46,13 +74,13 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 
 	@Override
 	public List<BorrowRecord> getAllBorrowRecordByUser(Long userId) {
-		return borrowRecordRepository.findAllByUserId(userId);
+		return borrowRecordRepository.findAllByUser_UserId(userId);
 	}
 
 	// how many times a book was borrowed
 	@Override
 	public List<BorrowRecord> getAllBorrowRecordByBook(Long bookId) {
-		return borrowRecordRepository.findAllByBookId(bookId);
+		return borrowRecordRepository.findAllByBook_BookId(bookId);
 	}
 
 	// Show all "Returned" or "Overdue" records
@@ -60,12 +88,13 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 		return borrowRecordRepository.findAllByBorrowStatus(status);
 	}
 
-//	// get all borrow records that are overdue
+	// get all borrow records that are overdue
 	@Override
 	public List<BorrowRecord> getAllOverdueRecords() {
 		LocalDate today = LocalDate.now();
-		return borrowRecordRepository.findAll().stream().filter(
-				record -> record.getBorrowReturnDate().isBefore(today) && record.getBorrowStatus().equals("Borrowed"))
+		return borrowRecordRepository.findAll().stream()
+				.filter(record -> record.getBorrowReturnDate() != null && record.getBorrowReturnDate().isBefore(today)
+						&& "Borrowed".equalsIgnoreCase(record.getBorrowStatus()))
 				.collect(Collectors.toList());
 	}
 
@@ -88,14 +117,27 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 		return borrowRecordRepository.save(record);
 	}
 
-//	// fine based on return date
 	@Override
 	public Integer calculateFine(Long borrowId) {
 		BorrowRecord record = borrowRecordRepository.findById(borrowId)
 				.orElseThrow(() -> new RuntimeException("Record not found"));
-		// fine is Rs.5 per day overdue
-		long daysOverdue = ChronoUnit.DAYS.between(record.getBorrowReturnDate(), LocalDate.now());
-		return daysOverdue > 0 ? (int) (daysOverdue * 5) : 0;
+
+
+		LocalDate dueDate = record.getBorrowDate().plusDays(allowedReturnDays);
+		LocalDate returnDate = record.getBorrowReturnDate() != null ? record.getBorrowReturnDate() : LocalDate.now();
+
+		if (returnDate.isAfter(dueDate)) {
+			long overdueDays = ChronoUnit.DAYS.between(dueDate, returnDate);
+			return (int) (overdueDays * finePerDay);
+		} else {
+			return 0;
+		}
+	}
+
+	// Count Records by Status (like "Returned", "Borrowed")
+	@Override
+	public long countBorrowRecordsByStatus(String status) {
+		return borrowRecordRepository.countByBorrowStatus(status);
 	}
 
 	@Override
@@ -113,4 +155,5 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 		borrowRecordRepository.deleteById(borrowId);
 
 	}
+
 }
