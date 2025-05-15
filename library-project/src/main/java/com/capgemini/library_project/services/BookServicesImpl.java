@@ -27,7 +27,6 @@ public class BookServicesImpl implements BookServices {
 	private final CategoryRepository categoryRepository;
 	
 	public BookServicesImpl( BookRepository bookRepository, CategoryRepository categoryRepository) {
-		// TODO Auto-generated constructor stub
 		this.bookRepository = bookRepository;
 		this.categoryRepository = categoryRepository;
 	}
@@ -48,7 +47,6 @@ public class BookServicesImpl implements BookServices {
 	
 	@Override
 	public void assignBook(Long categoryId, Long bookId) {
-		// TODO Auto-generated method stub
 		Category category = categoryRepository.findById(categoryId)
 				.orElseThrow(() -> new RuntimeException("Category Not Found"));
 		Book book = bookRepository.findById(bookId).orElseThrow(() -> new RuntimeException("Category Not Found"));;
