@@ -30,4 +30,9 @@ public interface BookServices {
 	Book addBook(Long categoryId, Book book);
 	
 	void assignBook(Long categoryId, Long bookId);
+	
+	Book addBookToAuthor(Long authorId, Book book);
+	
+	void assignBookToAuthor(Long authorId, Long bookId);
+
 }
