@@ -3,6 +3,7 @@ package com.capgemini.library_project.services;
 import com.capgemini.library_project.entities.Author;
 import com.capgemini.library_project.entities.Book;
 import com.capgemini.library_project.entities.Category;
+import com.capgemini.library_project.exceptions.BookNotFoundException;
 import com.capgemini.library_project.repositories.AuthorRepository;
 import com.capgemini.library_project.repositories.BookRepository;
 import com.capgemini.library_project.repositories.CategoryRepository;
@@ -64,7 +65,7 @@ public class BookServicesImpl implements BookServices {
 	@Override
 	public Book addBookToAuthor(Long authorId, Book book) {
 		Author author = authorRepository.findById(authorId)
-				.orElseThrow(() -> new RuntimeException("Category Not Found"));
+				.orElseThrow(() -> new RuntimeException("Author Not Found"));
 		book.setAuthor(author);
 		author.getBooks().add(book);
 		return bookRepository.save(book);
@@ -73,7 +74,7 @@ public class BookServicesImpl implements BookServices {
 	@Override
 	public void assignBookToAuthor(Long authorId, Long bookId) {
 		Author author = authorRepository.findById(authorId)
-				.orElseThrow(() -> new RuntimeException("Category Not Found"));
+				.orElseThrow(() -> new RuntimeException("Author Not Found"));
 		Book book = bookRepository.findById(bookId).orElseThrow(() -> new RuntimeException("Category Not Found"));
 		;
 		author.getBooks().add(book);
@@ -85,7 +86,7 @@ public class BookServicesImpl implements BookServices {
 	@Override
 	public Book updateBook(Long bookId, Book book) {
 		if (!bookRepository.existsById(bookId)) {
-			throw new RuntimeException("Book with ID " + bookId + " not found.");
+			throw new BookNotFoundException("Book with ID " + bookId + " not found.");
 		}
 		book.setBookId(bookId);
 		return bookRepository.save(book);
@@ -94,7 +95,7 @@ public class BookServicesImpl implements BookServices {
 	@Override
 	public void deleteBook(Long bookId) {
 		if (!bookRepository.existsById(bookId)) {
-			throw new RuntimeException("Book with ID " + bookId + " not found.");
+			throw new BookNotFoundException("Book with ID " + bookId + " not found.");
 		}
 		bookRepository.deleteById(bookId);
 	}
@@ -128,7 +129,7 @@ public class BookServicesImpl implements BookServices {
 
 		// Find the existing user
 		Book user = bookRepository.findById(bookId)
-				.orElseThrow(() -> new RuntimeException("User with id " + bookId + " not found"));
+				.orElseThrow(() -> new BookNotFoundException("Book with id " + bookId + " not found"));
 
 		// Update the user's image path
 		user.setBookCover(fileName);
@@ -139,6 +140,6 @@ public class BookServicesImpl implements BookServices {
 
 	@Override
 	public Book getImage(Long bookId) {
-		return bookRepository.findById(bookId).orElseThrow(() -> new RuntimeException());
+		return bookRepository.findById(bookId).orElseThrow(() -> new BookNotFoundException("Book Not Found"));
 	}
 }
