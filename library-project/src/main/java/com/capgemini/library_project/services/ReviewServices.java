@@ -14,4 +14,14 @@ public interface ReviewServices {
 	Review updateReview(Long id, Review review);
 	
 	boolean deleteReview(Long id);
+	
+	Review addReviewToBook(Long bookId, Review review);
+	
+	void assignReviewToBook(Long bookId, Long reviewId);
+
+	Review addReviewToUser(Long userId, Review review);
+	
+	void assignReviewToUser(Long userId, Long reviewId);
+
+	
 }

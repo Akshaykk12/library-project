@@ -7,19 +7,22 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+
 import org.springframework.stereotype.Service;
 
+import com.capgemini.library_project.entities.Book;
 import com.capgemini.library_project.entities.BorrowRecord;
+import com.capgemini.library_project.entities.User;
+import com.capgemini.library_project.repositories.BookRepository;
 import com.capgemini.library_project.repositories.BorrowRecordRepository;
+import com.capgemini.library_project.repositories.UserRepository;
 
 @Service
 public class BorrowRecordServicesImpl implements BorrowRecordServices {
 
 	private final BorrowRecordRepository borrowRecordRepository;
+	private final UserRepository userRepository;
+	private final BookRepository bookRepository;
 
 	@Value("${borrow.return.days}")
 	private int allowedReturnDays;
@@ -28,13 +31,34 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 	private int finePerDay;
 
 	@Autowired
-	public BorrowRecordServicesImpl(BorrowRecordRepository borrowRecordRepository) {
+	public BorrowRecordServicesImpl(BorrowRecordRepository borrowRecordRepository, UserRepository userRepository,
+			BookRepository bookRepository) {
 		this.borrowRecordRepository = borrowRecordRepository;
+		this.userRepository = userRepository;
+		this.bookRepository = bookRepository;
 	}
 
 	@Override
 	public BorrowRecord createBorrowRecord(BorrowRecord borrowRecord) {
-		return borrowRecordRepository.save(borrowRecord);
+	    Long userId = borrowRecord.getUser().getUserId();
+	    Long bookId = borrowRecord.getBook().getBookId();
+
+	    User user = userRepository.findById(userId)
+	            .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+
+	    Book book = bookRepository.findById(bookId)
+	            .orElseThrow(() -> new RuntimeException("Book not found with ID: " + bookId));
+
+	    borrowRecord.setUser(user);
+	    borrowRecord.setBook(book);
+	    borrowRecord.setBorrowStatus("Borrowed");
+	    borrowRecord.setFine(0);
+
+	    if (borrowRecord.getBorrowReturnDate() == null) {
+	        borrowRecord.setBorrowReturnDate(borrowRecord.getBorrowDate().plusDays(7));
+	    }
+
+	    return borrowRecordRepository.save(borrowRecord);
 	}
 
 	@Override
@@ -50,13 +74,13 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 
 	@Override
 	public List<BorrowRecord> getAllBorrowRecordByUser(Long userId) {
-		return borrowRecordRepository.findAllByUserId(userId);
+		return borrowRecordRepository.findAllByUser_UserId(userId);
 	}
 
 	// how many times a book was borrowed
 	@Override
 	public List<BorrowRecord> getAllBorrowRecordByBook(Long bookId) {
-		return borrowRecordRepository.findAllByBookId(bookId);
+		return borrowRecordRepository.findAllByBook_BookId(bookId);
 	}
 
 	// Show all "Returned" or "Overdue" records
