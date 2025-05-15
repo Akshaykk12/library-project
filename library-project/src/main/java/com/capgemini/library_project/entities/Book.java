@@ -21,47 +21,44 @@ import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Book {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long bookId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long bookId;
 
-	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(name = "category_id")
-	@JsonBackReference(value = "category-book")
-	Category category;
-	
-	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(name = "authorId")
-	@JsonBackReference(value = "author-book")
-	Author author;
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "authorId")
+    @JsonBackReference(value = "author-book")
+    private Author author;
 
-	@NotBlank(message = "Book Title is required")
-	private String bookTitle;
+    @NotBlank(message = "Book Title is required")
+    private String bookTitle;
 
-	@NotNull(message = "Total Copies is required")
-	@Positive(message = "Total Copies cannot be negative")
-	private Integer totalCopies;
-	
-	@NotNull(message = "Available Copies is required")
-	@Positive(message = "Available Copies cannot be negative")
-	private Integer availableCopies;
-	
-	private String bookCover;
-	
-	@JsonManagedReference(value = "book-review")
-	@OneToMany(mappedBy = "book", cascade = CascadeType.PERSIST)
-	List<Review> reviews;
+    @NotNull(message = "Total Copies is required")
+    @Positive(message = "Total Copies cannot be negative")
+    private Integer totalCopies;
 
-	@OneToMany(mappedBy = "book")
-	@JsonManagedReference(value = "book-borrowRecord")
-//	@JsonIgnore
-	private List<BorrowRecord> borrowRecords;
+    @NotNull(message = "Available Copies is required")
+    @Positive(message = "Available Copies cannot be negative")
+    private Integer availableCopies;
 
+    private String bookCover;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "category_id")
+    @JsonBackReference(value = "category-book")
+    private Category category;
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.PERSIST)
+    @JsonManagedReference(value = "book-review")
+    private List<Review> reviews;
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.PERSIST)
+    @JsonManagedReference(value = "book-borrow")
+    private List<BorrowRecord> borrowRecords;
 }

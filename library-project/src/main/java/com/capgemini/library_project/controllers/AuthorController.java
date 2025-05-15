@@ -34,7 +34,6 @@ public class AuthorController {
 
 	@Autowired
 	public AuthorController(AuthorServices authorServices, AuthorRepository authorRepository) {
-		// TODO Auto-generated constructor stub
 		this.authorServices = authorServices;
 		this.authorRepository = authorRepository;
 	}
