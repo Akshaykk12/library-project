@@ -2,6 +2,8 @@ package com.capgemini.library_project.entities;
 
 import java.util.List;
 
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -51,5 +53,10 @@ public class Book {
 	private Integer availableCopies;
 	
 	private String bookCover;
+	
+	@OneToMany(mappedBy = "book")
+//	@JsonManagedReference
+	@JsonIgnore
+	private List<BorrowRecord> borrowRecords;
 
 }
