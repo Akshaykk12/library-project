@@ -12,6 +12,8 @@ import com.capgemini.library_project.repositories.BookRepository;
 import com.capgemini.library_project.repositories.BorrowRecordRepository;
 import com.capgemini.library_project.repositories.UserRepository;
 
+import jakarta.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,35 +45,47 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 
 	// issue a book
 	@Override
+	@Transactional
 	public BorrowRecord createBorrowRecord(BorrowRecord borrowRecord) {
-		Long userId = borrowRecord.getUser().getUserId();
-		Long bookId = borrowRecord.getBook().getBookId();
+	    Long userId = borrowRecord.getUser().getUserId();
+	    Long bookId = borrowRecord.getBook().getBookId();
 
-		logger.info("Creating borrow record for user ID {} and book ID {}", userId, bookId);
+	    logger.info("Creating borrow record for user ID {} and book ID {}", userId, bookId);
 
-		User user = userRepository.findById(userId)
-				.orElseThrow(() -> {
-					logger.error("User not found with ID {}", userId);
-					return new RuntimeException("User not found with ID: " + userId);
-				});
+	    User user = userRepository.findById(userId)
+	            .orElseThrow(() -> {
+	                logger.error("User not found with ID {}", userId);
+	                return new RuntimeException("User not found with ID: " + userId);
+	            });
 
-		Book book = bookRepository.findById(bookId)
-				.orElseThrow(() -> {
-					logger.error("Book not found with ID {}", bookId);
-					return new RuntimeException("Book not found with ID: " + bookId);
-				});
+	    Book book = bookRepository.findById(bookId)
+	            .orElseThrow(() -> {
+	                logger.error("Book not found with ID {}", bookId);
+	                return new RuntimeException("Book not found with ID: " + bookId);
+	            });
 
-		borrowRecord.setUser(user);
-		borrowRecord.setBook(book);
-		borrowRecord.setBorrowStatus("Borrowed");
-		borrowRecord.setFine(0);
+	    if (book.getAvailableCopies() <= 0) {
+	        logger.error("No available copies for book ID {}", bookId);
+	        throw new RuntimeException("No available copies for book ID: " + bookId);
+	    }
 
-		if (borrowRecord.getBorrowReturnDate() == null) {
-			borrowRecord.setBorrowReturnDate(borrowRecord.getBorrowDate().plusDays(7));
-		}
+	    book.setAvailableCopies(book.getAvailableCopies() - 1);
+	    bookRepository.save(book); //
 
-		logger.debug("Borrow record created: {}", borrowRecord);
-		return borrowRecordRepository.save(borrowRecord);
+	    borrowRecord.setUser(user);
+	    borrowRecord.setBook(book);
+	    borrowRecord.setBorrowStatus("Borrowed");
+	    borrowRecord.setFine(0);
+
+	    if (borrowRecord.getBorrowDate() == null) {
+	        borrowRecord.setBorrowDate(LocalDate.now());
+	    }
+	    if (borrowRecord.getBorrowReturnDate() == null) {
+	        borrowRecord.setBorrowReturnDate(borrowRecord.getBorrowDate().plusDays(7));
+	    }
+
+	    logger.debug("Borrow record created: {}", borrowRecord);
+	    return borrowRecordRepository.save(borrowRecord);
 	}
 
 	// display all issued book records
@@ -127,37 +141,42 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 
 	// quick mark as returned
 	@Override
+	@Transactional
 	public BorrowRecord markAsReturned(Long borrowId) {
-		logger.info("Marking borrow record as returned for ID {}", borrowId);
-		BorrowRecord record = getBorrowRecordById(borrowId);
-		record.setBorrowStatus("Returned");
-		record.setBorrowReturnDate(LocalDate.now());
+	    logger.info("Marking borrow record as returned for ID {}", borrowId);
+	    BorrowRecord brecord = getBorrowRecordById(borrowId);
+	    brecord.setBorrowStatus("Returned");
+	    brecord.setBorrowReturnDate(LocalDate.now());
 
-		LocalDate dueDate = record.getBorrowDate().plusDays(allowedReturnDays);
-		if (record.getBorrowReturnDate().isAfter(dueDate)) {
-			long overdueDays = ChronoUnit.DAYS.between(dueDate, record.getBorrowReturnDate());
-			int fine = (int) (overdueDays * finePerDay);
-			record.setFine(fine);
-			logger.info("Fine calculated for overdue: {} days, fine: {}", overdueDays, fine);
-		} else {
-			record.setFine(0);
-		}
+	    Book book = brecord.getBook();
+	    book.setAvailableCopies(book.getAvailableCopies() + 1);
+	    bookRepository.save(book);
 
-		return borrowRecordRepository.save(record);
+	    LocalDate dueDate = brecord.getBorrowDate().plusDays(allowedReturnDays);
+	    if (brecord.getBorrowReturnDate().isAfter(dueDate)) {
+	        long overdueDays = ChronoUnit.DAYS.between(dueDate, brecord.getBorrowReturnDate());
+	        int fine = (int) (overdueDays * finePerDay);
+	        brecord.setFine(fine);
+	        logger.info("Fine calculated for overdue: {} days, fine: {}", overdueDays, fine);
+	    } else {
+	        brecord.setFine(0);
+	    }
+
+	    return borrowRecordRepository.save(brecord);
 	}
 
 	// fine based on return date
 	@Override
 	public Integer calculateFine(Long borrowId) {
 		logger.info("Calculating fine for borrow record ID {}", borrowId);
-		BorrowRecord record = borrowRecordRepository.findById(borrowId)
+		BorrowRecord brecord = borrowRecordRepository.findById(borrowId)
 				.orElseThrow(() -> {
 					logger.error("Borrow record not found for fine calculation");
 					return new RuntimeException("Record not found");
 				});
 
-		LocalDate dueDate = record.getBorrowDate().plusDays(allowedReturnDays);
-		LocalDate returnDate = record.getBorrowReturnDate() != null ? record.getBorrowReturnDate() : LocalDate.now();
+		LocalDate dueDate = brecord.getBorrowDate().plusDays(allowedReturnDays);
+		LocalDate returnDate = brecord.getBorrowReturnDate() != null ? brecord.getBorrowReturnDate() : LocalDate.now();
 
 		if (returnDate.isAfter(dueDate)) {
 			long overdueDays = ChronoUnit.DAYS.between(dueDate, returnDate);
@@ -190,7 +209,7 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 	@Override
 	public void deleteBorrowRecord(Long borrowId) {
 		logger.info("Deleting borrow record with ID {}", borrowId);
-		BorrowRecord record = getBorrowRecordById(borrowId);
+		BorrowRecord brecord = getBorrowRecordById(borrowId);
 		borrowRecordRepository.deleteById(borrowId);
 	}
 }

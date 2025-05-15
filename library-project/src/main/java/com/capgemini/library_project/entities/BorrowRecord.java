@@ -2,6 +2,7 @@ package com.capgemini.library_project.entities;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Entity;
@@ -26,13 +27,14 @@ public class BorrowRecord {
 	
 	@ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "userId")
-//	@JsonBackReference
+	@JsonBackReference(value = "user-borrowRecord")
     private User user;
 	
 	@ManyToOne
     @JoinColumn(name = "book_id", referencedColumnName = "bookId")
-//	@JsonBackReference
+	@JsonBackReference(value = "book-borrowRecord")
     private Book book;
+	
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private LocalDate borrowDate;
 	@JsonFormat(pattern = "yyyy-MM-dd")
