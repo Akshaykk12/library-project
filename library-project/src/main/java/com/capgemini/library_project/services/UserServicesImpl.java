@@ -23,7 +23,6 @@ public class UserServicesImpl implements UserServices{
 
 	@Autowired
 	public UserServicesImpl(UserRepository userRepository) {
-		super();
 		this.userRepository = userRepository;
 	}
 
@@ -42,6 +41,7 @@ public class UserServicesImpl implements UserServices{
 	public User createUser(User user) {
 		return userRepository.save(user);
 	}
+	
 
 	@Override
 	public User updateUser(Long userId, User user) {
