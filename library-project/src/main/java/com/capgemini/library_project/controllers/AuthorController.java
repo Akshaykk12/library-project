@@ -4,6 +4,7 @@ import com.capgemini.library_project.entities.Author;
 import com.capgemini.library_project.repositories.AuthorRepository;
 import com.capgemini.library_project.services.AuthorServices;
 
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 import org.slf4j.Logger;
@@ -14,6 +15,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 
 import org.springframework.http.*;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -46,14 +48,21 @@ public class AuthorController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Author> createAuthor(@RequestBody Author author) {
+	public ResponseEntity<Author> createAuthor(@Valid @RequestBody Author author, BindingResult bindingResult) {
 		logger.info("POST request received: create author");
+		if (bindingResult.hasErrors()) {
+			throw new IllegalArgumentException("Invalid Data");
+		}
 		return ResponseEntity.status(HttpStatus.CREATED).body(authorServices.createAuthor(author));
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Author> updateAuthorById(@PathVariable Long id, @RequestBody Author author) {
+	public ResponseEntity<Author> updateAuthorById(@PathVariable Long id, @Valid @RequestBody Author author,
+			BindingResult bindingResult) {
 		logger.info("PUT request received: update author with ID {}", id);
+		if (bindingResult.hasErrors()) {
+			throw new IllegalArgumentException("Invalid Data");
+		}
 		return ResponseEntity.status(HttpStatus.OK).body(authorServices.updateAuthorById(id, author));
 	}
 
