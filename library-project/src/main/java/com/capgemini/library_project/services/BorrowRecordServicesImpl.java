@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 import com.capgemini.library_project.entities.Book;
 import com.capgemini.library_project.entities.BorrowRecord;
 import com.capgemini.library_project.entities.User;
+import com.capgemini.library_project.exceptions.BookNotFoundException;
+import com.capgemini.library_project.exceptions.BorrowRecordNotFoundException;
+import com.capgemini.library_project.exceptions.UserNotFoundException;
 import com.capgemini.library_project.repositories.BookRepository;
 import com.capgemini.library_project.repositories.BorrowRecordRepository;
 import com.capgemini.library_project.repositories.UserRepository;
@@ -44,10 +47,10 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 	    Long bookId = borrowRecord.getBook().getBookId();
 
 	    User user = userRepository.findById(userId)
-	            .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+	            .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
 
 	    Book book = bookRepository.findById(bookId)
-	            .orElseThrow(() -> new RuntimeException("Book not found with ID: " + bookId));
+	            .orElseThrow(() -> new BookNotFoundException("Book not found with ID: " + bookId));
 
 	    borrowRecord.setUser(user);
 	    borrowRecord.setBook(book);
@@ -69,7 +72,7 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 	@Override
 	public BorrowRecord getBorrowRecordById(Long borrowId) {
 		return borrowRecordRepository.findById(borrowId)
-				.orElseThrow(() -> new RuntimeException("No Borrow Record available for " + borrowId));
+				.orElseThrow(() -> new BorrowRecordNotFoundException("No Borrow Record available for " + borrowId));
 	}
 
 	@Override
@@ -120,7 +123,7 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 	@Override
 	public Integer calculateFine(Long borrowId) {
 		BorrowRecord record = borrowRecordRepository.findById(borrowId)
-				.orElseThrow(() -> new RuntimeException("Record not found"));
+				.orElseThrow(() -> new BorrowRecordNotFoundException("Record not found"));
 
 
 		LocalDate dueDate = record.getBorrowDate().plusDays(allowedReturnDays);
