@@ -10,10 +10,10 @@ import com.capgemini.library_project.entities.BorrowRecord;
 
 public interface BorrowRecordRepository extends JpaRepository<BorrowRecord, Long> {
 
-	List<BorrowRecord> findAllByUserId(Long userId);
+	List<BorrowRecord> findAllByUser_UserId(Long userId);
 
 	// how many times a book was borrowed
-	List<BorrowRecord> findAllByBookId(Long bookId);
+	List<BorrowRecord> findAllByBook_BookId(Long bookId);
 
 	// Show all "Returned" or "Overdue" records
 	List<BorrowRecord> findAllByBorrowStatus(String status);
