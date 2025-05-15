@@ -55,11 +55,6 @@ public class Book {
 	
 	private String bookCover;
 	
-	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(name = "category_id")
-	@JsonBackReference
-	Category category;
-	
 	@JsonManagedReference(value = "book-review")
 	@OneToMany(mappedBy = "book", cascade = CascadeType.PERSIST)
 	List<Review> reviews;
