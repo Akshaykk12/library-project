@@ -43,9 +43,7 @@ public class BorrowRecord {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate borrowReturnDate;
 
-    @NotNull(message = "Fine is required")
     private Integer fine;
     
-    @NotBlank(message = "Borrow Status is required")
     private String borrowStatus;
 }
