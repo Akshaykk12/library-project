@@ -8,6 +8,8 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,79 +22,92 @@ import com.capgemini.library_project.repositories.UserRepository;
 @Service
 public class UserServicesImpl implements UserServices{
 	
-	private final UserRepository userRepository;
-	private final String UPLOAD_DIR = "uploads/";
 
-	@Autowired
-	public UserServicesImpl(UserRepository userRepository) {
-		this.userRepository = userRepository;
-	}
+	 private static final Logger logger = LoggerFactory.getLogger(UserServicesImpl.class);
+	    private final UserRepository userRepository;
+	    private final String UPLOAD_DIR = "uploads/";
 
-	@Override
-	public List<User> getAllUsers() {
-		return userRepository.findAll();
-	}
+	    @Autowired
+	    public UserServicesImpl(UserRepository userRepository) {
+	        this.userRepository = userRepository;
+	    }
 
-	@Override
-	public User getUserById(Long userId) {
-		return userRepository.findById(userId)
-				.orElseThrow(() -> new UserNotFoundException("User with id : " + userId + " not found."));
-	}
+	    @Override
+	    public List<User> getAllUsers() {
+	        logger.info("Fetching all users");
+	        return userRepository.findAll();
+	    }
 
-	@Override
+	    @Override
+	    public User getUserById(Long userId) {
+	        logger.info("Fetching user by ID: {}", userId);
+	        return userRepository.findById(userId)
+	                .orElseThrow(() -> {
+	                    logger.error("User with id {} not found", userId);
+	                    return new UserNotFoundException("User with id : " + userId + " not found.");
+	                });
+	    }
+
+      @Override
 	public User createUser(User user) {
 		if (userRepository.findByUserEmail(user.getUserEmail()).isPresent()) {
+          logger.info("Creating new user: {}", user.getUserName());
 	        throw new UserAlreadyExistsException("User Already Exists");
 	    }
 		return userRepository.save(user);
 	}
-	
 
-	@Override
-	public User updateUser(Long userId, User user) {
-		User existing = userRepository.findById(userId)
-				.orElseThrow(() -> new UserNotFoundException("User with id : " + userId + " not found."));
-		existing.setUserName(user.getUserName());
-		existing.setUserEmail(user.getUserEmail());
-		existing.setUserContact(user.getUserContact());
-		return userRepository.save(existing);
-	}
+	    @Override
+	    public User updateUser(Long userId, User user) {
+	        logger.info("Updating user with ID: {}", userId);
+	        User existing = userRepository.findById(userId)
+	                .orElseThrow(() -> {
+	                    logger.error("User with id {} not found for update", userId);
+	                    return new UserNotFoundException("User with id : " + userId + " not found.");
+	                });
 
-	@Override
-	public boolean deleteUser(Long userId) {
-		if (!userRepository.existsById(userId)) {
-			throw new UserNotFoundException("User with id : " + userId + " not found.");
-		}
-		userRepository.deleteById(userId);
-		return true;
-	}
-	
-	@Override
-	public User updateImage(Long userId, MultipartFile image) throws IOException {
-	    // Ensure the upload directory exists
-	    Files.createDirectories(Paths.get(UPLOAD_DIR));
+	        existing.setUserName(user.getUserName());
+	        existing.setUserEmail(user.getUserEmail());
+	        existing.setUserContact(user.getUserContact());
+	        return userRepository.save(existing);
+	    }
 
-	    // Generate a unique file name
-	    String fileName = UUID.randomUUID() + "_" + image.getOriginalFilename();
-	    Path filePath = Paths.get(UPLOAD_DIR, fileName);
+	    @Override
+	    public boolean deleteUser(Long userId) {
+	        logger.info("Deleting user with ID: {}", userId);
+	        if (!userRepository.existsById(userId)) {
+	            logger.error("User with id {} not found for deletion", userId);
+	            throw new UserNotFoundException("User with id : " + userId + " not found.");
+	        }
+	        userRepository.deleteById(userId);
+	        return true;
+	    }
 
-	    // Save the uploaded image file
-	    Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+	    @Override
+	    public User updateImage(Long userId, MultipartFile image) throws IOException {
+	        logger.info("Updating image for user ID: {}", userId);
+	        Files.createDirectories(Paths.get(UPLOAD_DIR));
+	        String fileName = UUID.randomUUID() + "_" + image.getOriginalFilename();
+	        Path filePath = Paths.get(UPLOAD_DIR, fileName);
+	        Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-	    // Find the existing user
-	    User user = userRepository.findById(userId)
-	                   .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found"));
+	        User user = userRepository.findById(userId)
+	                .orElseThrow(() -> {
+	                    logger.error("User with id {} not found for image update", userId);
+	                    return new UserNotFoundException("User with id " + userId + " not found");
+	                });
 
-	    // Update the user's image path
-	    user.setUserImage(fileName);
+	        user.setUserImage(fileName);
+	        return userRepository.save(user);
+	    }
 
-	    // Save and return the updated user
-	    return userRepository.save(user);
-	}
-
-	@Override
-	public User getImage(Long userid) {
-		return userRepository.findById(userid)
-				.orElseThrow(() -> new UserNotFoundException("User with id " + userid + " not found"));
-	}
+	    @Override
+	    public User getImage(Long userId) {
+	        logger.info("Getting image for user ID: {}", userId);
+	        return userRepository.findById(userId)
+	                .orElseThrow(() -> {
+	                    logger.error("User with id {} not found when retrieving image", userId);
+	                    return new UserNotFoundException("User not found");
+	                });
+	    }
 }

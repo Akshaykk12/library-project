@@ -1,47 +1,58 @@
 package com.capgemini.library_project.services;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.List;
-import java.util.UUID;
+import com.capgemini.library_project.entities.Author;
+import com.capgemini.library_project.exceptions.AuthorAlreadyExistsException;
+import com.capgemini.library_project.exceptions.AuthorNotFoundException;
+import com.capgemini.library_project.repositories.AuthorRepository;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.capgemini.library_project.entities.Author;
-import com.capgemini.library_project.repositories.AuthorRepository;
+import java.io.IOException;
+import java.nio.file.*;
+import java.util.List;
+import java.util.UUID;
 
 @Service
-public class AuthorServicesImpl implements AuthorServices{
-		private AuthorRepository authorRepository;
-		private String UPLOAD_DIR = "uploads/";
-	
+public class AuthorServicesImpl implements AuthorServices {
+
+	private static final Logger logger = LoggerFactory.getLogger(AuthorServicesImpl.class);
+	private final String UPLOAD_DIR = "uploads/";
+
+	private final AuthorRepository authorRepository;
+
 	@Autowired
 	public AuthorServicesImpl(AuthorRepository authorRepository) {
-		// TODO Auto-generated constructor stub
-		this.authorRepository =authorRepository;
+		this.authorRepository = authorRepository;
 	}
 
 	@Override
 	public Author createAuthor(Author a) {
 		// TODO Auto-generated method stub
+		if(authorRepository.findByAuthorName(a.getAuthorName()).isPresent()) {
+			throw new AuthorAlreadyExistsException("Author Already Exists");
+		}
+		logger.info("Creating new author: {}", a.getAuthorName());
 		return authorRepository.save(a);
 	}
 
 	@Override
 	public List<Author> findAllAuthors() {
-		// TODO Auto-generated method stub
+		logger.info("Fetching all authors");
 		return authorRepository.findAll();
 	}
 
 	@Override
-	public Author updateAuthorById( Long id ,Author a) {
-		// TODO Auto-generated method stub
-		Author author = authorRepository.findById(id).orElseThrow(()->new RuntimeException("Author with this id not found"+id));
+	public Author updateAuthorById(Long id, Author a) {
+		logger.info("Updating author with ID: {}", id);
+		Author author = authorRepository.findById(id)
+				.orElseThrow(() -> {
+					logger.error("Author with ID {} not found", id);
+					return new AuthorNotFoundException(id);
+				});
 		author.setAuthorName(a.getAuthorName());
 		author.setAuthorBio(a.getAuthorBio());
 		author.setAuthorSocial(a.getAuthorSocial());
@@ -50,44 +61,59 @@ public class AuthorServicesImpl implements AuthorServices{
 
 	@Override
 	public Author findAuthorById(Long id) {
-		// TODO Auto-generated method stub
-		return authorRepository.findById(id).orElseThrow(()->new RuntimeException("Author with this id not found"+id));
+		logger.info("Fetching author with ID: {}", id);
+		return authorRepository.findById(id)
+				.orElseThrow(() -> {
+					logger.error("Author with ID {} not found", id);
+					return new AuthorNotFoundException(id);				
+					});
 	}
 
 	@Override
 	public Boolean deleteAuthorById(Long id) {
-		// TODO Auto-generated method stub
-		Author author = authorRepository.findById(id).orElseThrow( ()->new RuntimeException("Author with this id not found"+id));
+		logger.info("Deleting author with ID: {}", id);
+		Author author = authorRepository.findById(id)
+				.orElseThrow(() -> {
+					logger.error("Author with ID {} not found", id);
+					return new AuthorNotFoundException(id);
+				});
 		authorRepository.delete(author);
 		return true;
 	}
-	
+
 	@Override
 	public Author updateImage(Long authorId, MultipartFile image) throws IOException {
-	    // Ensure the upload directory exists
-	    Files.createDirectories(Paths.get(UPLOAD_DIR));
+		logger.info("Updating image for author ID: {}", authorId);
+		// Ensure the upload directory exists
+		Files.createDirectories(Paths.get(UPLOAD_DIR));
 
-	    // Generate a unique file name
-	    String fileName = UUID.randomUUID() + "_" + image.getOriginalFilename();
-	    Path filePath = Paths.get(UPLOAD_DIR, fileName);
+		// Generate a unique file name
+		String fileName = UUID.randomUUID() + "_" + image.getOriginalFilename();
+		Path filePath = Paths.get(UPLOAD_DIR, fileName);
 
-	    // Save the uploaded image file
-	    Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+		// Save the uploaded image file
+		Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-	    // Find the existing user
-	    Author author = authorRepository.findById(authorId)
-	                   .orElseThrow(() -> new RuntimeException("Author with id " + authorId + " not found"));
+		// Find the existing user
+		Author author = authorRepository.findById(authorId)
+				.orElseThrow(() -> {
+					logger.error("Author with ID {} not found for image update", authorId);
+					return new AuthorNotFoundException(authorId);
+				});
 
-	    // Update the Author image path
-	    author.setAuthorImage(fileName);
+		// Update the Author image path
+		author.setAuthorImage(fileName);
 
-	    // Save and return the updated author
-	    return authorRepository.save(author);
+		// Save and return the updated author
+		return authorRepository.save(author);
 	}
 
 	@Override
 	public Author getImage(Long authorid) {
-		return authorRepository.findById(authorid).orElseThrow(() -> new RuntimeException());
+		logger.info("Fetching image for author ID: {}", authorid);
+		return authorRepository.findById(authorid).orElseThrow(() -> {
+			logger.error("Author with ID {} not found while fetching image", authorid);
+			return new AuthorNotFoundException(authorid);
+		});
 	}
-
 }
