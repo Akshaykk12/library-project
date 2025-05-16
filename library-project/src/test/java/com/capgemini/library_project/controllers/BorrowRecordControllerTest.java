@@ -16,7 +16,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class BorrowRecordControllerTest {
+class BorrowRecordControllerTest {
 
 	@Mock
 	private BorrowRecordServices borrowRecordServices;
@@ -30,7 +30,7 @@ public class BorrowRecordControllerTest {
 	private BorrowRecord sampleRecord;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		MockitoAnnotations.openMocks(this);
 
 		sampleRecord = new BorrowRecord();
@@ -41,7 +41,7 @@ public class BorrowRecordControllerTest {
 	}
 
 	@Test
-	public void testCreateBorrowRecord() {
+	void testCreateBorrowRecord() {
 		when(bindingResult.hasErrors()).thenReturn(false);
 		when(borrowRecordServices.createBorrowRecord(sampleRecord)).thenReturn(sampleRecord);
 
@@ -52,7 +52,7 @@ public class BorrowRecordControllerTest {
 	}
 
 	@Test
-	public void testGetAllBorrowRecords() {
+	void testGetAllBorrowRecords() {
 		when(borrowRecordServices.getAllBorrowRecord()).thenReturn(Arrays.asList(sampleRecord));
 
 		ResponseEntity<List<BorrowRecord>> response = borrowRecordController.getAllBorrowRecords();
@@ -62,7 +62,7 @@ public class BorrowRecordControllerTest {
 	}
 
 	@Test
-	public void testGetBorrowRecordById() {
+	void testGetBorrowRecordById() {
 		when(borrowRecordServices.getBorrowRecordById(1L)).thenReturn(sampleRecord);
 
 		ResponseEntity<BorrowRecord> response = borrowRecordController.getBorrowRecordById(1L);
@@ -72,7 +72,7 @@ public class BorrowRecordControllerTest {
 	}
 
 	@Test
-	public void testGetAllBorrowRecordByUser() {
+	void testGetAllBorrowRecordByUser() {
 		when(borrowRecordServices.getAllBorrowRecordByUser(101L)).thenReturn(List.of(sampleRecord));
 
 		ResponseEntity<List<BorrowRecord>> response = borrowRecordController.getAllBorrowRecordByUser(101L);
@@ -82,7 +82,7 @@ public class BorrowRecordControllerTest {
 	}
 
 	@Test
-	public void testGetAllBorrowRecordByBook() {
+	void testGetAllBorrowRecordByBook() {
 		when(borrowRecordServices.getAllBorrowRecordByBook(201L)).thenReturn(List.of(sampleRecord));
 
 		ResponseEntity<List<BorrowRecord>> response = borrowRecordController.getAllBorrowRecordByBook(201L);
@@ -91,7 +91,7 @@ public class BorrowRecordControllerTest {
 	}
 
 	@Test
-	public void testGetBorrowRecordsByStatus() {
+	void testGetBorrowRecordsByStatus() {
 		when(borrowRecordServices.getBorrowRecordsByStatus("Returned")).thenReturn(List.of(sampleRecord));
 
 		ResponseEntity<List<BorrowRecord>> response = borrowRecordController.getBorrowRecordsByStatus("Returned");
@@ -100,7 +100,7 @@ public class BorrowRecordControllerTest {
 	}
 
 	@Test
-	public void testGetAllOverdueRecords() {
+	void testGetAllOverdueRecords() {
 		when(borrowRecordServices.getAllOverdueRecords()).thenReturn(List.of(sampleRecord));
 
 		ResponseEntity<List<BorrowRecord>> response = borrowRecordController.getAllOverdueRecords();
@@ -109,7 +109,7 @@ public class BorrowRecordControllerTest {
 	}
 
 	@Test
-	public void testMarkAsReturned() {
+	void testMarkAsReturned() {
 		when(borrowRecordServices.markAsReturned(1L)).thenReturn(sampleRecord);
 
 		ResponseEntity<BorrowRecord> response = borrowRecordController.markAsReturned(1L);
@@ -119,7 +119,7 @@ public class BorrowRecordControllerTest {
 	}
 
 	@Test
-	public void testCalculateFine() {
+	void testCalculateFine() {
 		when(borrowRecordServices.calculateFine(1L)).thenReturn(50);
 
 		ResponseEntity<Integer> response = borrowRecordController.calculateFine(1L);
@@ -129,7 +129,7 @@ public class BorrowRecordControllerTest {
 	}
 
 	@Test
-	public void testCountByStatus() {
+	void testCountByStatus() {
 		when(borrowRecordServices.countBorrowRecordsByStatus("Borrowed")).thenReturn(3L);
 
 		ResponseEntity<Long> response = borrowRecordController.countByStatus("Borrowed");
@@ -139,7 +139,7 @@ public class BorrowRecordControllerTest {
 	}
 
 	@Test
-	public void testUpdateBorrowRecord() {
+	void testUpdateBorrowRecord() {
 		when(bindingResult.hasErrors()).thenReturn(false);
 		when(borrowRecordServices.updateBorrowRecord(eq(1L), any(BorrowRecord.class))).thenReturn(sampleRecord);
 
@@ -151,7 +151,7 @@ public class BorrowRecordControllerTest {
 	}
 
 	@Test
-	public void testDeleteBorrowRecord() {
+	void testDeleteBorrowRecord() {
 		doNothing().when(borrowRecordServices).deleteBorrowRecord(1L);
 
 		ResponseEntity<Void> response = borrowRecordController.deleteBorrowRecord(1L);
