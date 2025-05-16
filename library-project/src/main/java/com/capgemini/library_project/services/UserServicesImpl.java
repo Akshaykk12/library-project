@@ -15,11 +15,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.capgemini.library_project.entities.User;
+import com.capgemini.library_project.exceptions.UserAlreadyExistsException;
+import com.capgemini.library_project.exceptions.UserNotFoundException;
 import com.capgemini.library_project.repositories.UserRepository;
 
 @Service
 public class UserServicesImpl implements UserServices{
 	
+
 	 private static final Logger logger = LoggerFactory.getLogger(UserServicesImpl.class);
 	    private final UserRepository userRepository;
 	    private final String UPLOAD_DIR = "uploads/";
@@ -41,15 +44,18 @@ public class UserServicesImpl implements UserServices{
 	        return userRepository.findById(userId)
 	                .orElseThrow(() -> {
 	                    logger.error("User with id {} not found", userId);
-	                    return new RuntimeException("User with id : " + userId + " not found.");
+	                    return new UserNotFoundException("User with id : " + userId + " not found.");
 	                });
 	    }
 
-	    @Override
-	    public User createUser(User user) {
-	        logger.info("Creating new user: {}", user.getUserName());
-	        return userRepository.save(user);
+      @Override
+	public User createUser(User user) {
+		if (userRepository.findByUserEmail(user.getUserEmail()).isPresent()) {
+          logger.info("Creating new user: {}", user.getUserName());
+	        throw new UserAlreadyExistsException("User Already Exists");
 	    }
+		return userRepository.save(user);
+	}
 
 	    @Override
 	    public User updateUser(Long userId, User user) {
@@ -57,7 +63,7 @@ public class UserServicesImpl implements UserServices{
 	        User existing = userRepository.findById(userId)
 	                .orElseThrow(() -> {
 	                    logger.error("User with id {} not found for update", userId);
-	                    return new RuntimeException("User with id : " + userId + " not found.");
+	                    return new UserNotFoundException("User with id : " + userId + " not found.");
 	                });
 
 	        existing.setUserName(user.getUserName());
@@ -71,7 +77,7 @@ public class UserServicesImpl implements UserServices{
 	        logger.info("Deleting user with ID: {}", userId);
 	        if (!userRepository.existsById(userId)) {
 	            logger.error("User with id {} not found for deletion", userId);
-	            throw new RuntimeException("User with id : " + userId + " not found.");
+	            throw new UserNotFoundException("User with id : " + userId + " not found.");
 	        }
 	        userRepository.deleteById(userId);
 	        return true;
@@ -88,7 +94,7 @@ public class UserServicesImpl implements UserServices{
 	        User user = userRepository.findById(userId)
 	                .orElseThrow(() -> {
 	                    logger.error("User with id {} not found for image update", userId);
-	                    return new RuntimeException("User with id " + userId + " not found");
+	                    return new UserNotFoundException("User with id " + userId + " not found");
 	                });
 
 	        user.setUserImage(fileName);
@@ -101,7 +107,7 @@ public class UserServicesImpl implements UserServices{
 	        return userRepository.findById(userId)
 	                .orElseThrow(() -> {
 	                    logger.error("User with id {} not found when retrieving image", userId);
-	                    return new RuntimeException("User not found");
+	                    return new UserNotFoundException("User not found");
 	                });
 	    }
 }
