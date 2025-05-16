@@ -1,5 +1,7 @@
 package com.capgemini.library_project.repositories;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -15,4 +17,7 @@ public interface UserRepository extends JpaRepository<User, Long>{
 	@Transactional
 	@Query("UPDATE User u SET u.userImage = :image WHERE u.id = :userId")
 	int updateImage(@Param("image") String image, @Param("userId") Long userId);
+	
+	
+	Optional<User> findByUserNameOrEmail(String username, String email);
 }
