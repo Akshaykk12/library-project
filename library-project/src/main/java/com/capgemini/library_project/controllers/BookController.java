@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.*;
 import org.springframework.http.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,6 +26,7 @@ import java.util.Optional;
 @Slf4j
 @RestController
 @RequestMapping("/api/books")
+@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 public class BookController {
 
 	private static final Logger logger = LoggerFactory.getLogger(BookController.class);

@@ -18,6 +18,9 @@ public interface UserRepository extends JpaRepository<User, Long>{
 	@Query("UPDATE User u SET u.userImage = :image WHERE u.id = :userId")
 	int updateImage(@Param("image") String image, @Param("userId") Long userId);
 	
+	Optional<User> findByUserEmail(String email);
 	
-	Optional<User> findByUserNameOrEmail(String username, String email);
+	Optional<User> findByUserNameOrUserEmail(String username, String email);
+	
+	boolean existsByUserEmail(String email);
 }

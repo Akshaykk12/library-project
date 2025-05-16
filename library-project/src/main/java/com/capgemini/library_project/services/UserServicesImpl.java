@@ -110,4 +110,16 @@ public class UserServicesImpl implements UserServices{
 	                    return new UserNotFoundException("User not found");
 	                });
 	    }
+
+		@Override
+		public User findByUserNameOrUserEmail(String name, String email) {
+			// TODO Auto-generated method stub
+			return userRepository.findByUserNameOrUserEmail(name, email).orElseThrow(() -> new UserNotFoundException("User not found with given eamil: "+email));
+		}
+
+		@Override
+		public boolean existsByUserEmail(String email) {
+			// TODO Auto-generated method stub
+			return userRepository.existsByUserEmail(email);
+		}
 }

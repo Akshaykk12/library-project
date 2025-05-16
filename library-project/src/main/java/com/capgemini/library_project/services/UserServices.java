@@ -23,4 +23,8 @@ public interface UserServices {
 	User updateImage(Long userId, MultipartFile image) throws IOException;
 	
 	public User getImage(Long userId);
+
+	User findByUserNameOrUserEmail(String name, String email);
+
+	boolean existsByUserEmail(String email);
 }
