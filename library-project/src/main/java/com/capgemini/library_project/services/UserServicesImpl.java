@@ -25,7 +25,7 @@ public class UserServicesImpl implements UserServices{
 
 	 private static final Logger logger = LoggerFactory.getLogger(UserServicesImpl.class);
 	    private final UserRepository userRepository;
-	    private final String UPLOAD_DIR = "uploads/";
+	    private static final String UPLOAD_DIR = "uploads/";
 
 	    @Autowired
 	    public UserServicesImpl(UserRepository userRepository) {
