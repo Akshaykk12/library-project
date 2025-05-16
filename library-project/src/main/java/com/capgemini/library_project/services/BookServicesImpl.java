@@ -8,9 +8,6 @@ import com.capgemini.library_project.repositories.AuthorRepository;
 import com.capgemini.library_project.repositories.BookRepository;
 import com.capgemini.library_project.repositories.CategoryRepository;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,8 +19,11 @@ import java.util.UUID;
 
 @Service
 public class BookServicesImpl implements BookServices {
+	
+	private static final String CATEGORY_NOT_FOUND_MSG = "Category Not Found";
 
-	private final String UPLOAD_DIR = "uploads/";
+
+	private static final String UPLOAD_DIR = "uploads/";
 
 	private final BookRepository bookRepository;
 	private final CategoryRepository categoryRepository;
@@ -44,7 +44,7 @@ public class BookServicesImpl implements BookServices {
 	@Override
 	public Book addBook(Long categoryId, Book book) {
 		Category category = categoryRepository.findById(categoryId)
-				.orElseThrow(() -> new RuntimeException("Category Not Found"));
+				.orElseThrow(() -> new RuntimeException(CATEGORY_NOT_FOUND_MSG));
 		book.setCategory(category);
 		category.getBooks().add(book);
 		return bookRepository.save(book);
@@ -53,8 +53,8 @@ public class BookServicesImpl implements BookServices {
 	@Override
 	public void assignBook(Long categoryId, Long bookId) {
 		Category category = categoryRepository.findById(categoryId)
-				.orElseThrow(() -> new RuntimeException("Category Not Found"));
-		Book book = bookRepository.findById(bookId).orElseThrow(() -> new RuntimeException("Category Not Found"));
+				.orElseThrow(() -> new RuntimeException(CATEGORY_NOT_FOUND_MSG));
+		Book book = bookRepository.findById(bookId).orElseThrow(() -> new RuntimeException(CATEGORY_NOT_FOUND_MSG));
 		category.getBooks().add(book);
 		book.setCategory(category);
 		categoryRepository.save(category);
@@ -74,8 +74,7 @@ public class BookServicesImpl implements BookServices {
 	public void assignBookToAuthor(Long authorId, Long bookId) {
 		Author author = authorRepository.findById(authorId)
 				.orElseThrow(() -> new RuntimeException("Author Not Found"));
-		Book book = bookRepository.findById(bookId).orElseThrow(() -> new RuntimeException("Category Not Found"));
-		;
+		Book book = bookRepository.findById(bookId).orElseThrow(() -> new RuntimeException(CATEGORY_NOT_FOUND_MSG));
 		author.getBooks().add(book);
 		book.setAuthor(author);
 		authorRepository.save(author);

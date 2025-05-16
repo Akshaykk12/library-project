@@ -14,8 +14,6 @@ import java.util.List;
 public interface BookRepository extends JpaRepository<Book, Long> {
 	List<Book> findByAuthor_AuthorId(Long authorId);
 
-//	List<Book> findByCategoryId(Long categoryId);
-
 	@Modifying
 	@Transactional
 	@Query("UPDATE Book b SET b.bookCover = :image WHERE b.id = :bookId")

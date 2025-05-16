@@ -8,6 +8,7 @@ class LibraryProjectApplicationTests {
 
 	@Test
 	void contextLoads() {
+		// This test ensures the Spring application context loads successfully.
 	}
 
 }
