@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class UserServicesImplTest {
+class UserServicesImplTest {
 
     @Mock
     private UserRepository userRepository;
@@ -31,7 +31,7 @@ public class UserServicesImplTest {
     private User user;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         user = new User();
         user.setUserId(1L);
         user.setUserName("Test User");
@@ -42,27 +42,27 @@ public class UserServicesImplTest {
     }
 
     @Test
-    public void testGetAllUsers() {
+    void testGetAllUsers() {
         when(userRepository.findAll()).thenReturn(Arrays.asList(user));
         assertEquals(1, userServices.getAllUsers().size());
     }
 
     @Test
-    public void testGetUserById() {
+    void testGetUserById() {
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         User found = userServices.getUserById(1L);
         assertEquals("Test User", found.getUserName());
     }
 
     @Test
-    public void testCreateUser() {
+    void testCreateUser() {
         when(userRepository.save(user)).thenReturn(user);
         User saved = userServices.createUser(user);
         assertEquals("Test User", saved.getUserName());
     }
 
     @Test
-    public void testUpdateUser() {
+    void testUpdateUser() {
         User updatedUser = new User();
         updatedUser.setUserName("Updated Name");
         updatedUser.setUserEmail("updated@example.com");
@@ -76,14 +76,14 @@ public class UserServicesImplTest {
     }
 
     @Test
-    public void testDeleteUser() {
+    void testDeleteUser() {
         when(userRepository.existsById(1L)).thenReturn(true);
         doNothing().when(userRepository).deleteById(1L);
         assertTrue(userServices.deleteUser(1L));
     }
 
     @Test
-    public void testUpdateImage() throws IOException {
+    void testUpdateImage() throws IOException {
         MultipartFile file = mock(MultipartFile.class);
         when(file.getOriginalFilename()).thenReturn("image.jpg");
         when(file.getInputStream()).thenReturn(mock(InputStream.class));
@@ -96,7 +96,7 @@ public class UserServicesImplTest {
     }
 
     @Test
-    public void testGetImage() {
+    void testGetImage() {
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         User result = userServices.getImage(1L);
         assertEquals("Test User", result.getUserName());
