@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -17,139 +18,145 @@ import static org.mockito.Mockito.*;
 
 public class BorrowRecordControllerTest {
 
-    @Mock
-    private BorrowRecordServices borrowRecordServices;
+	@Mock
+	private BorrowRecordServices borrowRecordServices;
 
-    @InjectMocks
-    private BorrowRecordController borrowRecordController;
+	@InjectMocks
+	private BorrowRecordController borrowRecordController;
 
-    private BorrowRecord sampleRecord;
+	@Mock
+	private BindingResult bindingResult;
 
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
+	private BorrowRecord sampleRecord;
 
-        sampleRecord = new BorrowRecord();
-        sampleRecord.setBorrowId(1L);
-        sampleRecord.setBorrowStatus("Borrowed");
-        sampleRecord.setBorrowDate(LocalDate.now());
-        sampleRecord.setBorrowReturnDate(LocalDate.now().plusDays(7));
-    }
+	@BeforeEach
+	public void setUp() {
+		MockitoAnnotations.openMocks(this);
 
-    @Test
-    public void testCreateBorrowRecord() {
-        when(borrowRecordServices.createBorrowRecord(sampleRecord)).thenReturn(sampleRecord);
+		sampleRecord = new BorrowRecord();
+		sampleRecord.setBorrowId(1L);
+		sampleRecord.setBorrowStatus("Borrowed");
+		sampleRecord.setBorrowDate(LocalDate.now());
+		sampleRecord.setBorrowReturnDate(LocalDate.now().plusDays(7));
+	}
 
-        ResponseEntity<BorrowRecord> response = borrowRecordController.createBorrowRecord(sampleRecord);
+	@Test
+	public void testCreateBorrowRecord() {
+		when(bindingResult.hasErrors()).thenReturn(false);
+		when(borrowRecordServices.createBorrowRecord(sampleRecord)).thenReturn(sampleRecord);
 
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals(sampleRecord, response.getBody());
-    }
+		ResponseEntity<BorrowRecord> response = borrowRecordController.createBorrowRecord(sampleRecord, bindingResult);
 
-    @Test
-    public void testGetAllBorrowRecords() {
-        when(borrowRecordServices.getAllBorrowRecord()).thenReturn(Arrays.asList(sampleRecord));
+		assertEquals(HttpStatus.CREATED, response.getStatusCode());
+		assertEquals(sampleRecord, response.getBody());
+	}
 
-        ResponseEntity<List<BorrowRecord>> response = borrowRecordController.getAllBorrowRecords();
+	@Test
+	public void testGetAllBorrowRecords() {
+		when(borrowRecordServices.getAllBorrowRecord()).thenReturn(Arrays.asList(sampleRecord));
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(1, response.getBody().size());
-    }
+		ResponseEntity<List<BorrowRecord>> response = borrowRecordController.getAllBorrowRecords();
 
-    @Test
-    public void testGetBorrowRecordById() {
-        when(borrowRecordServices.getBorrowRecordById(1L)).thenReturn(sampleRecord);
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertEquals(1, response.getBody().size());
+	}
 
-        ResponseEntity<BorrowRecord> response = borrowRecordController.getBorrowRecordById(1L);
+	@Test
+	public void testGetBorrowRecordById() {
+		when(borrowRecordServices.getBorrowRecordById(1L)).thenReturn(sampleRecord);
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(sampleRecord, response.getBody());
-    }
+		ResponseEntity<BorrowRecord> response = borrowRecordController.getBorrowRecordById(1L);
 
-    @Test
-    public void testGetAllBorrowRecordByUser() {
-        when(borrowRecordServices.getAllBorrowRecordByUser(101L)).thenReturn(List.of(sampleRecord));
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertEquals(sampleRecord, response.getBody());
+	}
 
-        ResponseEntity<List<BorrowRecord>> response = borrowRecordController.getAllBorrowRecordByUser(101L);
+	@Test
+	public void testGetAllBorrowRecordByUser() {
+		when(borrowRecordServices.getAllBorrowRecordByUser(101L)).thenReturn(List.of(sampleRecord));
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(1, response.getBody().size());
-    }
+		ResponseEntity<List<BorrowRecord>> response = borrowRecordController.getAllBorrowRecordByUser(101L);
 
-    @Test
-    public void testGetAllBorrowRecordByBook() {
-        when(borrowRecordServices.getAllBorrowRecordByBook(201L)).thenReturn(List.of(sampleRecord));
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertEquals(1, response.getBody().size());
+	}
 
-        ResponseEntity<List<BorrowRecord>> response = borrowRecordController.getAllBorrowRecordByBook(201L);
+	@Test
+	public void testGetAllBorrowRecordByBook() {
+		when(borrowRecordServices.getAllBorrowRecordByBook(201L)).thenReturn(List.of(sampleRecord));
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-    }
+		ResponseEntity<List<BorrowRecord>> response = borrowRecordController.getAllBorrowRecordByBook(201L);
 
-    @Test
-    public void testGetBorrowRecordsByStatus() {
-        when(borrowRecordServices.getBorrowRecordsByStatus("Returned")).thenReturn(List.of(sampleRecord));
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+	}
 
-        ResponseEntity<List<BorrowRecord>> response = borrowRecordController.getBorrowRecordsByStatus("Returned");
+	@Test
+	public void testGetBorrowRecordsByStatus() {
+		when(borrowRecordServices.getBorrowRecordsByStatus("Returned")).thenReturn(List.of(sampleRecord));
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-    }
+		ResponseEntity<List<BorrowRecord>> response = borrowRecordController.getBorrowRecordsByStatus("Returned");
 
-    @Test
-    public void testGetAllOverdueRecords() {
-        when(borrowRecordServices.getAllOverdueRecords()).thenReturn(List.of(sampleRecord));
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+	}
 
-        ResponseEntity<List<BorrowRecord>> response = borrowRecordController.getAllOverdueRecords();
+	@Test
+	public void testGetAllOverdueRecords() {
+		when(borrowRecordServices.getAllOverdueRecords()).thenReturn(List.of(sampleRecord));
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-    }
+		ResponseEntity<List<BorrowRecord>> response = borrowRecordController.getAllOverdueRecords();
 
-    @Test
-    public void testMarkAsReturned() {
-        when(borrowRecordServices.markAsReturned(1L)).thenReturn(sampleRecord);
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+	}
 
-        ResponseEntity<BorrowRecord> response = borrowRecordController.markAsReturned(1L);
+	@Test
+	public void testMarkAsReturned() {
+		when(borrowRecordServices.markAsReturned(1L)).thenReturn(sampleRecord);
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(sampleRecord, response.getBody());
-    }
+		ResponseEntity<BorrowRecord> response = borrowRecordController.markAsReturned(1L);
 
-    @Test
-    public void testCalculateFine() {
-        when(borrowRecordServices.calculateFine(1L)).thenReturn(50);
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertEquals(sampleRecord, response.getBody());
+	}
 
-        ResponseEntity<Integer> response = borrowRecordController.calculateFine(1L);
+	@Test
+	public void testCalculateFine() {
+		when(borrowRecordServices.calculateFine(1L)).thenReturn(50);
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(50, response.getBody());
-    }
+		ResponseEntity<Integer> response = borrowRecordController.calculateFine(1L);
 
-    @Test
-    public void testCountByStatus() {
-        when(borrowRecordServices.countBorrowRecordsByStatus("Borrowed")).thenReturn(3L);
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertEquals(50, response.getBody());
+	}
 
-        ResponseEntity<Long> response = borrowRecordController.countByStatus("Borrowed");
+	@Test
+	public void testCountByStatus() {
+		when(borrowRecordServices.countBorrowRecordsByStatus("Borrowed")).thenReturn(3L);
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(3L, response.getBody());
-    }
+		ResponseEntity<Long> response = borrowRecordController.countByStatus("Borrowed");
 
-    @Test
-    public void testUpdateBorrowRecord() {
-        when(borrowRecordServices.updateBorrowRecord(eq(1L), any(BorrowRecord.class))).thenReturn(sampleRecord);
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertEquals(3L, response.getBody());
+	}
 
-        ResponseEntity<BorrowRecord> response = borrowRecordController.updateBorrowRecord(1L, sampleRecord);
+	@Test
+	public void testUpdateBorrowRecord() {
+		when(bindingResult.hasErrors()).thenReturn(false);
+		when(borrowRecordServices.updateBorrowRecord(eq(1L), any(BorrowRecord.class))).thenReturn(sampleRecord);
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(sampleRecord, response.getBody());
-    }
+		ResponseEntity<BorrowRecord> response = borrowRecordController.updateBorrowRecord(1L, sampleRecord,
+				bindingResult);
 
-    @Test
-    public void testDeleteBorrowRecord() {
-        doNothing().when(borrowRecordServices).deleteBorrowRecord(1L);
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertEquals(sampleRecord, response.getBody());
+	}
 
-        ResponseEntity<Void> response = borrowRecordController.deleteBorrowRecord(1L);
+	@Test
+	public void testDeleteBorrowRecord() {
+		doNothing().when(borrowRecordServices).deleteBorrowRecord(1L);
 
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-        verify(borrowRecordServices, times(1)).deleteBorrowRecord(1L);
-    }
+		ResponseEntity<Void> response = borrowRecordController.deleteBorrowRecord(1L);
+
+		assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+		verify(borrowRecordServices, times(1)).deleteBorrowRecord(1L);
+	}
 }

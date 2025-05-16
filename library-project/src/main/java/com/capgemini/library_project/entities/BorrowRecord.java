@@ -2,6 +2,7 @@ package com.capgemini.library_project.entities;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Entity;
@@ -10,6 +11,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,24 +23,29 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BorrowRecord {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long borrowId;
-	
-	@ManyToOne
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long borrowId;
+
+    @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "userId")
-//	@JsonBackReference
+    @JsonBackReference(value = "user-borrow")
     private User user;
-	
-	@ManyToOne
+
+    @ManyToOne
     @JoinColumn(name = "book_id", referencedColumnName = "bookId")
-//	@JsonBackReference
+    @JsonBackReference(value = "book-borrow")
     private Book book;
-	@JsonFormat(pattern = "yyyy-MM-dd")
-	private LocalDate borrowDate;
-	@JsonFormat(pattern = "yyyy-MM-dd")
-	private LocalDate borrowReturnDate;
-	private Integer fine;
-	
-	private String borrowStatus;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate borrowDate;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate borrowReturnDate;
+
+    @NotNull(message = "Fine is required")
+    private Integer fine;
+    
+    @NotBlank(message = "Borrow Status is required")
+    private String borrowStatus;
 }
