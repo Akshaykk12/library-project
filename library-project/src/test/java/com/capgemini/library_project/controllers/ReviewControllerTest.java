@@ -96,9 +96,10 @@ public class ReviewControllerTest {
 
 	@Test
 	public void testDeleteReview() {
-		doNothing().when(reviewServices).deleteReview(1L);
+		when(reviewServices.deleteReview(1L)).thenReturn(true);
 
-		ResponseEntity<Review> response = reviewController.deleteCourse(1L);
+
+		ResponseEntity<Review> response = reviewController.deleteReview(1L);
 
 		assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 	}

@@ -74,6 +74,7 @@ public class ReviewServicesImpl implements ReviewServices {
             reviewRepository.deleteById(id);
             logger.info("Review with ID {} successfully deleted", id);
             return true;
+            
         } else {
             logger.warn("Review with ID {} not found for deletion", id);
             return false;
