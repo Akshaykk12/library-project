@@ -66,7 +66,7 @@ public class AuthController {
 	@PostMapping("/register")
 	public ResponseEntity<User> registerUser(@RequestBody User user) {
 		System.err.println("in register api ");
-		if ((userService.existsByUserEmail(user.getUserName()) || userService.existsByUserEmail(user.getUserEmail())))
+		if ((userService.existsByUserName(user.getUserName()) || userService.existsByUserEmail(user.getUserEmail())))
 			throw new UserNotFoundException("Username or Email Exists !");
 		user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
 
