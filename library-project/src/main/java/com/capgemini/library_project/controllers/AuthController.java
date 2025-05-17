@@ -53,6 +53,7 @@ public class AuthController {
 			User user = userService.findByUserNameOrUserEmail(loginDto.getUserName(), loginDto.getUserName());
 			Map<String, Object> claims = new HashMap<>();
 			claims.put("email", user.getUserEmail());
+			claims.put("name", user.getUserName());
 			claims.put("userid", user.getUserId());
 			claims.put("usertype", user.getUserType());
 			String token = jwtService.generateToken(loginDto.getUserName(),claims);
