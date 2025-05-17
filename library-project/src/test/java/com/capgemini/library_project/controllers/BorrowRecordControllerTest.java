@@ -1,5 +1,6 @@
 package com.capgemini.library_project.controllers;
 
+import com.capgemini.library_project.dto.BorrowRequest;
 import com.capgemini.library_project.entities.BorrowRecord;
 import com.capgemini.library_project.services.BorrowRecordServices;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,15 +42,21 @@ class BorrowRecordControllerTest {
 	}
 
 	@Test
-	void testCreateBorrowRecord() {
-		when(bindingResult.hasErrors()).thenReturn(false);
-		when(borrowRecordServices.createBorrowRecord(sampleRecord)).thenReturn(sampleRecord);
+	void testBorrowBook() {
+	    BorrowRequest sampleRequest = new BorrowRequest();
+	    sampleRequest.setUserId(1L);
+	    sampleRequest.setBookId(2L);
 
-		ResponseEntity<BorrowRecord> response = borrowRecordController.createBorrowRecord(sampleRecord, bindingResult);
+	    when(borrowRecordServices.borrowBook(sampleRequest))
+	        .thenReturn(sampleRecord);
 
-		assertEquals(HttpStatus.CREATED, response.getStatusCode());
-		assertEquals(sampleRecord, response.getBody());
+	    ResponseEntity<BorrowRecord> response = 
+	        borrowRecordController.borrowBook(sampleRequest);
+
+	    assertEquals(HttpStatus.OK, response.getStatusCode());
+	    assertEquals(sampleRecord, response.getBody());
 	}
+
 
 	@Test
 	void testGetAllBorrowRecords() {
