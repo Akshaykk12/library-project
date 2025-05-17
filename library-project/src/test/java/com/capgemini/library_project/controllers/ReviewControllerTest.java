@@ -17,7 +17,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ReviewControllerTest {
+class ReviewControllerTest {
 
 	@Mock
 	private ReviewServices reviewServices;
@@ -31,7 +31,7 @@ public class ReviewControllerTest {
 	private BindingResult bindingResult;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		MockitoAnnotations.openMocks(this);
 
 		sampleReview = new Review();
@@ -41,7 +41,7 @@ public class ReviewControllerTest {
 	}
 
 	@Test
-	public void testGetAllReviews() {
+	void testGetAllReviews() {
 		when(reviewServices.getAllReviews()).thenReturn(Arrays.asList(sampleReview));
 
 		ResponseEntity<List<Review>> response = reviewController.getAllReviews();
@@ -52,7 +52,7 @@ public class ReviewControllerTest {
 	}
 
 	@Test
-	public void testGetReviewById() {
+	void testGetReviewById() {
 		when(reviewServices.getReviewById(1L)).thenReturn(sampleReview);
 
 		ResponseEntity<Review> response = reviewController.getReviewById(1L);
@@ -62,7 +62,7 @@ public class ReviewControllerTest {
 	}
 
 	@Test
-	public void testCreateReview() {
+	void testCreateReview() {
 		when(bindingResult.hasErrors()).thenReturn(false);
 		when(reviewServices.createReview(sampleReview)).thenReturn(sampleReview);
 
@@ -73,7 +73,7 @@ public class ReviewControllerTest {
 	}
 
 	@Test
-	public void testUpdateReview_Found() {
+	void testUpdateReview_Found() {
 		when(bindingResult.hasErrors()).thenReturn(false);
 		when(reviewServices.updateReview(eq(1L), any(Review.class))).thenReturn(sampleReview);
 
@@ -84,7 +84,7 @@ public class ReviewControllerTest {
 	}
 
 	@Test
-	public void testUpdateReview_NotFound() {
+	void testUpdateReview_NotFound() {
 		when(bindingResult.hasErrors()).thenReturn(false);
 		when(reviewServices.updateReview(eq(2L), any(Review.class))).thenReturn(null);
 
@@ -96,9 +96,10 @@ public class ReviewControllerTest {
 
 	@Test
 	public void testDeleteReview() {
-		doNothing().when(reviewServices).deleteReview(1L);
+		when(reviewServices.deleteReview(1L)).thenReturn(true);
 
-		ResponseEntity<Review> response = reviewController.deleteCourse(1L);
+
+		ResponseEntity<Review> response = reviewController.deleteReview(1L);
 
 		assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 	}

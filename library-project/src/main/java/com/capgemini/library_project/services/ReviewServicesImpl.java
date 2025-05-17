@@ -16,6 +16,8 @@ import com.capgemini.library_project.repositories.UserRepository;
 
 @Service
 public class ReviewServicesImpl implements ReviewServices {
+	
+	private static final String REVIEW_NOT_FOUND_MSG = "Review with ID {} not found";
 
     private static final Logger logger = LoggerFactory.getLogger(ReviewServicesImpl.class);
 
@@ -43,7 +45,7 @@ public class ReviewServicesImpl implements ReviewServices {
         logger.info("Fetching review by ID: {}", id);
         return reviewRepository.findById(id)
                 .orElseThrow(() -> {
-                    logger.error("Review with ID {} not found", id);
+                    logger.error(REVIEW_NOT_FOUND_MSG, id);
                     return new RuntimeException("Review with Id " + id + " not found");
                 });
     }
@@ -59,7 +61,7 @@ public class ReviewServicesImpl implements ReviewServices {
         logger.info("Updating review with ID: {}", id);
         Review exist = reviewRepository.findById(id)
                 .orElseThrow(() -> {
-                    logger.error("Review with ID {} not found for update", id);
+                    logger.error(REVIEW_NOT_FOUND_MSG, id);
                     return new RuntimeException("Review with Id " + id + " not found");
                 });
         exist.setFeedback(updated.getFeedback());
@@ -74,6 +76,7 @@ public class ReviewServicesImpl implements ReviewServices {
             reviewRepository.deleteById(id);
             logger.info("Review with ID {} successfully deleted", id);
             return true;
+            
         } else {
             logger.warn("Review with ID {} not found for deletion", id);
             return false;
@@ -105,7 +108,7 @@ public class ReviewServicesImpl implements ReviewServices {
 
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> {
-                    logger.error("Review with ID {} not found", reviewId);
+                    logger.error(REVIEW_NOT_FOUND_MSG, reviewId);
                     return new RuntimeException("Review Not Found");
                 });
 
@@ -139,7 +142,7 @@ public class ReviewServicesImpl implements ReviewServices {
 
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> {
-                    logger.error("Review with ID {} not found", reviewId);
+                    logger.error(REVIEW_NOT_FOUND_MSG, reviewId);
                     return new RuntimeException("Review Not Found");
                 });
 

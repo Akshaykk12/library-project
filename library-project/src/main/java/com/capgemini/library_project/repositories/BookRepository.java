@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BookRepository extends JpaRepository<Book, Long> {
-	
-	@Modifying
+
+  @Modifying
 	@Transactional
 	@Query("UPDATE Book b SET b.bookCover = :image WHERE b.id = :bookId")
 	int updateImage(@Param("image") String image, @Param("bookId") Long bookId);
