@@ -95,4 +95,34 @@ public class CategoryController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
 	}
+	
+	 @GetMapping("/name/{name}")
+	    public List<Category> getByName(@PathVariable String name) {
+	        return categoryServices.getByCategoryName(name);
+	    }
+
+	    @GetMapping("/name-contains")
+	    public List<Category> getByNameContaining(@RequestParam String fragment) {
+	        return categoryServices.getByCategoryNameContaining(fragment);
+	    }
+
+	    @GetMapping("/search-description")
+	    public List<Category> searchByDescription(@RequestParam String keyword) {
+	        return categoryServices.searchByDescription(keyword);
+	    }
+
+	    @GetMapping("/book-counts")
+	    public List<Object[]> countBooksPerCategory() {
+	        return categoryServices.countBooksPerCategory();
+	    }
+
+	    @GetMapping("/available")
+	    public List<Category> getCategoriesWithAvailableBooks() {
+	        return categoryServices.findWithAvailableBooks();
+	    }
+
+	    @GetMapping("/sorted-by-book-count")
+	    public List<Category> getAllCategoriesSortedByBookCount() {
+	        return categoryServices.getAllOrderByBookCountDesc();
+	    }
 }

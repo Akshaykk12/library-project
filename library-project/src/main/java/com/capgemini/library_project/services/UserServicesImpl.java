@@ -25,7 +25,7 @@ public class UserServicesImpl implements UserServices{
 
 	 private static final Logger logger = LoggerFactory.getLogger(UserServicesImpl.class);
 	    private final UserRepository userRepository;
-	    private final String UPLOAD_DIR = "uploads/";
+	    private static final String UPLOAD_DIR = "uploads/";
 
 	    @Autowired
 	    public UserServicesImpl(UserRepository userRepository) {
@@ -113,13 +113,15 @@ public class UserServicesImpl implements UserServices{
 
 		@Override
 		public User findByUserNameOrUserEmail(String name, String email) {
-			// TODO Auto-generated method stub
 			return userRepository.findByUserNameOrUserEmail(name, email).orElseThrow(() -> new UserNotFoundException("User not found with given eamil: "+email));
 		}
 
 		@Override
 		public boolean existsByUserEmail(String email) {
-			// TODO Auto-generated method stub
 			return userRepository.existsByUserEmail(email);
+		}
+		@Override
+		public boolean existsByUserName(String name) {
+			return userRepository.existsByUserName(name);
 		}
 }
