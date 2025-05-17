@@ -1,5 +1,6 @@
 package com.capgemini.library_project.controllers;
 
+import com.capgemini.library_project.dto.BookDto;
 import com.capgemini.library_project.entities.Book;
 import com.capgemini.library_project.repositories.BookRepository;
 import com.capgemini.library_project.services.BookServices;
@@ -97,13 +98,32 @@ class BookControllerTest {
 
 	@Test
 	void testGetAllBooks() {
-		List<Book> books = Arrays.asList(new Book(), new Book());
-		when(bookService.getAllBooks()).thenReturn(books);
+	    Book book1 = new Book();
+	    book1.setBookId(1L);
+	    book1.setBookTitle("Book One");
+	    book1.setTotalCopies(10L);
+	    book1.setAvailableCopies(5L);
 
-		ResponseEntity<List<Book>> response = bookController.getAllBooks();
+	    Book book2 = new Book();
+	    book2.setBookId(2L);
+	    book2.setBookTitle("Book Two");
+	    book2.setTotalCopies(8L);
+	    book2.setAvailableCopies(4L);
 
-		assertEquals(HttpStatus.OK, response.getStatusCode());
-		assertEquals(2, response.getBody().size());
+	    List<Book> books = Arrays.asList(book1, book2);
+	    when(bookService.getAllBooks()).thenReturn(books);
+
+	    ResponseEntity<List<BookDto>> response = bookController.getAllBooks();
+
+	    assertEquals(HttpStatus.OK, response.getStatusCode());
+	    assertNotNull(response.getBody());
+	    assertEquals(2, response.getBody().size());
+
+	    BookDto dto1 = response.getBody().get(0);
+	    assertEquals("Book One", dto1.getBookTitle());
+
+	    BookDto dto2 = response.getBody().get(1);
+	    assertEquals("Book Two", dto2.getBookTitle());
 	}
 
 	@Test
