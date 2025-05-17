@@ -113,9 +113,7 @@ public class BorrowRecordController {
 	public ResponseEntity<BorrowRecord> updateBorrowRecord(@PathVariable Long borrowId,
 			@Valid @RequestBody BorrowRecord updatedBorrowRecord, BindingResult bindingResult) {
 		logger.info("PUT: Updating borrow record {}", borrowId);
-		if (bindingResult.hasErrors()) {
-			throw new IllegalArgumentException("Invalid Data");
-		}
+		
 		return ResponseEntity.ok(borrowRecordServices.updateBorrowRecord(borrowId, updatedBorrowRecord));
 	}
 

@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 import com.capgemini.library_project.entities.Book;
 import com.capgemini.library_project.entities.Review;
 import com.capgemini.library_project.entities.User;
+import com.capgemini.library_project.exceptions.BookNotFoundException;
+import com.capgemini.library_project.exceptions.ReviewNotFoundException;
+import com.capgemini.library_project.exceptions.UserNotFoundException;
 import com.capgemini.library_project.repositories.BookRepository;
 import com.capgemini.library_project.repositories.ReviewRepository;
 import com.capgemini.library_project.repositories.UserRepository;
@@ -44,7 +47,7 @@ public class ReviewServicesImpl implements ReviewServices {
         return reviewRepository.findById(id)
                 .orElseThrow(() -> {
                     logger.error("Review with ID {} not found", id);
-                    return new RuntimeException("Review with Id " + id + " not found");
+                    return new ReviewNotFoundException("Review with Id " + id + " not found");
                 });
     }
 
@@ -60,7 +63,7 @@ public class ReviewServicesImpl implements ReviewServices {
         Review exist = reviewRepository.findById(id)
                 .orElseThrow(() -> {
                     logger.error("Review with ID {} not found for update", id);
-                    return new RuntimeException("Review with Id " + id + " not found");
+                    return new ReviewNotFoundException("Review with Id " + id + " not found");
                 });
         exist.setFeedback(updated.getFeedback());
         exist.setRating(updated.getRating());
@@ -86,7 +89,7 @@ public class ReviewServicesImpl implements ReviewServices {
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> {
                     logger.error("Book with ID {} not found", bookId);
-                    return new RuntimeException("Book Not Found");
+                    return new BookNotFoundException("Book with ID " + bookId + " not found.");
                 });
 
         review.setBook(book);
@@ -100,13 +103,13 @@ public class ReviewServicesImpl implements ReviewServices {
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> {
                     logger.error("Book with ID {} not found", bookId);
-                    return new RuntimeException("Book Not Found");
+                    return new BookNotFoundException("Book with ID " + bookId + " not found.");
                 });
 
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> {
                     logger.error("Review with ID {} not found", reviewId);
-                    return new RuntimeException("Review Not Found");
+                    return new ReviewNotFoundException("Review with Id " + reviewId + " not found");
                 });
 
         book.getReviews().add(review);
@@ -120,7 +123,7 @@ public class ReviewServicesImpl implements ReviewServices {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> {
                     logger.error("User with ID {} not found", userId);
-                    return new RuntimeException("User Not Found");
+                    return new UserNotFoundException("User with id : " + userId + " not found.");
                 });
 
         review.setUser(user);
@@ -134,13 +137,13 @@ public class ReviewServicesImpl implements ReviewServices {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> {
                     logger.error("User with ID {} not found", userId);
-                    return new RuntimeException("User Not Found");
+                    return new UserNotFoundException("User with id : " + userId + " not found.");
                 });
 
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> {
                     logger.error("Review with ID {} not found", reviewId);
-                    return new RuntimeException("Review Not Found");
+                    return new ReviewNotFoundException("Review with Id " + reviewId + " not found");
                 });
 
         user.getReviews().add(review);

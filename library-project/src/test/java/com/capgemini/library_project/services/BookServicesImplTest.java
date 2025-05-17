@@ -125,9 +125,9 @@ class BookServicesImplTest {
     void testGetBookById() {
         when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
 
-        Optional<Book> result = bookServices.getBookById(1L);
-        assertTrue(result.isPresent());
-        assertEquals(book, result.get());
+        Book result = bookServices.getBookById(1L);
+        assertTrue(result!=null);
+        assertEquals(book, result);
     }
 
     @Test
