@@ -150,4 +150,33 @@ public class ReviewServicesImpl implements ReviewServices {
         review.setUser(user);
         userRepository.save(user);
     }
+  @Override
+	public List<Review> getReviewsByBookId(Long bookId) {
+		logger.info("Fetching reviews for book ID: {}", bookId);
+		return reviewRepository.findByBookId(bookId);
+	}
+
+	@Override
+	public List<Review> getReviewsByUserId(Long userId) {
+		logger.info("Fetching reviews for user ID: {}", userId);
+		return reviewRepository.findByUserId(userId);
+	}
+
+	@Override
+	public Double getAverageRatingByBookId(Long bookId) {
+		logger.info("Calculating average rating for book ID: {}", bookId);
+		return reviewRepository.findAverageRatingByBookId(bookId);
+	}
+
+	@Override
+	public List<Review> getReviewsWithMinRating(int minRating) {
+		logger.info("Fetching reviews with minimum rating of: {}", minRating);
+		return reviewRepository.findReviewsWithMinRating(minRating);
+	}
+
+	@Override
+	public Long countReviewsByBookId(Long bookId) {
+		logger.info("Counting reviews for book ID: {}", bookId);
+		return reviewRepository.countReviewsByBookId(bookId);
+	}
 }
