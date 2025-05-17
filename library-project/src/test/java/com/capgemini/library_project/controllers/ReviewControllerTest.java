@@ -86,9 +86,9 @@ class ReviewControllerTest {
 	@Test
 	void testUpdateReview_NotFound() {
 		when(bindingResult.hasErrors()).thenReturn(false);
-		when(reviewServices.updateReview(eq(2L), any(Review.class))).thenReturn(null);
+		when(reviewServices.updateReview(eq(1L), any(Review.class))).thenReturn(null);
 
-		ResponseEntity<Review> response = reviewController.updateReview(2L, sampleReview, bindingResult);
+		ResponseEntity<Review> response = reviewController.updateReview(1L, sampleReview, bindingResult);
 
 		assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
 		assertNull(response.getBody());
