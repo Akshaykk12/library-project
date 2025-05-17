@@ -97,7 +97,7 @@ public class ReviewController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Review> deleteCourse(@PathVariable Long id) {
+	public ResponseEntity<Review> deleteReview(@PathVariable Long id) {
 		logger.info("DELETE request received: delete review with ID {}", id);
 		reviewServices.deleteReview(id);
 		return ResponseEntity.noContent().build();

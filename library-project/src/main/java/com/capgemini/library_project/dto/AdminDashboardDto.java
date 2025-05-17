@@ -1,7 +1,5 @@
 package com.capgemini.library_project.dto;
 
-import java.awt.print.Book;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +17,7 @@ public class AdminDashboardDto {
 	private Integer userCount;
 	private Integer issueCount;
 	private Integer overdueCount;
-	private Map<String ,Long> genreCount;
+
+  private Map<String ,Long> categoryCount;
 	private List<TrendingBookForUserDto> topBooksCount;
 }
