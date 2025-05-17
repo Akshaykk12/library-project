@@ -47,6 +47,7 @@ class BorrowRecordServicesImplTest {
 
         book = new Book();
         book.setBookId(1L);
+        book.setAvailableCopies(3);
 
         brecord = new BorrowRecord();
         brecord.setBorrowId(1L);
