@@ -24,8 +24,6 @@ public interface BookServices {
 
 	List<Book> getBooksByAuthorId(Long authorId);
 
-//	List<Book> getBooksByCategoryId(Long categoryId);
-
 	Book updateImage(Long bookId, MultipartFile image) throws IOException;
 
 	public Book getImage(Long bookId);
