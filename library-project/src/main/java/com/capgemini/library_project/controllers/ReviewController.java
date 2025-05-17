@@ -61,6 +61,9 @@ public class ReviewController {
 			throw new IllegalArgumentException("Invalid Data");
 		}
 		Review updated = reviewServices.updateReview(id, newReview);
+		if (updated == null) {
+	        return ResponseEntity.notFound().build();  
+	    }
 		return ResponseEntity.ok(updated);
 	}
 
