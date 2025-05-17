@@ -43,6 +43,38 @@ public class ReviewController {
 		return ResponseEntity.ok(reviewServices.getReviewById(id));
 	}
 
+	@GetMapping("/book/{bookId}")
+	public ResponseEntity<List<Review>> getReviewsByBook(@PathVariable Long bookId) {
+		logger.info("GET request received: fetch all reviews for book ID {}", bookId);
+		List<Review> reviews = reviewServices.getReviewsByBookId(bookId);
+		return ResponseEntity.ok(reviews);
+	}
+
+	@GetMapping("/user/{userId}")
+	public ResponseEntity<List<Review>> getReviewsByUser(@PathVariable Long userId) {
+		logger.info("GET request received: fetch all reviews for user ID {}", userId);
+		List<Review> reviews = reviewServices.getReviewsByUserId(userId);
+		return ResponseEntity.ok(reviews);
+	}
+
+	@GetMapping("/book/{bookId}/average-rating")
+	public ResponseEntity<Double> getAverageRating(@PathVariable Long bookId) {
+		logger.info("GET request: average rating for book ID {}", bookId);
+		return ResponseEntity.ok(reviewServices.getAverageRatingByBookId(bookId));
+	}
+
+	@GetMapping("/min-rating/{minRating}")
+	public ResponseEntity<List<Review>> getReviewsWithMinRating(@PathVariable int minRating) {
+		logger.info("GET request: reviews with minimum rating {}", minRating);
+		return ResponseEntity.ok(reviewServices.getReviewsWithMinRating(minRating));
+	}
+
+	@GetMapping("/book/{bookId}/count")
+	public ResponseEntity<Long> countReviews(@PathVariable Long bookId) {
+		logger.info("GET request: count reviews for book ID {}", bookId);
+		return ResponseEntity.ok(reviewServices.countReviewsByBookId(bookId));
+	}
+
 	@PostMapping
 	public ResponseEntity<Review> createReview(@Valid @RequestBody Review review, BindingResult bindingResult) {
 		logger.info("POST request received: create new review");
