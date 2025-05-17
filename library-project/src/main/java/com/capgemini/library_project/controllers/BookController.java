@@ -71,8 +71,14 @@ public class BookController {
 	@GetMapping("/{id}")
 	public ResponseEntity<Book> getBookById(@PathVariable("id") Long id) {
 		logger.info("GET: Fetching book with ID {}", id);
-		Optional<Book> book = bookService.getBookById(id);
-		return book.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+		Book book = bookService.getBookById(id);
+		//return book.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+		
+		if (book != null) {
+	        return ResponseEntity.ok(book);
+	    } else {
+	    	return ResponseEntity.notFound().build();
+	    }
 	}
 
 	@GetMapping

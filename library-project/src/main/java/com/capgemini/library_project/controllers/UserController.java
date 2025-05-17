@@ -55,9 +55,7 @@ public class UserController {
 	@PostMapping
 	public ResponseEntity<User> createUser(@Valid @RequestBody User user, BindingResult bindingResult) {
 		logger.info("Received request to create user: {}", user.getUserName());
-		if (bindingResult.hasErrors()) {
-			throw new IllegalArgumentException("Invalid Data");
-		}
+		
 		User savedUser = userServices.createUser(user);
 		return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
 	}

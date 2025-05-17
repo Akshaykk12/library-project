@@ -57,7 +57,7 @@ public class CategoryServicesImpl implements CategoryServices {
             return categoryRepository.save(category);
         } else {
             logger.warn("Category with ID {} not found for update", categoryId);
-            return null;
+            throw  new CategoryNotFoundException("Category with ID " + categoryId + " Not Found !!");
         }
     }
 
@@ -76,7 +76,8 @@ public class CategoryServicesImpl implements CategoryServices {
             return categoryRepository.save(category);
         } else {
             logger.warn("Category with ID {} not found for patching", categoryId);
-            return null;
+           throw  new CategoryNotFoundException("Category with ID " + categoryId + " Not Found !!");
+            
         }
     }
 
@@ -89,7 +90,7 @@ public class CategoryServicesImpl implements CategoryServices {
             return true;
         } else {
             logger.warn("Category with ID {} not found for deletion", categoryId);
-            return false;
+            throw  new CategoryNotFoundException("Category with ID " + categoryId + " Not Found !!");
         }
     }
 }
