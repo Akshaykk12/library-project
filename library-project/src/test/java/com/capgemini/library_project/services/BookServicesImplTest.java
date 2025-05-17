@@ -51,8 +51,8 @@ class BookServicesImplTest {
         book = new Book();
         book.setBookId(1L);
         book.setBookTitle("Test Book");
-        book.setTotalCopies(5);
-        book.setAvailableCopies(5);
+        book.setTotalCopies(5L);
+        book.setAvailableCopies(5L);
     }
 
     @Test

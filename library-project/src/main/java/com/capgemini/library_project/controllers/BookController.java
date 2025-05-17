@@ -1,5 +1,7 @@
 package com.capgemini.library_project.controllers;
 
+import com.capgemini.library_project.dto.AdminDashboardDto;
+import com.capgemini.library_project.dto.TrendingBookForUserDto;
 import com.capgemini.library_project.entities.Book;
 import com.capgemini.library_project.repositories.BookRepository;
 import com.capgemini.library_project.services.BookServices;
@@ -21,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -152,5 +155,20 @@ public class BookController {
 		book.setBookCover(null);
 		bookRepository.save(book);
 		return ResponseEntity.ok().build();
+	}
+	
+	@GetMapping("/categoryCount")
+	public ResponseEntity<Map<String, Long>> findGenreCount() {
+		return ResponseEntity.status(200).body(bookService.findCategoryCount());
+	}
+	
+	@GetMapping("/adminData")
+	public ResponseEntity<AdminDashboardDto> getAdminDashBoardData(){
+		return ResponseEntity.status(200).body(bookService.dashBoardDto());
+	}
+	
+	@GetMapping("/userData")
+	public ResponseEntity<List<TrendingBookForUserDto>> getUserDisplayData(){
+		return ResponseEntity.status(200).body(bookService.getTrendingBooksForUser());
 	}
 }
