@@ -67,24 +67,26 @@ class BorrowRecordServicesImplTest {
 
     @Test
     void testCreateBorrowRecord() {
-    	
         BorrowRequest dto = new BorrowRequest();
         dto.setUserId(user.getUserId());
         dto.setBookId(book.getBookId());
+
+        book.setAvailableCopies(1L);
 
         when(bookRepository.findById(book.getBookId()))
             .thenReturn(Optional.of(book));
         when(userRepository.findById(user.getUserId()))
             .thenReturn(Optional.of(user));
-        when(book.getAvailableCopies()).thenReturn(1L);
 
         BorrowRecord result = borrowRecordServices.borrowBook(dto);
+
         assertNotNull(result);
         assertEquals("Borrowed", result.getBorrowStatus());
         assertEquals(user, result.getUser());
         assertEquals(book, result.getBook());
         verify(bookRepository).save(book);
     }
+
 
     @Test
     void testGetBorrowRecordById() {
