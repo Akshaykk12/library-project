@@ -18,9 +18,12 @@ import java.util.UUID;
 
 @Service
 public class AuthorServicesImpl implements AuthorServices {
+	
+	private static final String AUTHOR_NOT_FOUND_MSG = "Author with ID {} not found";
+
 
 	private static final Logger logger = LoggerFactory.getLogger(AuthorServicesImpl.class);
-	private final String UPLOAD_DIR = "uploads/";
+	private static final String UPLOAD_DIR = "uploads/";
 
 	private final AuthorRepository authorRepository;
 
@@ -31,7 +34,6 @@ public class AuthorServicesImpl implements AuthorServices {
 
 	@Override
 	public Author createAuthor(Author a) {
-		// TODO Auto-generated method stub
 		if(authorRepository.findByAuthorName(a.getAuthorName()).isPresent()) {
 			throw new AuthorAlreadyExistsException("Author Already Exists");
 		}
@@ -50,7 +52,7 @@ public class AuthorServicesImpl implements AuthorServices {
 		logger.info("Updating author with ID: {}", id);
 		Author author = authorRepository.findById(id)
 				.orElseThrow(() -> {
-					logger.error("Author with ID {} not found", id);
+					logger.error(AUTHOR_NOT_FOUND_MSG, id);
 					return new AuthorNotFoundException(id);
 				});
 		author.setAuthorName(a.getAuthorName());
@@ -64,7 +66,7 @@ public class AuthorServicesImpl implements AuthorServices {
 		logger.info("Fetching author with ID: {}", id);
 		return authorRepository.findById(id)
 				.orElseThrow(() -> {
-					logger.error("Author with ID {} not found", id);
+					logger.error(AUTHOR_NOT_FOUND_MSG, id);
 					return new AuthorNotFoundException(id);				
 					});
 	}
@@ -74,7 +76,7 @@ public class AuthorServicesImpl implements AuthorServices {
 		logger.info("Deleting author with ID: {}", id);
 		Author author = authorRepository.findById(id)
 				.orElseThrow(() -> {
-					logger.error("Author with ID {} not found", id);
+					logger.error(AUTHOR_NOT_FOUND_MSG, id);
 					return new AuthorNotFoundException(id);
 				});
 		authorRepository.delete(author);
