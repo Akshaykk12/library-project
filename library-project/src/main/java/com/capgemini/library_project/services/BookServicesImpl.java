@@ -129,21 +129,16 @@ public class BookServicesImpl implements BookServices {
 		// Ensure the upload directory exists
 		Files.createDirectories(Paths.get(UPLOAD_DIR));
 
-		// Generate a unique file name
 		String fileName = UUID.randomUUID() + "_" + image.getOriginalFilename();
 		Path filePath = Paths.get(UPLOAD_DIR, fileName);
 
-		// Save the uploaded image file
 		Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-		// Find the existing user
 		Book user = bookRepository.findById(bookId)
 				.orElseThrow(() -> new BookNotFoundException("Book with id " + bookId + " not found"));
 
-		// Update the user's image path
 		user.setBookCover(fileName);
 
-		// Save and return the updated user
 		return bookRepository.save(user);
 	}
 
@@ -160,15 +155,11 @@ public class BookServicesImpl implements BookServices {
 	@Override
 	public AdminDashboardDto dashBoardDto() {
 		
-		for (Object[] row : bookRepository.findCategoryCount()) {
-		    System.out.println("genre: " + row[0].getClass() + ", count: " + row[1].getClass());
-		}
-
 		
 		Integer authorCount = authorRepository.findAll().size();
 		Integer bookCount = bookRepository.findAll().size();
 		Integer userCount = userRepository.findAll().size();
-		Integer issueCount =  borrowRecordRepository.findAll().stream().filter(rec-> rec.getBorrowStatus()=="Issued").collect(Collectors.toList()).size();
+		Integer issueCount = borrowRecordRepository.findAll().stream().filter(rec -> "Issued".equals(rec.getBorrowStatus())).collect(Collectors.toList()).size();
 		Integer overdueCount =  borrowRecordRepository.findAll().stream().filter(rec-> rec.getBorrowStatus()=="Overdue").collect(Collectors.toList()).size();
 		 Map<String, Long> genreCount = bookRepository.findCategoryCount().stream().collect(Collectors.toMap(ele -> (String) ele[0],ele -> ((Long) ele[1])));
 		 List<TrendingBookForUserDto> topBooksCount =  topBorrowedBooks(); 
