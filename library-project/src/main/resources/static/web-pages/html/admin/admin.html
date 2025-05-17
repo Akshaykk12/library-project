@@ -1,0 +1,601 @@
+Admin.html
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Dashboard - Library Management System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+  <style>
+    body {
+      padding-top: 56px;
+    }
+
+    .offcanvas-sidebar {
+      width: 200px;
+    }
+
+    .list-group-item {
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .list-group-item:hover {
+      background-color: #f8f9fa;
+      cursor: pointer;
+    }
+
+    .sidebar-icon {
+      margin-right: 10px;
+    }
+
+    .badge-notification {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+    }
+
+    canvas {
+      max-height: 300px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container-fluid">
+      <!-- Sidebar Toggle Button on the Left -->
+      <button id="sidebarToggle" class="btn btn-outline-light me-3" type="button" data-bs-toggle="offcanvas"
+        data-bs-target="#offcanvasSidebar" aria-controls="offcanvasSidebar">
+        <i class="bi bi-list" id="toggleIcon"></i>
+      </button>
+
+      <!-- Library Brand -->
+      <a class="navbar-brand" href="Admin.html"><i class="bi bi-book"></i> Library</a>
+
+      <!-- Navbar toggle for mobile -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbarContent"
+        aria-controls="adminNavbarContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Navbar content -->
+      <div class="collapse navbar-collapse" id="adminNavbarContent">
+        <!-- Search bar -->
+        <form class="d-flex ms-auto">
+          <input class="form-control me-2" type="search" placeholder="Search books, authors, members"
+            aria-label="Search" />
+          <button class="btn btn-outline-success" type="submit">
+            Search
+          </button>
+        </form>
+
+        <!-- Admin dropdown -->
+        <ul class="navbar-nav ms-3">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              <i class="bi bi-person-circle sidebar-icon"></i> Admin
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminDropdown">
+              <li>
+                <a class="dropdown-item" href="#" onclick="loadPage('AdminProfile.html')"><i
+                    class="bi bi-person sidebar-icon"></i> Profile</a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="#" onclick="LogOut('home.html')"><i
+                    class="bi bi-box-arrow-right sidebar-icon"></i>
+                  Logout</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Offcanvas Sidebar -->
+  <div class="offcanvas offcanvas-start offcanvas-sidebar" tabindex="-1" id="offcanvasSidebar"
+    aria-labelledby="offcanvasSidebarLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="offcanvasSidebarLabel">Menu</h5>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body position-relative">
+      <div class="list-group">
+        <!-- <a
+            class="list-group-item list-group-item-action"
+            data-bs-toggle="collapse"
+            href="#dashboardSubmenu"
+            role="button"
+            aria-expanded="false"
+            aria-controls="dashboardSubmenu"
+          >
+            <i class="bi bi-speedometer2 sidebar-icon"></i> Dashboard
+          </a>
+          <div class="collapse" id="dashboardSubmenu">
+            <div class="card card-body">
+
+
+
+
+
+              <a
+                class="list-group-item list-group-item-action"
+                href="#"
+                onclick="loadDashboard()"
+              >
+                <i class="bi bi-house-door sidebar-icon"></i> Admin Dashboard
+              </a>
+
+              <a
+                href="#"
+                class="list-group-item list-group-item-action"
+                onclick="loadPage('../html/Book.html')"
+              >
+                <i class="bi bi-book sidebar-icon"></i> Total Books
+              </a>
+              <a href="#" class="list-group-item list-group-item-action">
+                <i class="bi bi-journal-check sidebar-icon"></i> Books Issued
+              </a>
+              <a
+                href="#"
+                class="list-group-item list-group-item-action"
+                onclick="loadPage('../html/RegisteredUsers.html')"
+              >
+                <i class="bi bi-people sidebar-icon"></i> Registered Members
+              </a>
+              <a
+                href="#"
+                class="list-group-item list-group-item-action"
+                onclick="loadPage('../html/Author.html')"
+              >
+                <i class="bi bi-people sidebar-icon"></i> Register Authors
+              </a>
+              <a href="#" class="list-group-item list-group-item-action">
+                <i class="bi bi-exclamation-circle sidebar-icon"></i> Overdue
+                Returns
+              </a>
+            </div>
+          </div> -->
+
+        <a class="list-group-item list-group-item-action" href="#" onclick="loadPage('Book.html')">
+          <i class="bi bi-book sidebar-icon"></i> All Books
+        </a>
+        <a class="list-group-item list-group-item-action" href="#" onclick="loadPage('RegisteredUsers.html')">
+          <i class="bi bi-people sidebar-icon"></i> All Users
+        </a>
+        <a class="list-group-item list-group-item-action" href="#" onclick="loadPage('Author.html')">
+          <i class="bi bi-people sidebar-icon"></i> Authors
+        </a>
+        <a class="list-group-item list-group-item-action" href="#" onclick="loadPage('Overdue.html')">
+          <i class="bi bi-exclamation-circle sidebar-icon"></i> Overdue
+        </a>
+        <a class="list-group-item list-group-item-action" href="#">
+          <i class="bi bi-arrow-repeat sidebar-icon"></i> Returns
+        </a>
+        <!--  -->
+        <a class="list-group-item list-group-item-action" data-bs-toggle="collapse" href="#queriesSubmenu" role="button"
+          aria-expanded="false" aria-controls="queriesSubmenu">
+          <i class="bi bi-question-circle sidebar-icon"></i> User Queries
+        </a>
+        <div class="collapse" id="queriesSubmenu">
+          <div class="card card-body">
+            <a href="#" class="list-group-item list-group-item-action">
+              <i class="bi bi-exclamation-triangle sidebar-icon"></i> Unsolved
+            </a>
+            <a href="#" class="list-group-item list-group-item-action">
+              <i class="bi bi-check2-circle sidebar-icon"></i> Solved
+            </a>
+          </div>
+        </div>
+        <!--  -->
+        <a class="list-group-item list-group-item-action position-relative" href="#" onclick="loadPage('Reports.html')">
+          <i class="bi bi-bell sidebar-icon"></i> Reports
+          <span class="badge bg-danger rounded-pill badge-notification"></span>
+        </a>
+
+        <a type="button" class="list-group-item list-group-item-action" href="#" onclick="LogOut('home.html')">
+          <i class="bi bi-box-arrow-right sidebar-icon"></i> Logout
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <main class="container mt-5" id="main-content">
+    <h1 class="mb-4">Admin Dashboard</h1>
+    <div class="row g-4">
+      <!-- Authors Card -->
+      <div class="col-md-4">
+        <div class="card text-white bg-secondary shadow h-100">
+          <div class="card-body d-flex justify-content-between align-items-center">
+            <div>
+              <h5 class="card-title">Authors</h5>
+              <p class="card-text fs-4" id="author-count">--</p>
+            </div>
+            <i class="bi bi-pen fs-1"></i>
+          </div>
+          <div class="card-footer text-end bg-transparent border-0">
+            <a href="#" class="text-white text-decoration-underline" onclick="loadPage('Author.html')">View Authors</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Books Card -->
+      <div class="col-md-4">
+        <div class="card text-white bg-secondary shadow h-100">
+          <div class="card-body d-flex justify-content-between align-items-center">
+            <div>
+              <h5 class="card-title">Books</h5>
+              <p class="card-text fs-4" id="book-count">--</p>
+            </div>
+            <i class="bi bi-book fs-1"></i>
+          </div>
+          <div class="card-footer text-end bg-transparent border-0">
+            <a href="#" class="text-white text-decoration-underline" onclick="loadPage('Book.html')">View Books</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Registered Users Card -->
+      <div class="col-md-4">
+        <div class="card text-white bg-secondary shadow h-100">
+          <div class="card-body d-flex justify-content-between align-items-center">
+            <div>
+              <h5 class="card-title">Registered Users</h5>
+              <p class="card-text fs-4" id="user-count">--</p>
+            </div>
+            <i class="bi bi-people fs-1"></i>
+          </div>
+          <div class="card-footer text-end bg-transparent border-0">
+            <a href="#" class="text-white text-decoration-underline" onclick="loadPage('RegisteredUsers.html')">View
+              Users</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Issued Books Card -->
+      <div class="col-md-4">
+        <div class="card text-white bg-secondary shadow h-100">
+          <div class="card-body d-flex justify-content-between align-items-center">
+            <div>
+              <h5 class="card-title">Issued Books</h5>
+              <p class="card-text fs-4" id="issued-count">--</p>
+            </div>
+            <i class="bi bi-journal-check fs-1"></i>
+          </div>
+          <div class="card-footer text-end bg-transparent border-0">
+            <a href="#" class="text-white text-decoration-underline" onclick="loadPage('Issued.html')">View Issued</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Overdue Books Card -->
+      <div class="col-md-4">
+        <div class="card text-white bg-danger shadow h-100">
+          <div class="card-body d-flex justify-content-between align-items-center">
+            <div>
+              <h5 class="card-title">Overdue Books</h5>
+              <p class="card-text fs-4" id="overdue-count">--</p>
+            </div>
+            <i class="bi bi-exclamation-triangle fs-1"></i>
+          </div>
+          <div class="card-footer text-end bg-transparent border-0">
+            <a href="#" class="text-white text-decoration-underline" onclick="loadPage('Overdue.html')">View Overdue</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Genre Distribution Pie Chart -->
+      <div class="row">
+        <div class="card col mt-5 mb-3 me-3 p-2">
+          <div class="card-header" style="display: flex">
+            <h4>Genre-wise Book Distribution</h4>
+          </div>
+          <div class="card-body">
+            <canvas id="genreDistributionChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Top 5 Most Borrowed Books Bar Chart -->
+        <div class="card col mt-5 mb-3 me-3 p-2" style="display: flex">
+          <div class="card-header">
+            <h4>Top 5 Most Borrowed Books</h4>
+          </div>
+          <div class="card-body">
+            <canvas id="topBorrowedBooksChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Bootstrap Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="../../js/script.js"></script>
+
+  <script>
+    // Redirect to login if session not active
+    // if (!sessionStorage.getItem("isLoggedIn")) {
+    //   window.location.href = "../home.html";
+    // }
+    function loadDashboard() {
+      location.reload(); //  reloads the page, restoring the original dashboard view
+    }
+    // onload = authorCount();
+    // onload = booksCount();
+    // onload = usersCount();
+    // onload = issuedBooksCount();
+    // onload = overDueBooks();
+
+    // async function fetchData() {
+    //   let allAuthors = await fetch("http://localhost:8080/api/authors", {
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       Authorization: getAuthorization(),
+    //     },
+    //   }).then((res) => res.json());
+    //   let allBooks = await fetch("http://localhost:8080/api/books", {
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       Authorization: getAuthorization(),
+    //     },
+    //   }).then((res) => res.json());
+    //   let allRecords = await fetch(
+    //     "http://localhost:8080/api/borrowRecords",
+    //     {
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //         Authorization: getAuthorization(),
+    //       },
+    //     }
+    //   ).then((res) => res.json());
+    //   let allUsers = await fetch("http://localhost:8080/api/users", {
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       Authorization: getAuthorization(),
+    //     },
+    //   }).then((res) => res.json());
+
+    //   return [allAuthors, allBooks, allRecords, allUsers];
+    // }
+
+    async function fetchAdminDashboardData() {
+      const res = await fetch("http://localhost:8080/api/books/adminData", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: getAuthorization(),
+        },
+      });
+      return await res.json();
+    }
+
+    // function authorCount(allAuthors) {
+    //   console.log(allAuthors);
+    //   let id = document.getElementById("author-count");
+    //   id.innerText = allAuthors.length;
+    // }
+    // function booksCount(allBooks) {
+    //   let id = document.getElementById("book-count");
+    //   id.innerText = allBooks.length;
+    // }
+    // function usersCount(allUsers) {
+    //   let id = document.getElementById("user-count");
+    //   id.innerText = allUsers.length;
+    // }
+    // function issuedBooksCount(allRecords) {
+    //   let id = document.getElementById("issued-count");
+    //   console.log(allRecords);
+    //   let cnt = allRecords.filter((rec) => rec.status === "Issued").length;
+    //   id.innerText = cnt;
+    // }
+    // function overDueBooks(allRecords) {
+    //   let id = document.getElementById("overdue-count");
+    //   let cnt = allRecords.filter((rec) => rec.status === "Overdue").length;
+    //   id.innerText = cnt;
+    // }
+
+    // function loadPage(page) {
+    //   sessionStorage.setItem("lastPageVisited", page);
+    //   fetch(page)
+    //     .then((response) => response.text())
+    //     .then((data) => {
+    //       const container = document.getElementById("main-content");
+    //       container.innerHTML = "";
+    //       container.innerHTML = data;
+
+    //       const scripts = container.querySelectorAll("script");
+    //       scripts.forEach((script) => {
+    //         const newScript = document.createElement("script");
+    //         if (script.src) {
+    //           newScript.src = script.src;
+    //         } else {
+    //           newScript.textContent = script.textContent;
+    //         }
+    //         document.body.appendChild(newScript);
+    //         script.remove();
+    //       });
+    //     })
+    //     .catch((err) => {
+    //       document.getElementById("main-content").innerHTML =
+    //         '<p class="text-danger">Failed to load content.</p>';
+    //       console.error(err);
+    //     });
+    // }
+
+    // Toggle icon change
+    const sidebar = document.getElementById("offcanvasSidebar");
+    const toggleIcon = document.getElementById("toggleIcon");
+
+    sidebar.addEventListener("show.bs.offcanvas", () => {
+      toggleIcon.classList.remove("bi-list");
+      toggleIcon.classList.add("bi-x-lg");
+    });
+
+    sidebar.addEventListener("hide.bs.offcanvas", () => {
+      toggleIcon.classList.remove("bi-x-lg");
+      toggleIcon.classList.add("bi-list");
+    });
+
+    // Function to fetch and display the Genre Distribution Pie Chart
+    function genreDistributionChart(allBooks) {
+      // const genres = {};
+      // allBooks.forEach((book) => {
+      //   const genre = book.genre || "Unknown"; // handle missing genres
+      //   genres[genre] = (genres[genre] || 0) + 1;
+      // });
+
+      const labels = Object.keys(allBooks);
+      const genreCounts = Object.values(allBooks);
+
+      const ctx = document
+        .getElementById("genreDistributionChart")
+        .getContext("2d");
+
+      const genreChart = new Chart(ctx, {
+        type: "pie",
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: "Genre Distribution",
+              data: genreCounts,
+              backgroundColor: [
+                "#FF5733",
+                "#33FF57",
+                "#3357FF",
+                "#FF33A1",
+                "#57FF33",
+                "#FFC300",
+              ],
+              borderColor: [
+                "#FF5733",
+                "#33FF57",
+                "#3357FF",
+                "#FF33A1",
+                "#57FF33",
+                "#FFC300",
+              ],
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: "top",
+            },
+            tooltip: {
+              callbacks: {
+                label: function (tooltipItem) {
+                  return (
+                    tooltipItem.label + ": " + tooltipItem.raw + " books"
+                  );
+                },
+              },
+            },
+          },
+        },
+      });
+    }
+
+    // Function to fetch and display the Top 5 Most Borrowed Books Bar Chart
+    function topBorrowedBooksChart(allRecords) {
+      const borrowCount = {};
+
+      // allRecords.forEach((record) => {
+      //   const bookId = record.bookId;
+      //   borrowCount[bookId] = (borrowCount[bookId] || 0) + 1;
+      // });
+
+      // const sortedBooks = Object.entries(borrowCount).sort(
+      //   (a, b) => b[1] - a[1]
+      // );
+      const topBooks = allRecords.slice(0, 5);
+      console.log(topBooks)
+      const bookIds = allRecords.map((book) => book["title"]).slice(0, 5);
+      console.log(bookIds)
+      const borrowCounts = topBooks.map((book) => book["issueCount"]).slice(0, 5);
+      console.log(borrowCounts)
+
+      const ctx = document
+        .getElementById("topBorrowedBooksChart")
+        .getContext("2d");
+
+      const topBooksChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: bookIds,
+          datasets: [
+            {
+              label: "Top 5 Most Borrowed Books",
+              data: borrowCounts,
+              backgroundColor: "#FF5733",
+              borderColor: "#FF5733",
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          scales: {
+            x: {
+              beginAtZero: true,
+            },
+          },
+          plugins: {
+            tooltip: {
+              callbacks: {
+                label: function (tooltipItem) {
+                  return "Borrowed: " + tooltipItem.raw + " times";
+                },
+              },
+            },
+          },
+        },
+      });
+    }
+
+    // Call the chart rendering functions on page load
+
+    // window.onload = async function () {
+    //   const [allAuthors, allBooks, allRecords, allUsers] = await fetchData();
+
+    //   authorCount(allAuthors);
+    //   booksCount(allBooks);
+    //   usersCount(allUsers);
+    //   issuedBooksCount(allRecords);
+    //   overDueBooks(allRecords);
+    //   genreDistributionChart(allBooks);
+    //   topBorrowedBooksChart(allRecords);
+    // };
+    window.onload = async function () {
+      const data = await fetchAdminDashboardData();
+
+      // Simple stats
+      document.getElementById("author-count").innerText = data.authorCount;
+      document.getElementById("book-count").innerText = data.bookCount;
+      document.getElementById("user-count").innerText = data.userCount;
+      document.getElementById("issued-count").innerText = data.issueCount;
+      document.getElementById("overdue-count").innerText = data.overdueCount;
+
+      // Charts
+      genreDistributionChart(data.categoryCount);
+      topBorrowedBooksChart(data.topBooksCount);
+    };
+  </script>
+</body>
+
+</html>
