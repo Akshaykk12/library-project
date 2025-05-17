@@ -3,7 +3,6 @@ package com.capgemini.library_project.services;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.capgemini.library_project.entities.Book;
 import com.capgemini.library_project.entities.BorrowRecord;
@@ -25,6 +24,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class BorrowRecordServicesImpl implements BorrowRecordServices {
+	
+	private static final String STATUS_BORROWED = "Borrowed";
+	private static final String STATUS_RETURNED = "Returned";
+	private static final String STATUS_OVERDUE = "Overdue";
 
 	private static final Logger logger = LoggerFactory.getLogger(BorrowRecordServicesImpl.class);
 
@@ -77,7 +80,7 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 
 	    borrowRecord.setUser(user);
 	    borrowRecord.setBook(book);
-	    borrowRecord.setBorrowStatus("Borrowed");
+	    borrowRecord.setBorrowStatus(STATUS_BORROWED);
 	    borrowRecord.setFine(0);
 
 	    if (borrowRecord.getBorrowDate() == null) {
@@ -110,8 +113,6 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 	}
 
 	// display all issue records of a single user by userId
-	
-	//borrow record not found and user not found 
 	@Override
 	public List<BorrowRecord> getAllBorrowRecordByUser(Long userId) {
 		
@@ -121,8 +122,6 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 	}
 
 	// how many times a book was borrowed
-	
-	//book not found
 	@Override
 	public List<BorrowRecord> getAllBorrowRecordByBook(Long bookId) {
 		logger.info("Fetching all borrow records for book ID {}", bookId);
@@ -130,13 +129,11 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 	}
 
 	// Show all "Returned" or "Overdue" records
-	
-	//invalid status exception
 	@Override
 	public List<BorrowRecord> getBorrowRecordsByStatus(String status) {
 		logger.info("Fetching all borrow records with status: {}", status);
 		
-		  if (!status.equalsIgnoreCase("Returned") && !status.equalsIgnoreCase("Borrowed") && !status.equalsIgnoreCase("Overdue")) {
+		  if (!status.equalsIgnoreCase(STATUS_RETURNED) && !status.equalsIgnoreCase(STATUS_BORROWED) && !status.equalsIgnoreCase(STATUS_OVERDUE)) {
 	            throw new InvalidStatusException("Invalid borrow status: " + status);
 	        }
 		return borrowRecordRepository.findAllByBorrowStatus(status);
@@ -145,48 +142,42 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 	// get all borrow records that are overdue
 	@Override
 	public List<BorrowRecord> getAllOverdueRecords() {
-		logger.info("Fetching all overdue borrow records");
-		LocalDate today = LocalDate.now();
-		return borrowRecordRepository.findAll().stream()
-				.filter(record -> record.getBorrowReturnDate() != null
-						&& record.getBorrowReturnDate().isBefore(today)
-						&& "Borrowed".equalsIgnoreCase(record.getBorrowStatus()))
-				.collect(Collectors.toList());
+	    logger.info("Fetching all overdue borrow records");
+	    LocalDate today = LocalDate.now();
+	    return borrowRecordRepository.findAll().stream()
+	            .filter(brecord -> brecord.getBorrowReturnDate() != null
+	                    && brecord.getBorrowReturnDate().isBefore(today)
+	                    && STATUS_BORROWED.equalsIgnoreCase(brecord.getBorrowStatus()))
+	            .toList(); // simpler and more modern
 	}
 
 	// quick mark as returned
-	
-	//borrow record not found  check by borrow id
-	//already returned , check by status
 	@Override
 	@Transactional
 	public BorrowRecord markAsReturned(Long borrowId) {
 		logger.info("Marking borrow record as returned for ID {}", borrowId);
-		BorrowRecord record = getBorrowRecordById(borrowId);
-		//record.getStatus for exception check
+		BorrowRecord brecord = getBorrowRecordById(borrowId);
 		
-		if ("Returned".equalsIgnoreCase(record.getBorrowStatus())) {
+		if (STATUS_RETURNED.equalsIgnoreCase(brecord.getBorrowStatus())) {
             throw new AlreadyReturnedException("Book is already returned for borrow ID: " + borrowId);
         }
-		record.setBorrowStatus("Returned");
-		record.setBorrowReturnDate(LocalDate.now());
+		brecord.setBorrowStatus(STATUS_RETURNED);
+		brecord.setBorrowReturnDate(LocalDate.now());
 
-		LocalDate dueDate = record.getBorrowDate().plusDays(allowedReturnDays);
-		if (record.getBorrowReturnDate().isAfter(dueDate)) {
-			long overdueDays = ChronoUnit.DAYS.between(dueDate, record.getBorrowReturnDate());
+		LocalDate dueDate = brecord.getBorrowDate().plusDays(allowedReturnDays);
+		if (brecord.getBorrowReturnDate().isAfter(dueDate)) {
+			long overdueDays = ChronoUnit.DAYS.between(dueDate, brecord.getBorrowReturnDate());
 			int fine = (int) (overdueDays * finePerDay);
-			record.setFine(fine);
+			brecord.setFine(fine);
 			logger.info("Fine calculated for overdue: {} days, fine: {}", overdueDays, fine);
 		} else {
-			record.setFine(0);
+			brecord.setFine(0);
 		}
 
-		return borrowRecordRepository.save(record);
+		return borrowRecordRepository.save(brecord);
 	}
 
 	// fine based on return date
-	
-	//borrow record not found .
 	@Override
 	public Integer calculateFine(Long borrowId) {
 		logger.info("Calculating fine for borrow record ID {}", borrowId);
@@ -213,9 +204,9 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 	public long countBorrowRecordsByStatus(String status) {
 		
 		 
-	        if (status != null && !status.equalsIgnoreCase("Borrowed") &&
-	            !status.equalsIgnoreCase("Returned") &&
-	            !status.equalsIgnoreCase("Overdue")) {
+	        if (status != null && !status.equalsIgnoreCase(STATUS_BORROWED) &&
+	            !status.equalsIgnoreCase(STATUS_RETURNED) &&
+	            !status.equalsIgnoreCase(STATUS_OVERDUE)) {
 	            throw new InvalidStatusException("Invalid borrow status: " + status);
 	        }
 
@@ -224,18 +215,15 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 	}
 
 	// manually update all the details of any issue
-	
-	//borrow id not found 
-	//borrowRecord.getStatus , to throw invalid borrow status
 	@Override
 	public BorrowRecord updateBorrowRecord(Long borrowId, BorrowRecord updatedBorrowRecord) {
 		logger.info("Updating borrow record ID {}", borrowId);
 		BorrowRecord borrowRecord = getBorrowRecordById(borrowId);
 		
 		String status = updatedBorrowRecord.getBorrowStatus();
-        if (status != null && !status.equalsIgnoreCase("Borrowed") &&
-            !status.equalsIgnoreCase("Returned") &&
-            !status.equalsIgnoreCase("Overdue")) {
+        if (status != null && !status.equalsIgnoreCase(STATUS_BORROWED) &&
+            !status.equalsIgnoreCase(STATUS_RETURNED) &&
+            !status.equalsIgnoreCase(STATUS_OVERDUE)) {
             throw new InvalidStatusException("Invalid borrow status: " + status);
         }
 
@@ -246,18 +234,16 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
         
 		borrowRecord.setBorrowStatus(updatedBorrowRecord.getBorrowStatus());
 		borrowRecord.setBorrowReturnDate(updatedBorrowRecord.getBorrowReturnDate());
-		//invalid borrow return date exception.
 		borrowRecord.setFine(updatedBorrowRecord.getFine());
 		return borrowRecordRepository.save(borrowRecord);
 	}
 
 	// delete a borrow record
-	
-	//Borrow record not found .
 	@Override
 	public void deleteBorrowRecord(Long borrowId) {
-		logger.info("Deleting borrow record with ID {}", borrowId);
-		BorrowRecord record = getBorrowRecordById(borrowId);
-		borrowRecordRepository.deleteById(borrowId);
+	    logger.info("Deleting borrow record with ID {}", borrowId);
+	    getBorrowRecordById(borrowId);
+	    borrowRecordRepository.deleteById(borrowId);
 	}
+
 }

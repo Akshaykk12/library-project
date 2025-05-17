@@ -11,8 +11,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -43,9 +41,7 @@ public class BorrowRecord {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate borrowReturnDate;
 
-    @NotNull(message = "Fine is required")
     private Integer fine;
     
-    @NotBlank(message = "Borrow Status is required")
     private String borrowStatus;
 }
