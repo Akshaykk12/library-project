@@ -2,7 +2,10 @@ package com.capgemini.library_project.controllers;
 
 import java.util.List;
 
+import com.capgemini.library_project.dto.BorrowRequest;
 import com.capgemini.library_project.entities.BorrowRecord;
+import com.capgemini.library_project.repositories.BookRepository;
+import com.capgemini.library_project.repositories.UserRepository;
 import com.capgemini.library_project.services.BorrowRecordServices;
 
 import jakarta.validation.Valid;
@@ -26,23 +29,27 @@ public class BorrowRecordController {
 	private static final Logger logger = LoggerFactory.getLogger(BorrowRecordController.class);
 
 	private final BorrowRecordServices borrowRecordServices;
-
+	private BookRepository bookRepository;
+	private UserRepository userRepository;
+	
 	@Autowired
-	public BorrowRecordController(BorrowRecordServices borrowRecordServices) {
+	public BorrowRecordController(BorrowRecordServices borrowRecordServices, BookRepository bookRepository,
+			UserRepository userRepository) {
 		this.borrowRecordServices = borrowRecordServices;
+		this.bookRepository = bookRepository;
+		this.userRepository = userRepository;
 	}
-
-	// issue a book
-	@PostMapping
-	public ResponseEntity<BorrowRecord> createBorrowRecord(@Valid @RequestBody BorrowRecord borrowRecord,
-			BindingResult bindingResult) {
-		logger.info("POST: Creating borrow record");
-		if (bindingResult.hasErrors()) {
-			throw new IllegalArgumentException("Invalid Data");
-		}
-		return ResponseEntity.status(HttpStatus.CREATED).body(borrowRecordServices.createBorrowRecord(borrowRecord));
-	}
-
+	
+	 @PostMapping("/borrow")
+	    public ResponseEntity<BorrowRecord> borrowBook(
+	            @Valid @RequestBody BorrowRequest dto
+	    ) {
+	        logger.info("POST: Borrowing book {} to user {}", dto.getBookId(), dto.getUserId());
+	        BorrowRecord saved = borrowRecordServices.borrowBook(dto);
+	        return ResponseEntity.ok(saved);
+	    }
+	 
+	 
 	// display all issued book records
 	@GetMapping
 	public ResponseEntity<List<BorrowRecord>> getAllBorrowRecords() {
