@@ -2,9 +2,9 @@ package com.capgemini.library_project.entities;
 
 import java.util.List;
 
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -25,6 +25,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIdentityInfo(
+		  generator = ObjectIdGenerators.PropertyGenerator.class,
+		  property = "bookId"
+		)
+
 public class Book {
 
     @Id
@@ -33,7 +38,6 @@ public class Book {
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "authorId")
-    @JsonBackReference(value = "author-book")
     private Author author;
 
     @NotBlank(message = "Book Title is required")
@@ -51,7 +55,6 @@ public class Book {
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "category_id")
-    @JsonBackReference(value = "category-book")
     private Category category;
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.PERSIST)

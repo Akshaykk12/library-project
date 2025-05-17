@@ -2,6 +2,7 @@
 
 package com.capgemini.library_project.services;
 
+import com.capgemini.library_project.dto.BorrowRequest;
 import com.capgemini.library_project.entities.Book;
 import com.capgemini.library_project.entities.BorrowRecord;
 import com.capgemini.library_project.entities.User;
@@ -66,11 +67,23 @@ class BorrowRecordServicesImplTest {
 
     @Test
     void testCreateBorrowRecord() {
-        BorrowRecord result = borrowRecordServices.createBorrowRecord(brecord);
+    	
+        BorrowRequest dto = new BorrowRequest();
+        dto.setUserId(user.getUserId());
+        dto.setBookId(book.getBookId());
+
+        when(bookRepository.findById(book.getBookId()))
+            .thenReturn(Optional.of(book));
+        when(userRepository.findById(user.getUserId()))
+            .thenReturn(Optional.of(user));
+        when(book.getAvailableCopies()).thenReturn(1L);
+
+        BorrowRecord result = borrowRecordServices.borrowBook(dto);
         assertNotNull(result);
         assertEquals("Borrowed", result.getBorrowStatus());
         assertEquals(user, result.getUser());
         assertEquals(book, result.getBook());
+        verify(bookRepository).save(book);
     }
 
     @Test
