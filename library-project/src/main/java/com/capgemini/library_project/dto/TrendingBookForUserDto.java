@@ -1,7 +1,5 @@
 package com.capgemini.library_project.dto;
 
-import java.util.Map;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +12,7 @@ public class TrendingBookForUserDto {
 	 	private Long bookId;
 	 	 private String authorName;
 	    private String title;
-	    private String genre;
+	    private String category;
 	    private Long availableCopies;
 	    private Long issueCount;
 }

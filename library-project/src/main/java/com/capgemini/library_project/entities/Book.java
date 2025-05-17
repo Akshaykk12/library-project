@@ -20,6 +20,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -40,11 +41,11 @@ public class Book {
 
     @NotNull(message = "Total Copies is required")
     @Positive(message = "Total Copies cannot be negative")
-    private Integer totalCopies;
+    private Long totalCopies;
 
     @NotNull(message = "Available Copies is required")
     @Positive(message = "Available Copies cannot be negative")
-    private Integer availableCopies;
+    private Long availableCopies;
 
     private String bookCover;
 
