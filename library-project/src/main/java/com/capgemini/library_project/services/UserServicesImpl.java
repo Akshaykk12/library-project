@@ -50,10 +50,11 @@ public class UserServicesImpl implements UserServices{
 
       @Override
 	public User createUser(User user) {
-		if (userRepository.findByUserEmail(user.getUserEmail()).isPresent()) {
-          logger.info("Creating new user: {}", user.getUserName());
+		if (userRepository.findByUserEmail(user.getUserEmail()).isPresent()|| userRepository.findByUserEmail(user.getUserName()).isPresent()) {
+			logger.info("User Already exists",user.getUserName(),user.getUserEmail());
 	        throw new UserAlreadyExistsException("User Already Exists");
 	    }
+		 logger.info("Creating new user: {}", user.getUserName());
 		return userRepository.save(user);
 	}
 

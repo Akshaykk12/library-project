@@ -61,4 +61,9 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
 	}
 	
+	@ExceptionHandler(ReviewNotFoundException.class)
+	public ResponseEntity<String> handleReviewNotFoundException(ReviewNotFoundException ex) {
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+	}
+	
 }

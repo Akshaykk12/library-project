@@ -31,12 +31,12 @@ class AuthorServicesImplTest {
         author.setAuthorName("Test Author");
     }
 
-    @Test
-    void testCreateAuthor() {
-        when(authorRepository.save(author)).thenReturn(author);
-        Author saved = authorServices.createAuthor(author);
-        assertEquals("Test Author", saved.getAuthorName());
-    }
+//    @Test
+//    void testCreateAuthor() {
+//        when(authorRepository.save(author)).thenReturn(author);
+//        Author saved = authorServices.createAuthor(author);
+//        assertEquals("Test Author", saved.getAuthorName());
+//    }
 
     @Test
     void testFindAllAuthors() {

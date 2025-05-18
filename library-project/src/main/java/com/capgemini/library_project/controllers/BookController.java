@@ -24,7 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -75,8 +74,14 @@ public class BookController {
 	@GetMapping("/{id}")
 	public ResponseEntity<Book> getBookById(@PathVariable("id") Long id) {
 		logger.info("GET: Fetching book with ID {}", id);
-		Optional<Book> book = bookService.getBookById(id);
-		return book.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+		Book book = bookService.getBookById(id);
+		//return book.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+		
+		if (book != null) {
+	        return ResponseEntity.ok(book);
+	    } else {
+	    	return ResponseEntity.notFound().build();
+	    }
 	}
 
 	@GetMapping
@@ -149,10 +154,8 @@ public class BookController {
 			throw new IllegalArgumentException("Invalid book data");
 		}
 
-		// Save the book first
 		Book savedBook = bookService.addBook(book);
 
-		// Assign author and category
 		bookService.assignBookToAuthor(authorId, savedBook.getBookId());
 		bookService.assignBook(categoryId, savedBook.getBookId());
 
@@ -191,8 +194,14 @@ public class BookController {
 	}
 
 	@GetMapping("/categoryCount")
-	public ResponseEntity<Map<String, Long>> findGenreCount() {
-		return ResponseEntity.status(200).body(bookService.findCategoryCount());
+	public ResponseEntity<List<Object[]>> getCategoryBookCounts() {
+		logger.info("GET: Fetching book counts by category");
+		return ResponseEntity.ok(bookService.getCategoryBookCounts());
+	}
+
+	@GetMapping("/count")
+	public ResponseEntity<Long> getTotalBookCount() {
+		return ResponseEntity.ok(bookRepository.count());
 	}
 
 	@GetMapping("/adminData")
