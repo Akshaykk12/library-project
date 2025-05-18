@@ -136,8 +136,7 @@
           userEmail: UserEmailInput.value.trim(),
           userPassword: UserPasswordInput.value.trim(),
           userContact: UserPhoneInput.value.trim(),
-          userType: UserTypeInput.value,
-          userImage: UserImageInput.files.length > 0 ? UserImageInput.files[0].name : null,
+          userType: UserTypeInput.value
         };
 
         console.log("Submitting user", user);
@@ -154,7 +153,7 @@
           .then((data) => {
             console.log("Registered:", data);
             form.reset();
-            window.location.href = "../auth/Login.html";
+            window.location.href = "./login.html";
           })
           .catch((err) => {
             alert("Registration failed: " + err.message);
