@@ -50,6 +50,23 @@ public class BookServicesImpl implements BookServices {
 	}
 
 	@Override
+	public Book addBook(String bookTitle, Long totalCopies, Long availableCopies, Author author, Category category, MultipartFile bookCover) throws IOException {
+		Files.createDirectories(Paths.get(UPLOAD_DIR));
+		String fileName = UUID.randomUUID() + "_" + bookCover.getOriginalFilename();
+		Path filePath = Paths.get(UPLOAD_DIR, fileName);
+		Files.copy(bookCover.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+		
+		Book book = new Book();
+		book.setBookTitle(bookTitle);
+		book.setAvailableCopies(availableCopies);
+		book.setTotalCopies(totalCopies);
+		book.setBookCover(fileName);
+		book.setAuthor(author);
+		book.setCategory(category);
+		author.getBooks().add(book);
+		category.getBooks().add(book);
+		return bookRepository.save(book);
+	}
 	public Book addBook(Book book) {
 		return bookRepository.save(book);
 	}

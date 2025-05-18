@@ -3,9 +3,13 @@ package com.capgemini.library_project.controllers;
 import com.capgemini.library_project.dto.AdminDashboardDto;
 import com.capgemini.library_project.dto.BookDto;
 import com.capgemini.library_project.dto.TrendingBookForUserDto;
+import com.capgemini.library_project.entities.Author;
 import com.capgemini.library_project.entities.Book;
+import com.capgemini.library_project.entities.Category;
 import com.capgemini.library_project.repositories.BookRepository;
+import com.capgemini.library_project.services.AuthorServices;
 import com.capgemini.library_project.services.BookServices;
+import com.capgemini.library_project.services.CategoryServices;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,20 +41,23 @@ public class BookController {
 
 	private final BookServices bookService;
 	private final BookRepository bookRepository;
+	private final CategoryServices categoryServices;
+	private final AuthorServices authorServices;
 
 	@Autowired
-	public BookController(BookServices bookService, BookRepository bookRepository) {
+	public BookController(BookServices bookService, BookRepository bookRepository, AuthorServices authorServices, CategoryServices categoryServices) {
 		this.bookRepository = bookRepository;
 		this.bookService = bookService;
+		this.authorServices = authorServices;
+		this.categoryServices = categoryServices;
 	}
 
-	@PostMapping
-	public ResponseEntity<Book> addBook(@Valid @RequestBody Book book, BindingResult bindingResult) {
+	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<Book> addBook(@RequestParam String bookTitle, @RequestParam Long totalCopies, @RequestParam Long availableCopies, @RequestParam Long authorId, @RequestParam Long categoryId, @RequestParam("bookCover") MultipartFile bookCover) throws IOException{
 		logger.info("POST: Adding new book");
-		if (bindingResult.hasErrors()) {
-			throw new IllegalArgumentException("Invalid Data");
-		}
-		Book savedBook = bookService.addBook(book);
+		Author author = authorServices.findAuthorById(authorId);
+		Category category = categoryServices.getCategoryById(categoryId);
+		Book savedBook = bookService.addBook(bookTitle, totalCopies, availableCopies, author, category, bookCover);
 		return ResponseEntity.ok(savedBook);
 	}
 
