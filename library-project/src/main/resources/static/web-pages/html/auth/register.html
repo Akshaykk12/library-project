@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Registration</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet"/>
+</head>
+<body class="container my-5 border p-4">
+  <h2 class="mb-4">User Registration Form</h2>
+
+  <form id="UserForm" class="mb-4" enctype="multipart/form-data">
+    <div class="mb-3">
+      <label for="UserName" class="form-label">User Name</label>
+      <input type="text" class="form-control" id="UserName" required>
+      <div class="invalid-feedback">Enter full name</div>
+    </div>
+
+    <div class="mb-3">
+      <label for="UserEmail" class="form-label">User Email</label>
+      <input type="email" class="form-control" id="UserEmail" required>
+      <div class="invalid-feedback">Enter a valid email.</div>
+      <div class="text-danger d-none" id="emailMessage">Email already exists</div>
+    </div>
+
+    <div class="mb-3">
+      <label for="UserPassword" class="form-label">User Password</label>
+      <input type="password" class="form-control" id="UserPassword" required>
+      <div class="invalid-feedback">Minimum 8 characters, at least one letter, one number and one special character.</div>
+    </div>
+
+    <div class="mb-3">
+      <label for="UserPhone" class="form-label">User Phone</label>
+      <input type="number" class="form-control" id="UserPhone" required>
+      <div class="invalid-feedback">Mobile number must be 10 digits</div>
+    </div>
+
+    <div class="mb-3">
+      <label for="UserType" class="form-label">User Type</label>
+      <select class="form-select" id="UserType" required>
+        <option value="">Select User Type</option>
+        <option value="USER">User</option>
+        <option value="ADMIN">Admin</option>
+      </select>
+      <div class="invalid-feedback">Please select a user type</div>
+    </div>
+
+    <div class="mb-3">
+      <label for="UserImage" class="form-label">Upload Image (optional)</label>
+      <input type="file" class="form-control" id="UserImage" accept="image/*">
+    </div>
+
+    <button type="submit" class="btn btn-primary" id="submitBtn">Register</button>
+  </form>
+  
+  <script>
+    (function () {
+      const apiUrl = "http://localhost:8080/auth/register";
+      const UserNameInput = document.getElementById("UserName");
+      const UserEmailInput = document.getElementById("UserEmail");
+      const UserPasswordInput = document.getElementById("UserPassword");
+      const UserPhoneInput = document.getElementById("UserPhone");
+      const UserTypeInput = document.getElementById("UserType");
+      const UserImageInput = document.getElementById("UserImage");
+      const form = document.getElementById("UserForm");
+      const emailMsg = document.getElementById("emailMessage");
+
+      function validateForm() {
+        let isValid = true;
+
+        UserNameInput.addEventListener("blur", () => {
+          if (UserNameInput.value.trim().length < 3) {
+            UserNameInput.classList.add("is-invalid");
+            UserNameInput.classList.remove("is-valid");
+            isValid = false;
+          } else {
+            UserNameInput.classList.remove("is-invalid");
+            UserNameInput.classList.add("is-valid");
+          }
+        });
+
+        UserEmailInput.addEventListener("blur", () => {
+          if (!UserEmailInput.value.trim()) {
+            UserEmailInput.classList.add("is-invalid");
+            UserEmailInput.classList.remove("is-valid");
+            isValid = false;
+          } else {
+            UserEmailInput.classList.remove("is-invalid");
+            UserEmailInput.classList.add("is-valid");
+          }
+        });
+
+        UserPasswordInput.addEventListener("blur", () => {
+          const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]).{8,}$/;
+          if (!passwordRegex.test(UserPasswordInput.value)) {
+            UserPasswordInput.classList.add("is-invalid");
+            UserPasswordInput.classList.remove("is-valid");
+            isValid = false;
+          } else {
+            UserPasswordInput.classList.remove("is-invalid");
+            UserPasswordInput.classList.add("is-valid");
+          }
+        });
+
+        UserPhoneInput.addEventListener("blur", () => {
+          const mobileRegex = /^[7-9]\d{9}$/;
+          if (!mobileRegex.test(UserPhoneInput.value)) {
+            UserPhoneInput.classList.add("is-invalid");
+            UserPhoneInput.classList.remove("is-valid");
+            isValid = false;
+          } else {
+            UserPhoneInput.classList.remove("is-invalid");
+            UserPhoneInput.classList.add("is-valid");
+          }
+        });
+
+        UserTypeInput.addEventListener("blur", () => {
+          if (!UserTypeInput.value) {
+            UserTypeInput.classList.add("is-invalid");
+            isValid = false;
+          } else {
+            UserTypeInput.classList.remove("is-invalid");
+          }
+        });
+
+        return isValid;
+      }
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        // Optional image handling (for now only sending the file name; can be extended to upload image to server or Base64)
+        const user = {
+          userName: UserNameInput.value.trim(),
+          userEmail: UserEmailInput.value.trim(),
+          userPassword: UserPasswordInput.value.trim(),
+          userContact: UserPhoneInput.value.trim(),
+          userType: UserTypeInput.value,
+          userImage: UserImageInput.files.length > 0 ? UserImageInput.files[0].name : null,
+        };
+
+        console.log("Submitting user", user);
+
+        fetch(apiUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(user),
+        })
+          .then((res) => {
+            if (!res.ok) throw new Error("Registration failed");
+            return res.json();
+          })
+          .then((data) => {
+            console.log("Registered:", data);
+            form.reset();
+            window.location.href = "../auth/Login.html";
+          })
+          .catch((err) => {
+            alert("Registration failed: " + err.message);
+          });
+      });
+
+      validateForm();
+    })();
+  </script>
+</body>
+</html>

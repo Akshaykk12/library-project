@@ -2,11 +2,10 @@ package com.capgemini.library_project.services;
 
 import java.util.List;
 
+import com.capgemini.library_project.dto.BorrowRequest;
 import com.capgemini.library_project.entities.BorrowRecord;
 
 public interface BorrowRecordServices {
-
-	BorrowRecord createBorrowRecord(BorrowRecord borrowRecord);
 
 	List<BorrowRecord> getAllBorrowRecord();
 
@@ -34,6 +33,8 @@ public interface BorrowRecordServices {
 	BorrowRecord updateBorrowRecord(Long borrowId, BorrowRecord updatedBorrowRecord);
 
 	void deleteBorrowRecord(Long borrowId);
+	
+	BorrowRecord borrowBook(BorrowRequest dto);
 
 	List<Object[]> findTopBorrowedBooks();
 	
