@@ -44,4 +44,5 @@ public class BorrowRecord {
     private Integer fine;
     
     private String borrowStatus;
+    
 }

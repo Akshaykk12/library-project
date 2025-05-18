@@ -35,6 +35,8 @@ public interface BookServices {
 	Book addBookToAuthor(Long authorId, Book book);
 	
 	void assignBookToAuthor(Long authorId, Long bookId);
+	
+	List<Object[]> getCategoryBookCounts();
 
 	Map<String, Long> findCategoryCount();
 	

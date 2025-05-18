@@ -1,9 +1,11 @@
 package com.capgemini.library_project.controllers;
 
 import java.util.List;
+import java.util.Map;
 
 import com.capgemini.library_project.dto.BorrowRequest;
 import com.capgemini.library_project.entities.BorrowRecord;
+import com.capgemini.library_project.repositories.BorrowRecordRepository;
 import com.capgemini.library_project.repositories.BookRepository;
 import com.capgemini.library_project.repositories.UserRepository;
 import com.capgemini.library_project.services.BorrowRecordServices;
@@ -36,6 +38,7 @@ public class BorrowRecordController {
 	public BorrowRecordController(BorrowRecordServices borrowRecordServices, BookRepository bookRepository,
 			UserRepository userRepository) {
 		this.borrowRecordServices = borrowRecordServices;
+
 		this.bookRepository = bookRepository;
 		this.userRepository = userRepository;
 	}
@@ -133,4 +136,31 @@ public class BorrowRecordController {
 		borrowRecordServices.deleteBorrowRecord(borrowId);
 		return ResponseEntity.noContent().build();
 	}
+	// GET: Top 5 most borrowed books
+	@GetMapping("/topBooks")
+	public ResponseEntity<List<Object[]>> getTopBorrowedBooks() {
+	    logger.info("GET: Fetching top 5 most borrowed books");
+	    List<Object[]> topBooks = borrowRecordServices.findTopBorrowedBooks();
+	    return ResponseEntity.ok(topBooks);
+	}
+	
+	// Add this endpoint for monthly borrowing activity
+	@GetMapping("/monthlyCount")
+	public ResponseEntity<List<Object[]>> getMonthlyBorrowCounts() {
+	    logger.info("GET: Fetching monthly borrow counts");
+	    return ResponseEntity.ok(borrowRecordServices.getMonthlyBorrowCounts());
+	}
+	
+	@GetMapping("/activeCount")
+    public ResponseEntity<Long> countActiveBorrows() {
+        return ResponseEntity.ok(borrowRecordServices.countActiveBorrows());
+    }
+	
+	// In BorrowRecordController.java
+	 @PatchMapping("/{id}")
+	    public BorrowRecord updateStatus(@PathVariable Long id, @RequestBody Map<String, String> body) {
+	        String status = body.get("status");
+	        return borrowRecordServices.updateStatus(id, status);
+	    }
+	
 }

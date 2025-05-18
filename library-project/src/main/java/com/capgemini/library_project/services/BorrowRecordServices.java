@@ -36,4 +36,13 @@ public interface BorrowRecordServices {
 	
 	BorrowRecord borrowBook(BorrowRequest dto);
 
+	List<Object[]> findTopBorrowedBooks();
+	
+	List<Object[]> getMonthlyBorrowCounts();
+	
+	List<BorrowRecord> getIssuedRecords();
+	
+    BorrowRecord updateStatus(Long borrowId, String status);
+    
+    long countActiveBorrows();
 }
