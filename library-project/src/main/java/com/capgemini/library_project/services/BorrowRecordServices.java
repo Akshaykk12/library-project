@@ -2,7 +2,7 @@ package com.capgemini.library_project.services;
 
 import java.util.List;
 
-import com.capgemini.library_project.dto.BorrowRequest;
+import com.capgemini.library_project.dto.BorrowRecordDto;
 import com.capgemini.library_project.entities.BorrowRecord;
 
 public interface BorrowRecordServices {
@@ -11,7 +11,7 @@ public interface BorrowRecordServices {
 
 	BorrowRecord getBorrowRecordById(Long borrowId);
 
-	List<BorrowRecord> getAllBorrowRecordByUser(Long userId);
+	 List<BorrowRecordDto> getAllBorrowRecordByUser(Long userId);
 
 	// how many times a book was borrowed
 	List<BorrowRecord> getAllBorrowRecordByBook(Long bookId);
@@ -34,6 +34,8 @@ public interface BorrowRecordServices {
 
 	void deleteBorrowRecord(Long borrowId);
 	
-	BorrowRecord borrowBook(BorrowRequest dto);
+	BorrowRecord borrowBook(BorrowRecordDto dto);
+	
+	
 
 }

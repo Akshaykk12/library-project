@@ -2,7 +2,7 @@ package com.capgemini.library_project.controllers;
 
 import java.util.List;
 
-import com.capgemini.library_project.dto.BorrowRequest;
+import com.capgemini.library_project.dto.BorrowRecordDto;
 import com.capgemini.library_project.entities.BorrowRecord;
 import com.capgemini.library_project.repositories.BookRepository;
 import com.capgemini.library_project.repositories.UserRepository;
@@ -42,7 +42,7 @@ public class BorrowRecordController {
 	
 	 @PostMapping("/borrow")
 	    public ResponseEntity<BorrowRecord> borrowBook(
-	            @Valid @RequestBody BorrowRequest dto
+	            @Valid @RequestBody BorrowRecordDto dto
 	    ) {
 	        logger.info("POST: Borrowing book {} to user {}", dto.getBookId(), dto.getUserId());
 	        BorrowRecord saved = borrowRecordServices.borrowBook(dto);
@@ -66,7 +66,7 @@ public class BorrowRecordController {
 
 	// display all issue records of a single user by userId
 	@GetMapping("/user/{userId}")
-	public ResponseEntity<List<BorrowRecord>> getAllBorrowRecordByUser(@PathVariable Long userId) {
+	public ResponseEntity<List<BorrowRecordDto>> getAllBorrowRecordByUser(@PathVariable Long userId) {
 		logger.info("GET: Fetching borrow records for user ID {}", userId);
 		return ResponseEntity.ok(borrowRecordServices.getAllBorrowRecordByUser(userId));
 	}
