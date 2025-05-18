@@ -2,7 +2,7 @@
 
 package com.capgemini.library_project.services;
 
-import com.capgemini.library_project.dto.BorrowRequest;
+import com.capgemini.library_project.dto.BorrowRecordDto;
 import com.capgemini.library_project.entities.Book;
 import com.capgemini.library_project.entities.BorrowRecord;
 import com.capgemini.library_project.entities.User;
@@ -67,7 +67,7 @@ class BorrowRecordServicesImplTest {
 
     @Test
     void testCreateBorrowRecord() {
-        BorrowRequest dto = new BorrowRequest();
+        BorrowRecordDto dto = new BorrowRecordDto();
         dto.setUserId(user.getUserId());
         dto.setBookId(book.getBookId());
 
