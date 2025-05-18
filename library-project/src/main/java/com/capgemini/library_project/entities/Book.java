@@ -29,7 +29,6 @@ import lombok.NoArgsConstructor;
 		  generator = ObjectIdGenerators.PropertyGenerator.class,
 		  property = "bookId"
 		)
-
 public class Book {
 
     @Id

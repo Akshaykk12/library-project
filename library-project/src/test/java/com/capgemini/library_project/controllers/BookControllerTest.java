@@ -1,9 +1,14 @@
 package com.capgemini.library_project.controllers;
 
 import com.capgemini.library_project.dto.BookDto;
+import com.capgemini.library_project.entities.Author;
 import com.capgemini.library_project.entities.Book;
+import com.capgemini.library_project.entities.Category;
 import com.capgemini.library_project.repositories.BookRepository;
+import com.capgemini.library_project.services.AuthorServices;
 import com.capgemini.library_project.services.BookServices;
+import com.capgemini.library_project.services.CategoryServices;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -27,6 +32,10 @@ class BookControllerTest {
 
 	@Mock
 	private BookServices bookService;
+	@Mock
+	private AuthorServices authorService;
+	@Mock
+	private CategoryServices categoryServices;
 
 	@Mock
 	private BookRepository bookRepository;
@@ -43,16 +52,48 @@ class BookControllerTest {
 	}
 
 	@Test
-	void testAddBook() {
-		Book book = new Book();
-		when(bindingResult.hasErrors()).thenReturn(false);
-		when(bookService.addBook(book)).thenReturn(book);
+	void testAddBook() throws Exception {
+	    // Mock input data
+	    String bookTitle = "Test Book";
+	    Long totalCopies = 10L;
+	    Long availableCopies = 5L;
+	    Long authorId = 1L;
+	    Long categoryId = 2L;
 
-		ResponseEntity<Book> response = bookController.addBook(book, bindingResult);
+	    // Mock MultipartFile
+	    MockMultipartFile mockFile = new MockMultipartFile(
+	            "bookCover", "cover.jpg", "image/jpeg", "dummy image content".getBytes()
+	    );
 
-		assertEquals(HttpStatus.OK, response.getStatusCode());
-		assertEquals(book, response.getBody());
+	    // Mock Author and Category
+	    Author mockAuthor = new Author();
+	    mockAuthor.setAuthorId(authorId);
+	    mockAuthor.setAuthorName("Test Author");
+
+	    Category mockCategory = new Category();
+	    mockCategory.setCategoryId(categoryId);
+	    mockCategory.setCategoryName("Fiction");
+
+	    Book mockBook = new Book();
+	    mockBook.setBookTitle(bookTitle);
+	    mockBook.setTotalCopies(totalCopies);
+	    mockBook.setAvailableCopies(availableCopies);
+	    mockBook.setAuthor(mockAuthor);
+	    mockBook.setCategory(mockCategory);
+
+	    when(authorService.findAuthorById(authorId)).thenReturn(mockAuthor);
+	    when(categoryServices.getCategoryById(categoryId)).thenReturn(mockCategory);
+	    when(bookService.addBook(bookTitle, totalCopies, availableCopies, mockAuthor, mockCategory, mockFile))
+	            .thenReturn(mockBook);
+
+	    ResponseEntity<Book> response = bookController.addBook(
+	            bookTitle, totalCopies, availableCopies, authorId, categoryId, mockFile
+	    );
+
+	    assertEquals(HttpStatus.OK, response.getStatusCode());
+	    assertEquals(mockBook, response.getBody());
 	}
+
 
 	@Test
 	void testUpdateBook() {
