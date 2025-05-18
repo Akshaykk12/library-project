@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.*;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -27,9 +28,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class BookServicesImpl implements BookServices {
-	
-	private static final String CATEGORY_NOT_FOUND_MSG = "Category Not Found";
 
+	private static final String CATEGORY_NOT_FOUND_MSG = "Category Not Found";
 
 	private static final String UPLOAD_DIR = "uploads/";
 
@@ -39,9 +39,10 @@ public class BookServicesImpl implements BookServices {
 	private final UserRepository userRepository;
 	private final BorrowRecordRepository borrowRecordRepository;
 
-	public BookServicesImpl(BookRepository bookRepository, CategoryRepository categoryRepository, 
-			AuthorRepository authorRepository, UserRepository userRepository, BorrowRecordRepository borrowRecordRepository) {
-	
+	public BookServicesImpl(BookRepository bookRepository, CategoryRepository categoryRepository,
+			AuthorRepository authorRepository, UserRepository userRepository,
+			BorrowRecordRepository borrowRecordRepository) {
+
 		this.bookRepository = bookRepository;
 		this.categoryRepository = categoryRepository;
 		this.authorRepository = authorRepository;
@@ -76,7 +77,7 @@ public class BookServicesImpl implements BookServices {
 		Category category = categoryRepository.findById(categoryId)
 
 				.orElseThrow(() -> new RuntimeException(CATEGORY_NOT_FOUND_MSG));
-    
+
 		book.setCategory(category);
 		category.getBooks().add(book);
 		return bookRepository.save(book);
@@ -95,8 +96,7 @@ public class BookServicesImpl implements BookServices {
 
 	@Override
 	public Book addBookToAuthor(Long authorId, Book book) {
-		Author author = authorRepository.findById(authorId)
-				.orElseThrow(() -> new AuthorNotFoundException(authorId));
+		Author author = authorRepository.findById(authorId).orElseThrow(() -> new AuthorNotFoundException(authorId));
 		book.setAuthor(author);
 		author.getBooks().add(book);
 		return bookRepository.save(book);
@@ -104,9 +104,8 @@ public class BookServicesImpl implements BookServices {
 
 	@Override
 	public void assignBookToAuthor(Long authorId, Long bookId) {
-		Author author = authorRepository.findById(authorId)
-				.orElseThrow(() -> new AuthorNotFoundException(authorId));
-		
+		Author author = authorRepository.findById(authorId).orElseThrow(() -> new AuthorNotFoundException(authorId));
+
 		Book book = bookRepository.findById(bookId).orElseThrow(() -> new RuntimeException(CATEGORY_NOT_FOUND_MSG));
 		author.getBooks().add(book);
 		book.setAuthor(author);
@@ -131,14 +130,12 @@ public class BookServicesImpl implements BookServices {
 		bookRepository.deleteById(bookId);
 	}
 
-	
-	
-
 	@Override
 	public Book getBookById(Long bookId) {
-		return bookRepository.findById(bookId).orElseThrow(()-> new BookNotFoundException("Book with ID " + bookId + " not found."));
+		return bookRepository.findById(bookId)
+				.orElseThrow(() -> new BookNotFoundException("Book with ID " + bookId + " not found."));
 	}
-	
+
 	@Override
 	public List<Book> getAllBooks() {
 		return bookRepository.findAll();
@@ -169,75 +166,76 @@ public class BookServicesImpl implements BookServices {
 
 	@Override
 	public Book getImage(Long bookId) {
-		return bookRepository.findById(bookId).orElseThrow(() -> new BookNotFoundException("Book with id " + bookId + " not found"));
-	}
-	
-	@Override
-	public List<Object[]> getCategoryBookCounts() {
-	    return bookRepository.countBooksByCategory();
+		return bookRepository.findById(bookId)
+				.orElseThrow(() -> new BookNotFoundException("Book with id " + bookId + " not found"));
 	}
 
-  @Override
-  public Map<String,Long> findCategoryCount() {
-		return bookRepository.findCategoryCount().stream().collect(Collectors.toMap(ele -> (String) ele[0],ele -> ((Long) ele[1])));
+	@Override
+	public List<Object[]> getCategoryBookCounts() {
+		return bookRepository.countBooksByCategory();
+	}
+
+	@Override
+	public Map<String, Long> findCategoryCount() {
+		return bookRepository.findCategoryCount().stream()
+				.collect(Collectors.toMap(ele -> (String) ele[0], ele -> ((Long) ele[1])));
 	}
 
 	@Override
 	public AdminDashboardDto dashBoardDto() {
-		
-		
-		Integer authorCount = authorRepository.findAll().size();
-		Integer bookCount = bookRepository.findAll().size();
-		Integer userCount = userRepository.findAll().size();
-		Integer issueCount = borrowRecordRepository.findAll().stream().filter(rec -> "Issued".equals(rec.getBorrowStatus())).collect(Collectors.toList()).size();
-		Integer overdueCount =  borrowRecordRepository.findAll().stream().filter(rec-> rec.getBorrowStatus()=="Overdue").collect(Collectors.toList()).size();
-		 Map<String, Long> genreCount = bookRepository.findCategoryCount().stream().collect(Collectors.toMap(ele -> (String) ele[0],ele -> ((Long) ele[1])));
-		 List<TrendingBookForUserDto> topBooksCount =  topBorrowedBooks(); 
-		return new AdminDashboardDto(authorCount,bookCount,userCount,issueCount,overdueCount,genreCount,topBooksCount);
+	    AdminDashboardDto dto = new AdminDashboardDto();
+	    
+	    // Basic counts
+	    dto.setAuthorCount(authorRepository.findAll().size());
+	    dto.setBookCount(bookRepository.findAll().size());
+	    dto.setUserCount(userRepository.findAll().size());
+	    
+	    // Active borrows count
+	    dto.setIssueCount((int) borrowRecordRepository.countByBorrowStatus("BORROWED"));
+	    
+	    // CRITICAL FIX: Match the /overdue/count endpoint logic
+	    LocalDate today = LocalDate.now();
+	    dto.setOverdueCount((int) borrowRecordRepository.findAll().stream()
+	        .filter(record -> 
+	            "BORROWED".equalsIgnoreCase(record.getBorrowStatus()) &&
+	            record.getBorrowReturnDate() != null &&
+	            record.getBorrowReturnDate().isBefore(today))
+	        .count());
+	    
+	    // Chart data
+	    dto.setCategoryCount(bookRepository.findCategoryCount().stream()
+	        .collect(Collectors.toMap(
+	            ele -> (String) ele[0], 
+	            ele -> (Long) ele[1]
+	        )));
+	    
+	    dto.setTopBooksCount(topBorrowedBooks());
+	    
+	    return dto;
 	}
-
-
 
 	@Override
 	public List<TrendingBookForUserDto> getTrendingBooksForUser() {
 		List<Object[]> rawResult = bookRepository.trendingBooksByCategory();
 
 		// 1 bookId
-		//  authorName
-		//   title
-		//  genre
-		//  availableCopies
-		//  issueCount
-	    return rawResult.stream().map(obj -> 
-	        new TrendingBookForUserDto(
-	            ((Long) obj[0]),  
-	            (String) obj[1],
-	            (String) obj[2],  
-	            (String) obj[3],    
-	            ((Long) obj[4]),    
-	            ((Long) obj[5])     
-	        )
-	    ).collect(Collectors.toList());
+		// authorName
+		// title
+		// genre
+		// availableCopies
+		// issueCount
+		return rawResult.stream().map(obj -> new TrendingBookForUserDto(((Long) obj[0]), (String) obj[1],
+				(String) obj[2], (String) obj[3], ((Long) obj[4]), ((Long) obj[5]))).collect(Collectors.toList());
 	}
-
-
 
 	@Override
 	public List<TrendingBookForUserDto> topBorrowedBooks() {
 		List<Object[]> rawResult = bookRepository.topBorrowedBooks();
-		
-		//just added order by ofr desc sorting by issue cnt
-		
-		return rawResult.stream().map(obj -> 
-        new TrendingBookForUserDto(
-        		((Long) obj[0]),  
-	            (String) obj[1],
-	            (String) obj[2],  
-	            (String) obj[3],    
-	            ((Long) obj[4]),    
-	            ((Long) obj[5])    
-        )
-    ).collect(Collectors.toList());
+
+		// just added order by ofr desc sorting by issue cnt
+
+		return rawResult.stream().map(obj -> new TrendingBookForUserDto(((Long) obj[0]), (String) obj[1],
+				(String) obj[2], (String) obj[3], ((Long) obj[4]), ((Long) obj[5]))).collect(Collectors.toList());
 	}
-	
+
 }
