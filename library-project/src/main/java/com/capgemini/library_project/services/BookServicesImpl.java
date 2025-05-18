@@ -5,7 +5,9 @@ import com.capgemini.library_project.dto.TrendingBookForUserDto;
 import com.capgemini.library_project.entities.Author;
 import com.capgemini.library_project.entities.Book;
 import com.capgemini.library_project.entities.Category;
+import com.capgemini.library_project.exceptions.AuthorNotFoundException;
 import com.capgemini.library_project.exceptions.BookNotFoundException;
+import com.capgemini.library_project.exceptions.CategoryNotFoundException;
 import com.capgemini.library_project.repositories.AuthorRepository;
 import com.capgemini.library_project.repositories.BookRepository;
 import com.capgemini.library_project.repositories.BorrowRecordRepository;
@@ -55,7 +57,9 @@ public class BookServicesImpl implements BookServices {
 	@Override
 	public Book addBook(Long categoryId, Book book) {
 		Category category = categoryRepository.findById(categoryId)
+
 				.orElseThrow(() -> new RuntimeException(CATEGORY_NOT_FOUND_MSG));
+    
 		book.setCategory(category);
 		category.getBooks().add(book);
 		return bookRepository.save(book);
@@ -75,7 +79,7 @@ public class BookServicesImpl implements BookServices {
 	@Override
 	public Book addBookToAuthor(Long authorId, Book book) {
 		Author author = authorRepository.findById(authorId)
-				.orElseThrow(() -> new RuntimeException("Author Not Found"));
+				.orElseThrow(() -> new AuthorNotFoundException(authorId));
 		book.setAuthor(author);
 		author.getBooks().add(book);
 		return bookRepository.save(book);
@@ -84,7 +88,8 @@ public class BookServicesImpl implements BookServices {
 	@Override
 	public void assignBookToAuthor(Long authorId, Long bookId) {
 		Author author = authorRepository.findById(authorId)
-				.orElseThrow(() -> new RuntimeException("Author Not Found"));
+				.orElseThrow(() -> new AuthorNotFoundException(authorId));
+		
 		Book book = bookRepository.findById(bookId).orElseThrow(() -> new RuntimeException(CATEGORY_NOT_FOUND_MSG));
 		author.getBooks().add(book);
 		book.setAuthor(author);
@@ -109,11 +114,14 @@ public class BookServicesImpl implements BookServices {
 		bookRepository.deleteById(bookId);
 	}
 
-	@Override
-	public Optional<Book> getBookById(Long bookId) {
-		return bookRepository.findById(bookId);
-	}
+	
+	
 
+	@Override
+	public Book getBookById(Long bookId) {
+		return bookRepository.findById(bookId).orElseThrow(()-> new BookNotFoundException("Book with ID " + bookId + " not found."));
+	}
+	
 	@Override
 	public List<Book> getAllBooks() {
 		return bookRepository.findAll();
@@ -144,7 +152,7 @@ public class BookServicesImpl implements BookServices {
 
 	@Override
 	public Book getImage(Long bookId) {
-		return bookRepository.findById(bookId).orElseThrow(() -> new BookNotFoundException("Book Not Found"));
+		return bookRepository.findById(bookId).orElseThrow(() -> new BookNotFoundException("Book with id " + bookId + " not found"));
 	}
 	
 	@Override
