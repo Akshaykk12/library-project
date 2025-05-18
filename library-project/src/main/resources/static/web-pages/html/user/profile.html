@@ -8,76 +8,96 @@
     rel="stylesheet"
   />
   <style>
-    #userImageDisplay {
-      max-width: 150px;
-      max-height: 150px;
-      border-radius: 8px;
+    #userImageDisplay,
+    #userImagePreview {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
       object-fit: cover;
+      border: 3px solid #ddd;
+    }
+
+    .profile-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card {
+      box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+      border-radius: 1rem;
+      padding: 1.5rem;
+    }
+
+    .form-label {
+      font-weight: 500;
+    }
+
+    .img-container {
+      text-align: right;
+    }
+
+    .form-control:disabled {
+      background-color: #f8f9fa;
     }
   </style>
 </head>
 <body class="container mt-5">
-  <h2 class="mb-4">Profile Settings</h2>
+  <div class="profile-header mb-4">
+    <h2>Profile Settings</h2>
+    <a href="User.html" class="btn btn-outline-primary">Back to Dashboard</a>
+  </div>
 
-  <nav class="navbar navbar-light bg-white mb-4">
-    <div class="container-fluid">
-      <a href="User.html" class="btn btn-outline-light bg-primary text-white">
-        Back to Dashboard
-      </a>
-    </div>
-  </nav>
+  <div class="card">
+    <div class="d-flex justify-content-between align-items-start mb-4">
+      <div>
+        <h5 class="mb-3">Your Information</h5>
+        <!-- Fields -->
+        <div class="mb-3">
+          <label class="form-label">Name</label>
+          <div id="userNameField">
+            <span id="userNameValue"></span>
+          </div>
+        </div>
 
-  <div id="profileContainer">
-    <!-- Name -->
-    <div class="mb-3">
-      <label class="form-label" for="userNameInput">Name</label>
-      <div id="userNameField" class="border rounded p-2">
-        <span id="userNameValue"></span>
+        <div class="mb-3">
+          <label class="form-label">Phone</label>
+          <div id="userContactField">
+            <span id="userContactValue"></span>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <div id="userEmailField">
+            <span id="userEmailValue"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="img-container">
+        <div id="userImageField">
+          <img id="userImageDisplay" src="https://via.placeholder.com/150" alt="Profile Image" />
+        </div>
       </div>
     </div>
 
-    <!-- Phone -->
-    <div class="mb-3">
-      <label class="form-label" for="userContactInput">Phone</label>
-      <div id="userContactField" class="border rounded p-2">
-        <span id="userContactValue"></span>
-      </div>
-    </div>
-
-    <!-- Email -->
-    <div class="mb-3">
-      <label class="form-label" for="userEmailInput">Email</label>
-      <div id="userEmailField" class="border rounded p-2">
-        <span id="userEmailValue"></span>
-      </div>
-    </div>
-
-    <!-- Image -->
-    <div class="mb-3">
-      <label class="form-label" for="userImageInput">Profile Image</label>
-      <div id="userImageField" class="border rounded p-2">
-        <img id="userImageDisplay" src="" alt="Profile Image" />
-      </div>
-    </div>
-
-    <!-- Common Edit / Save / Cancel buttons -->
-    <div class="mb-3">
+    <!-- Buttons -->
+    <div class="text-end">
       <button id="editBtn" class="btn btn-primary">Edit</button>
       <button id="saveBtn" class="btn btn-success d-none">Save</button>
       <button id="cancelBtn" class="btn btn-secondary d-none">Cancel</button>
     </div>
   </div>
+
   <script src="script.js"></script>
   <script>
-    // Mock functions (replace with your real implementations)
 
     (function () {
-      const currId = getUserId();
       const apiUrl = "http://localhost:8080/api";
       let currentUser = null;
       let isEditing = false;
 
-      // DOM references
       const editBtn = document.getElementById("editBtn");
       const saveBtn = document.getElementById("saveBtn");
       const cancelBtn = document.getElementById("cancelBtn");
@@ -103,14 +123,21 @@
         userNameField.innerHTML = `<input type="text" id="userNameInput" class="form-control" value="${currentUser.userName || ""}">`;
         userContactField.innerHTML = `<input type="text" id="userContactInput" class="form-control" value="${currentUser.userContact || ""}">`;
         userEmailField.innerHTML = `<input type="email" id="userEmailInput" class="form-control" value="${currentUser.userEmail || ""}">`;
+
         userImageField.innerHTML = `
-          <input type="url" id="userImageInput" class="form-control mb-2" placeholder="Image URL" value="${currentUser.userImage || ""}">
-          <img id="userImagePreview" src="${currentUser.userImage || 'https://via.placeholder.com/150'}" alt="Image Preview" style="max-width: 150px; max-height: 150px; border-radius: 8px; object-fit: cover;">
+          <input type="file" id="userImageInput" accept="image/*" class="form-control mb-2" />
+          <img id="userImagePreview" src="${currentUser.userImage || 'https://via.placeholder.com/150'}" alt="Image Preview" />
         `;
 
-        // Live update preview when input changes
-        document.getElementById("userImageInput").addEventListener("input", (e) => {
-          document.getElementById("userImagePreview").src = e.target.value || 'https://via.placeholder.com/150';
+        document.getElementById("userImageInput").addEventListener("change", (e) => {
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              document.getElementById("userImagePreview").src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+          }
         });
 
         editBtn.classList.add("d-none");
@@ -120,64 +147,72 @@
       }
 
       async function loadUser() {
-  try {
-    const currId = getUserId();
-    console.log("currId:", currId);
+        try {
+          const currId = getUserId();
+          if (!currId) {
+            alert("No user ID found. Please login.");
+            return;
+          }
 
-    if (!currId) {
-      alert("No user ID found. Please login.");
-      return;
-    }
+          const response = await fetch(`${apiUrl}/users`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": getAuthorization(),
+            },
+          });
 
-    const response = await fetch(`${apiUrl}/users`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": getAuthorization(),
-      },
-    });
+          if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+          const users = await response.json();
 
-    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+          currentUser = users.find(u => u.userId?.toString() === currId.toString());
+          if (!currentUser) {
+            alert("User not found!");
+            return;
+          }
 
-    const users = await response.json();
-    console.log("users:", users);
-
-    currentUser = users.find(u => u.userId?.toString() === currId.toString());
-
-    if (!currentUser) {
-      alert("User not found!");
-      return;
-    }
-
-    renderViewMode();
-  } catch (err) {
-    console.error("Error loading user:", err);
-    alert("Failed to load user details.");
-  }
-}
-
+          renderViewMode();
+        } catch (err) {
+          console.error("Error loading user:", err);
+          alert("Failed to load user details.");
+        }
+      }
 
       async function saveUser() {
-        let imageData = currentUser.userImage; // default
-
-        const imageInput = document.getElementById("userImageInput");
-        if (imageInput && imageInput.files && imageInput.files[0]) {
-          imageData = await new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = (e) => resolve(e.target.result);
-            reader.onerror = (err) => reject(err);
-            reader.readAsDataURL(imageInput.files[0]);
-          });
-        }
-        const updatedUser = {
-          ...currentUser,
-          userName: document.getElementById("userNameInput").value.trim(),
-          userContact: document.getElementById("userContactInput").value.trim(),
-          userEmail: document.getElementById("userEmailInput").value.trim(),
-          userImage: document.getElementById("userImageInput").value.trim(),
-        };
-
         try {
+          // Simple validation
+          const name = document.getElementById("userNameInput").value.trim();
+          const phone = document.getElementById("userContactInput").value.trim();
+          const email = document.getElementById("userEmailInput").value.trim();
+          if (!name || !phone || !email) {
+            alert("Please fill in all fields.");
+            return;
+          }
+          if (!validateEmail(email)) {
+            alert("Please enter a valid email address.");
+            return;
+          }
+
+          const imageInput = document.getElementById("userImageInput");
+          let imageData = currentUser.userImage;
+
+          if (imageInput && imageInput.files && imageInput.files[0]) {
+            imageData = await new Promise((resolve, reject) => {
+              const reader = new FileReader();
+              reader.onload = (e) => resolve(e.target.result);
+              reader.onerror = (err) => reject(err);
+              reader.readAsDataURL(imageInput.files[0]);
+            });
+          }
+
+          const updatedUser = {
+            ...currentUser,
+            userName: name,
+            userContact: phone,
+            userEmail: email,
+            userImage: imageData,
+          };
+
           const response = await fetch(`${apiUrl}/users/${currentUser.userId}`, {
             method: "PUT",
             headers: {
@@ -187,9 +222,7 @@
             body: JSON.stringify(updatedUser),
           });
 
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
+          if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
           currentUser = updatedUser;
           renderViewMode();
@@ -200,11 +233,13 @@
         }
       }
 
-      // Button handlers
+      function validateEmail(email) {
+        // Simple email regex
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      }
+
       editBtn.addEventListener("click", () => {
-        if (!isEditing) {
-          renderEditMode();
-        }
+        if (!isEditing) renderEditMode();
       });
 
       saveBtn.addEventListener("click", () => {
@@ -215,7 +250,6 @@
         renderViewMode();
       });
 
-      // Initial load
       loadUser();
     })();
   </script>
