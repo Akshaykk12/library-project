@@ -9,9 +9,11 @@ import com.capgemini.library_project.entities.Book;
 import com.capgemini.library_project.entities.BorrowRecord;
 import com.capgemini.library_project.entities.User;
 import com.capgemini.library_project.exceptions.AlreadyReturnedException;
+import com.capgemini.library_project.exceptions.BookNotFoundException;
 import com.capgemini.library_project.exceptions.BorrowRecordNotFoundException;
 import com.capgemini.library_project.exceptions.InvalidBorrowDateException;
 import com.capgemini.library_project.exceptions.InvalidStatusException;
+import com.capgemini.library_project.exceptions.UserNotFoundException;
 import com.capgemini.library_project.repositories.BookRepository;
 import com.capgemini.library_project.repositories.BorrowRecordRepository;
 import com.capgemini.library_project.repositories.UserRepository;
@@ -92,10 +94,11 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 	@Override
 	public BorrowRecord getBorrowRecordById(Long borrowId) {
 		logger.info("Fetching borrow record with ID: {}", borrowId);
-		return borrowRecordRepository.findById(borrowId).orElseThrow(() -> {
-			logger.error("No borrow record available for ID {}", borrowId);
-			return new RuntimeException("No Borrow Record available for " + borrowId);
-		});
+		return borrowRecordRepository.findById(borrowId)
+				.orElseThrow(() -> {
+					logger.error("No borrow record available for ID {}", borrowId);
+					return new BorrowRecordNotFoundException("Borrow Record with Id "+borrowId+"not found ");
+				});
 	}
 
 	// display all issue records of a single user by userId
@@ -167,10 +170,12 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 	@Override
 	public Integer calculateFine(Long borrowId) {
 		logger.info("Calculating fine for borrow record ID {}", borrowId);
-		BorrowRecord brecord = borrowRecordRepository.findById(borrowId).orElseThrow(() -> {
-			logger.error("Borrow record not found for fine calculation");
-			return new RuntimeException("Record not found");
-		});
+		BorrowRecord brecord = borrowRecordRepository.findById(borrowId)
+				.orElseThrow(() -> {
+					logger.error("Borrow record not found for fine calculation");
+					return new BorrowRecordNotFoundException("Borrow Record with Id "+borrowId+"not found ");
+					
+				});
 
 		LocalDate dueDate = brecord.getBorrowDate().plusDays(allowedReturnDays);
 		LocalDate returnDate = brecord.getBorrowReturnDate() != null ? brecord.getBorrowReturnDate() : LocalDate.now();
@@ -202,7 +207,10 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 	public BorrowRecord updateBorrowRecord(Long borrowId, BorrowRecord updatedBorrowRecord) {
 		logger.info("Updating borrow record ID {}", borrowId);
 		BorrowRecord borrowRecord = getBorrowRecordById(borrowId);
-
+		
+		if(borrowRecord==null) {
+			throw new BorrowRecordNotFoundException("Borrow Record with Id "+borrowId+"not found ");
+		}
 		String status = updatedBorrowRecord.getBorrowStatus();
 		if (status != null && !status.equalsIgnoreCase(STATUS_BORROWED) && !status.equalsIgnoreCase(STATUS_RETURNED)
 				&& !status.equalsIgnoreCase(STATUS_OVERDUE)) {
@@ -224,7 +232,11 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 	@Override
 	public void deleteBorrowRecord(Long borrowId) {
 		logger.info("Deleting borrow record with ID {}", borrowId);
-		getBorrowRecordById(borrowId);
+		BorrowRecord record = getBorrowRecordById(borrowId);
+		
+		if(record==null) {
+			throw new BorrowRecordNotFoundException("Borrow Record with Id "+borrowId+"not found ");
+		}
 		borrowRecordRepository.deleteById(borrowId);
 	}
 	

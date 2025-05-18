@@ -18,7 +18,8 @@ public interface BookServices {
 
 	void deleteBook(Long bookId);
 
-	Optional<Book> getBookById(Long bookId);
+	//Optional<Book> getBookById(Long bookId);
+	Book getBookById(Long bookId);
 
 	List<Book> getAllBooks();
 
