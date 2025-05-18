@@ -79,7 +79,7 @@ class BookControllerTest {
 	@Test
 	void testGetBookByIdFound() {
 		Book book = new Book();
-		when(bookService.getBookById(1L)).thenReturn(Optional.of(book));
+		when(bookService.getBookById(1L)).thenReturn((book));
 
 		ResponseEntity<Book> response = bookController.getBookById(1L);
 
