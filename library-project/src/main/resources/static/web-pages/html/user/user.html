@@ -82,6 +82,8 @@
             class="list-group-item list-group-item-action">Return Book</a>
           <a href="#" onclick="loadPage('UserHistory.html')"
             class="list-group-item list-group-item-action">History</a>
+            <a href="#" onclick="loadPage('UserReports.html')"
+            class="list-group-item list-group-item-action">Reports</a>
           <a href="#" onclick="loadPage('UserContact.html')"
             class="list-group-item list-group-item-action">Contact</a>
           <a href="#" onclick="LogOut('home.html')"
@@ -101,7 +103,7 @@
             <th>Book Cover</th>
             <th>Title</th>
             <th>Author Name</th>
-            <th>Description</th>
+            <th>Category</th>
             <th>Available Copies</th>
             <th>Total Copies</th>
             <th>Actions</th>
@@ -110,7 +112,7 @@
         <tbody></tbody>
       </table>
     </main>
-    <script src="../../js/script.js"></script>
+
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -144,9 +146,6 @@
       function displayBooksInTable(books) {
         booksTableBody.innerHTML = "";
         for (const book of books) {
-          const categoryDescription = book.category ? book.category.categoryDescription : "N/A";
-          const authorName = book.author ? book.author.authorName : "N/A";
-
           const row = document.createElement("tr");
           row.innerHTML = `
         	  <td>
@@ -157,12 +156,12 @@
               }
             </td>
             <td>${book.bookTitle}</td>
-            <td>${authorName}</td>
-            <td>${categoryDescription}</td>
+            <td>${book.authorName}</td>
+            <td>${book.categoryName}</td>
             <td>${book.availableCopies}</td>
             <td>${book.totalCopies}</td>
             <td>
-              <button class="btn btn-success btn-sm" onclick="issueBook(${book.bookId})">Issue Book</button>
+              <button class="btn btn-success btn-sm" onclick="issueBook(${book.bookId})">Borrow Book</button>
             </td>
           `;
           booksTableBody.appendChild(row);
@@ -192,12 +191,16 @@
 
       async function issueBook(bookId) {
   try {
+    const borrowDate = new Date().toISOString().split("T")[0]; // Format: YYYY-MM-DD
+    const borrowReturnDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0]; // 14 days later
     const borrowRecord = {
+      borrowDate: borrowDate,
+      borrowReturnDate: borrowReturnDate,
       bookId: bookId,
       userId: getUserId()
     };
 
-    const res = await fetch(`${apiUrl}/borrowRecords`, {
+    const res = await fetch(`${apiUrl}/borrowRecords/borrow`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
