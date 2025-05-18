@@ -29,7 +29,7 @@
 		</p>
 	</form>
 
-	<script src="script.js"></script>
+	<script src="../../js/script.js"></script>
 	<script>
     document.getElementById("loginForm").addEventListener("submit", function (e) {
       e.preventDefault();
@@ -75,7 +75,7 @@
           if (userType === "USER") {
             window.location.href = "User.html";
           } else {
-            window.location.href = "Admin.html";
+            window.location.href = "../admin/admin.html";
           }
         })
         .catch(error => {
