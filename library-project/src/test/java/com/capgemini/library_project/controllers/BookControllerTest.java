@@ -1,5 +1,6 @@
 package com.capgemini.library_project.controllers;
 
+import com.capgemini.library_project.dto.BookDto;
 import com.capgemini.library_project.entities.Book;
 import com.capgemini.library_project.repositories.BookRepository;
 import com.capgemini.library_project.services.BookServices;
@@ -22,7 +23,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class BookControllerTest {
+class BookControllerTest {
 
 	@Mock
 	private BookServices bookService;
@@ -37,12 +38,12 @@ public class BookControllerTest {
 	private BookController bookController;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		MockitoAnnotations.openMocks(this);
 	}
 
 	@Test
-	public void testAddBook() {
+	void testAddBook() {
 		Book book = new Book();
 		when(bindingResult.hasErrors()).thenReturn(false);
 		when(bookService.addBook(book)).thenReturn(book);
@@ -54,7 +55,7 @@ public class BookControllerTest {
 	}
 
 	@Test
-	public void testUpdateBook() {
+	void testUpdateBook() {
 		Book book = new Book();
 		when(bindingResult.hasErrors()).thenReturn(false);
 		when(bookService.updateBook(1L, book)).thenReturn(book);
@@ -66,7 +67,7 @@ public class BookControllerTest {
 	}
 
 	@Test
-	public void testDeleteBook() {
+	void testDeleteBook() {
 		doNothing().when(bookService).deleteBook(1L);
 
 		ResponseEntity<String> response = bookController.deleteBook(1L);
@@ -76,7 +77,7 @@ public class BookControllerTest {
 	}
 
 	@Test
-	public void testGetBookByIdFound() {
+	void testGetBookByIdFound() {
 		Book book = new Book();
 		when(bookService.getBookById(1L)).thenReturn(Optional.of(book));
 
@@ -87,7 +88,7 @@ public class BookControllerTest {
 	}
 
 	@Test
-	public void testGetBookByIdNotFound() {
+	void testGetBookByIdNotFound() {
 		when(bookService.getBookById(1L)).thenReturn(Optional.empty());
 
 		ResponseEntity<Book> response = bookController.getBookById(1L);
@@ -96,18 +97,37 @@ public class BookControllerTest {
 	}
 
 	@Test
-	public void testGetAllBooks() {
-		List<Book> books = Arrays.asList(new Book(), new Book());
-		when(bookService.getAllBooks()).thenReturn(books);
+	void testGetAllBooks() {
+	    Book book1 = new Book();
+	    book1.setBookId(1L);
+	    book1.setBookTitle("Book One");
+	    book1.setTotalCopies(10L);
+	    book1.setAvailableCopies(5L);
 
-		ResponseEntity<List<Book>> response = bookController.getAllBooks();
+	    Book book2 = new Book();
+	    book2.setBookId(2L);
+	    book2.setBookTitle("Book Two");
+	    book2.setTotalCopies(8L);
+	    book2.setAvailableCopies(4L);
 
-		assertEquals(HttpStatus.OK, response.getStatusCode());
-		assertEquals(2, response.getBody().size());
+	    List<Book> books = Arrays.asList(book1, book2);
+	    when(bookService.getAllBooks()).thenReturn(books);
+
+	    ResponseEntity<List<BookDto>> response = bookController.getAllBooks();
+
+	    assertEquals(HttpStatus.OK, response.getStatusCode());
+	    assertNotNull(response.getBody());
+	    assertEquals(2, response.getBody().size());
+
+	    BookDto dto1 = response.getBody().get(0);
+	    assertEquals("Book One", dto1.getBookTitle());
+
+	    BookDto dto2 = response.getBody().get(1);
+	    assertEquals("Book Two", dto2.getBookTitle());
 	}
 
 	@Test
-	public void testGetBooksByAuthorId() {
+	void testGetBooksByAuthorId() {
 		List<Book> books = Arrays.asList(new Book(), new Book());
 		when(bookService.getBooksByAuthorId(1L)).thenReturn(books);
 
@@ -118,7 +138,7 @@ public class BookControllerTest {
 	}
 
 	@Test
-	public void testAssignBookToCategory() {
+	void testAssignBookToCategory() {
 		doNothing().when(bookService).assignBook(1L, 2L);
 
 		ResponseEntity<Void> response = bookController.assignBook(1L, 2L);
@@ -127,7 +147,7 @@ public class BookControllerTest {
 	}
 
 	@Test
-	public void testAssignBookToCategoryAndCreate() {
+	void testAssignBookToCategoryAndCreate() {
 		Book book = new Book();
 		when(bindingResult.hasErrors()).thenReturn(false);
 		when(bookService.addBook(1L, book)).thenReturn(book);
@@ -139,7 +159,7 @@ public class BookControllerTest {
 	}
 
 	@Test
-	public void testAssignBookToAuthor() {
+	void testAssignBookToAuthor() {
 		doNothing().when(bookService).assignBookToAuthor(1L, 2L);
 
 		ResponseEntity<Void> response = bookController.assignBookToAuthor(1L, 2L);
@@ -148,7 +168,7 @@ public class BookControllerTest {
 	}
 
 	@Test
-	public void testAssignBookToAuthorAndCreate() {
+	void testAssignBookToAuthorAndCreate() {
 		Book book = new Book();
 		when(bindingResult.hasErrors()).thenReturn(false);
 		when(bookService.addBookToAuthor(1L, book)).thenReturn(book);
@@ -160,7 +180,7 @@ public class BookControllerTest {
 	}
 
 	@Test
-	public void testUploadImage() throws IOException {
+	void testUploadImage() throws IOException {
 		Book book = new Book();
 		MultipartFile image = new MockMultipartFile("image", "image.jpg", "image/jpeg", new byte[10]);
 		when(bookService.updateImage(1L, image)).thenReturn(book);
@@ -172,7 +192,7 @@ public class BookControllerTest {
 	}
 
 	@Test
-	public void testDeleteProfileImage() {
+	void testDeleteProfileImage() {
 		Book book = new Book();
 		when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
 

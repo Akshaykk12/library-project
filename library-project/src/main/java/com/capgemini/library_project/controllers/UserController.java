@@ -66,19 +66,28 @@ public class UserController {
 	public ResponseEntity<User> updateUser(@PathVariable Long userId, @Valid @RequestBody User user,
 			BindingResult bindingResult) {
 		logger.info("Received request to update user ID: {}", userId);
+		
 		if (bindingResult.hasErrors()) {
 			throw new IllegalArgumentException("Invalid Data");
 		}
 		User updatedUser = userServices.updateUser(userId, user);
+		
+		if (updatedUser == null) {
+	        return ResponseEntity.notFound().build();  
+	    }
 		return ResponseEntity.ok(updatedUser);
 	}
 
 	@DeleteMapping("/{userId}")
 	public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
 		logger.info("Received request to delete user ID: {}", userId);
-		userServices.deleteUser(userId);
+		boolean deleted = userServices.deleteUser(userId);
+		if (!deleted) {
+			return ResponseEntity.notFound().build();
+		}
 		return ResponseEntity.noContent().build();
 	}
+
 
 	@PostMapping(value = "/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<User> uploadImage(@RequestParam Long userId, @RequestParam MultipartFile image)

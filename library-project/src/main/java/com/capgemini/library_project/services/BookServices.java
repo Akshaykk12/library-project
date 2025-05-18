@@ -1,9 +1,12 @@
 package com.capgemini.library_project.services;
 
+import com.capgemini.library_project.dto.AdminDashboardDto;
+import com.capgemini.library_project.dto.TrendingBookForUserDto;
 import com.capgemini.library_project.entities.Book;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -21,8 +24,6 @@ public interface BookServices {
 
 	List<Book> getBooksByAuthorId(Long authorId);
 
-//	List<Book> getBooksByCategoryId(Long categoryId);
-
 	Book updateImage(Long bookId, MultipartFile image) throws IOException;
 
 	public Book getImage(Long bookId);
@@ -37,4 +38,11 @@ public interface BookServices {
 	
 	List<Object[]> getCategoryBookCounts();
 
+	Map<String, Long> findCategoryCount();
+	
+	AdminDashboardDto dashBoardDto();
+	
+	List<TrendingBookForUserDto> getTrendingBooksForUser();
+	
+	List<TrendingBookForUserDto> topBorrowedBooks();
 }

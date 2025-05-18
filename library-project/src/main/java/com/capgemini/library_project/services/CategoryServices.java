@@ -17,6 +17,19 @@ public interface CategoryServices {
 	Category patchCategory(Long categoryId, Category category);
 	
 	boolean deleteCategory(Long categoryId);
+	
+	List<Category> getByCategoryName(String name);
+
+    List<Category> getByCategoryNameContaining(String fragment);
+
+    List<Category> searchByDescription(String keyword);
+
+    List<Object[]> countBooksPerCategory();
+
+    List<Category> findWithAvailableBooks();
+
+    List<Category> getAllOrderByBookCountDesc();
+
 
 
 }
