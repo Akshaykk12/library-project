@@ -82,11 +82,11 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminDropdown">
               <li>
-                <a class="dropdown-item" href="#" onclick="loadPage('AdminProfile.html')"><i
+                <a class="dropdown-item" href="#" onclick="loadPage('adminProfile.html')"><i
                     class="bi bi-person sidebar-icon"></i> Profile</a>
               </li>
               <li>
-                <a class="dropdown-item" href="#" onclick="LogOut('home.html')"><i
+                <a class="dropdown-item" href="#" onclick="loadPage('../auth/login.html')"><i
                     class="bi bi-box-arrow-right sidebar-icon"></i>
                   Logout</a>
               </li>
@@ -162,36 +162,21 @@
             </div>
           </div> -->
 
-        <a class="list-group-item list-group-item-action" href="#" onclick="loadPage('Book.html')">
+        <a class="list-group-item list-group-item-action" href="#" onclick="loadPage('book.html')">
           <i class="bi bi-book sidebar-icon"></i> All Books
         </a>
-        <a class="list-group-item list-group-item-action" href="#" onclick="loadPage('RegisteredUsers.html')">
+        <a class="list-group-item list-group-item-action" href="#" onclick="loadPage('registeredUsers.html')">
           <i class="bi bi-people sidebar-icon"></i> All Users
         </a>
-        <a class="list-group-item list-group-item-action" href="#" onclick="loadPage('Author.html')">
+        <a class="list-group-item list-group-item-action" href="#" onclick="loadPage('author.html')">
           <i class="bi bi-people sidebar-icon"></i> Authors
         </a>
-        <a class="list-group-item list-group-item-action" href="#" onclick="loadPage('Overdue.html')">
+        <a class="list-group-item list-group-item-action" href="#" onclick="loadPage('overdue.html')">
           <i class="bi bi-exclamation-circle sidebar-icon"></i> Overdue
         </a>
         <a class="list-group-item list-group-item-action" href="#">
           <i class="bi bi-arrow-repeat sidebar-icon"></i> Returns
         </a>
-        <!--  -->
-        <a class="list-group-item list-group-item-action" data-bs-toggle="collapse" href="#queriesSubmenu" role="button"
-          aria-expanded="false" aria-controls="queriesSubmenu">
-          <i class="bi bi-question-circle sidebar-icon"></i> User Queries
-        </a>
-        <div class="collapse" id="queriesSubmenu">
-          <div class="card card-body">
-            <a href="#" class="list-group-item list-group-item-action">
-              <i class="bi bi-exclamation-triangle sidebar-icon"></i> Unsolved
-            </a>
-            <a href="#" class="list-group-item list-group-item-action">
-              <i class="bi bi-check2-circle sidebar-icon"></i> Solved
-            </a>
-          </div>
-        </div>
         <!--  -->
         <a class="list-group-item list-group-item-action position-relative" href="#" onclick="loadPage('Reports.html')">
           <i class="bi bi-bell sidebar-icon"></i> Reports

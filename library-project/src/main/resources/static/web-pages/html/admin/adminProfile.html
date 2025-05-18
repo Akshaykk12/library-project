@@ -65,14 +65,16 @@
     </div>
   </div>
 
-  <script src="script.js"></script>
   <script>
     (function () {
-      const currId = getUserId(); // Extracted from JWT
+      const currId = getUserId(); 
       const apiUrl = "http://localhost:8080/api/users";
       let currentUser = null;
       let isEditing = false;
-
+      
+      document.getElementById("userNameValue").innerHTML = `${getUserName()}`;
+      document.getElementById("userContactValue").innerHTML = `${getUserPhone()}`;
+      document.getElementById("userEmailValue").innerHTML = `${getUserEmail()}`;
       // DOM Elements
       const editBtn = document.getElementById("editBtn");
       const saveBtn = document.getElementById("saveBtn");
@@ -114,33 +116,6 @@
         isEditing = true;
       }
 
-      async function loadUser() {
-        try {
-          const response = await fetch(`${apiUrl}`, {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": getAuthorization(),
-            },
-          });
-
-          if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-
-          const users = await response.json();
-          currentUser = users.find(u => u.userId?.toString() === currId.toString());
-
-          if (!currentUser) {
-            alert("User not found!");
-            return;
-          }
-
-          renderViewMode();
-        } catch (err) {
-          console.error("Error loading user:", err);
-          alert("Failed to load user details.");
-        }
-      }
-
       async function saveUser() {
         const updatedUser = {
           ...currentUser,
@@ -151,7 +126,7 @@
         };
 
         try {
-          const response = await fetch(`${apiUrl}/${currentUser.userId}`, {
+          const response = await fetch(`${BASE_URL}/api/users/${currentUser.userId}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
@@ -179,7 +154,7 @@
 
       cancelBtn.addEventListener("click", renderViewMode);
 
-      loadUser();
+
     })();
   </script>
 </body>

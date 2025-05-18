@@ -64,7 +64,15 @@ function getUserName() {
     if (!token)
         window.location.href = "index.html";
     const decoded = decodeJWT(token);
-    return decoded.sub;
+    return decoded.name;
+}
+
+function getUserPhone() {
+    const token = localStorage.getItem("token");
+    if (!token)
+        window.location.href = "index.html";
+    const decoded = decodeJWT(token);
+    return decoded.phone;
 }
 
 function getUserEmail() {
@@ -72,7 +80,7 @@ function getUserEmail() {
     if (!token)
         window.location.href = "index.html";;
     const decoded = decodeJWT(token);
-    return decoded.userEmail;
+    return decoded.email;
 }
 
 function getUserType() {
