@@ -2,9 +2,10 @@ package com.capgemini.library_project.services;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 
-import com.capgemini.library_project.dto.BorrowRequest;
+import com.capgemini.library_project.dto.BorrowRecordDto;
 import com.capgemini.library_project.entities.Book;
 import com.capgemini.library_project.entities.BorrowRecord;
 import com.capgemini.library_project.entities.User;
@@ -55,7 +56,7 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 
 	@Override
 	@Transactional
-	public BorrowRecord borrowBook(BorrowRequest dto) {
+	public BorrowRecord borrowBook(BorrowRecordDto dto) {
 
 		Book book = bookRepository.findById(dto.getBookId())
 				.orElseThrow(() -> new RuntimeException("Book not found: " + dto.getBookId()));
@@ -73,8 +74,8 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 		BorrowRecord rec = new BorrowRecord();
 		rec.setBook(book);
 		rec.setUser(user);
-		rec.setBorrowDate(dto.getIssueDate() != null ? dto.getIssueDate() : LocalDate.now());
-		rec.setBorrowReturnDate(dto.getReturnDate() != null ? dto.getReturnDate() : rec.getBorrowDate().plusDays(7));
+		rec.setBorrowDate(dto.getBorrowDate() != null ? dto.getBorrowDate() : LocalDate.now());
+		rec.setBorrowReturnDate(dto.getBorrowReturnDate() != null ? dto.getBorrowReturnDate() : rec.getBorrowDate().plusDays(7));
 		rec.setBorrowStatus(STATUS_BORROWED);
 
 //	    logger.debug("Borrow record created: {}", borrowRecord);
@@ -102,11 +103,26 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 
 	// display all issue records of a single user by userId
 	@Override
-	public List<BorrowRecord> getAllBorrowRecordByUser(Long userId) {
+	public List<BorrowRecordDto> getAllBorrowRecordByUser(Long userId) {
+	    logger.info("Fetching all borrow records for user ID {}", userId);
 
-		logger.info("Fetching all borrow records for user ID {}", userId);
-		return borrowRecordRepository.findAllByUser_UserId(userId);
+	    List<BorrowRecord> records = borrowRecordRepository.findAllByUser_UserId(userId);
+	    List<BorrowRecordDto> dtos = new ArrayList<>();
+
+	    for (BorrowRecord record : records) {
+	        BorrowRecordDto dto = new BorrowRecordDto();
+	        dto.setBorrowId(record.getBorrowId());
+	        dto.setUserId(record.getUser().getUserId());
+	        dto.setBookId(record.getBook().getBookId());
+	        dto.setBookTitle(record.getBook().getBookTitle());  // fetch book title here
+	        dto.setBorrowDate(record.getBorrowDate());
+	        dto.setBorrowReturnDate(record.getBorrowReturnDate());
+	        dto.setBorrowStatus(record.getBorrowStatus());
+	        dtos.add(dto);
+	    }
+	    return dtos;
 	}
+
 
 	// how many times a book was borrowed
 	@Override

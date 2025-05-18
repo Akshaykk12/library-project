@@ -2,7 +2,9 @@ package com.capgemini.library_project.services;
 
 import com.capgemini.library_project.dto.AdminDashboardDto;
 import com.capgemini.library_project.dto.TrendingBookForUserDto;
+import com.capgemini.library_project.entities.Author;
 import com.capgemini.library_project.entities.Book;
+import com.capgemini.library_project.entities.Category;
 
 import java.io.IOException;
 import java.util.List;
@@ -12,8 +14,10 @@ import java.util.Optional;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface BookServices {
-	Book addBook(Book book);
+	Book addBook(String bookTitle, Long totalCopies, Long availableCopies, Author author, Category category,  MultipartFile bookCover) throws IOException;
 
+	Book addBook(Book book);
+	
 	Book updateBook(Long bookId, Book book);
 
 	void deleteBook(Long bookId);
