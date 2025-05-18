@@ -35,4 +35,10 @@ public interface BorrowRecordServices {
 
 	void deleteBorrowRecord(Long borrowId);
 
+	List<Object[]> findTopBorrowedBooks();
+	
+	List<Object[]> getMonthlyBorrowCounts();
+	
+	List<BorrowRecord> getIssuedRecords();
+    BorrowRecord updateStatus(Long borrowId, String status);
 }

@@ -9,6 +9,7 @@ import com.capgemini.library_project.entities.Book;
 import com.capgemini.library_project.entities.BorrowRecord;
 import com.capgemini.library_project.entities.User;
 import com.capgemini.library_project.exceptions.AlreadyReturnedException;
+import com.capgemini.library_project.exceptions.BorrowRecordNotFoundException;
 import com.capgemini.library_project.exceptions.InvalidBorrowDateException;
 import com.capgemini.library_project.exceptions.InvalidStatusException;
 import com.capgemini.library_project.repositories.BookRepository;
@@ -260,4 +261,28 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 		BorrowRecord record = getBorrowRecordById(borrowId);
 		borrowRecordRepository.deleteById(borrowId);
 	}
+	
+	public List<Object[]> findTopBorrowedBooks() {
+	    return borrowRecordRepository.findTopBorrowedBooks();
+	}
+	
+	@Override
+	public List<Object[]> getMonthlyBorrowCounts() {
+	    return borrowRecordRepository.countBorrowRecordsByMonth();
+	}
+	
+	 @Override
+	    public BorrowRecord updateStatus(Long borrowId, String newStatus) {
+	        BorrowRecord record = borrowRecordRepository.findById(borrowId)
+	            .orElseThrow(() -> new BorrowRecordNotFoundException("Borrow record not found with id: " + borrowId));
+	        
+	        record.setBorrowStatus(newStatus);
+	        return borrowRecordRepository.save(record);
+	    }
+	 
+	 @Override
+	    public List<BorrowRecord> getIssuedRecords() {
+	        return borrowRecordRepository.findByBorrowStatusIn(List.of("Borrowed", "Overdue"));
+	    }
+
 }

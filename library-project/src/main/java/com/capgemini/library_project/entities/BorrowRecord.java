@@ -44,8 +44,9 @@ public class BorrowRecord {
     private LocalDate borrowReturnDate;
 
     @NotNull(message = "Fine is required")
-    private Integer fine;
+    private Integer fine = 0;
     
     @NotBlank(message = "Borrow Status is required")
     private String borrowStatus;
+    
 }
