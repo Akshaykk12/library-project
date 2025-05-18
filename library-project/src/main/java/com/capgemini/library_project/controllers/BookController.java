@@ -1,5 +1,8 @@
 package com.capgemini.library_project.controllers;
 
+import com.capgemini.library_project.dto.AdminDashboardDto;
+import com.capgemini.library_project.dto.BookDto;
+import com.capgemini.library_project.dto.TrendingBookForUserDto;
 import com.capgemini.library_project.entities.Book;
 import com.capgemini.library_project.repositories.BookRepository;
 import com.capgemini.library_project.services.BookServices;
@@ -82,9 +85,21 @@ public class BookController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<Book>> getAllBooks() {
-		logger.info("GET: Fetching all books");
-		return ResponseEntity.ok(bookService.getAllBooks());
+	public ResponseEntity<List<BookDto>> getAllBooks() {
+	    List<Book> books = bookService.getAllBooks();
+	    List<BookDto> bookDtos = books.stream().map(book -> {
+	        BookDto dto = new BookDto();
+	        dto.setBookId(book.getBookId());
+	        dto.setBookTitle(book.getBookTitle());
+	        dto.setTotalCopies(book.getTotalCopies());
+	        dto.setAvailableCopies(book.getAvailableCopies());
+	        dto.setBookCover(book.getBookCover());
+	        dto.setAuthorName(book.getAuthor() != null ? book.getAuthor().getAuthorName() : null);
+	        dto.setCategoryName(book.getCategory() != null ? book.getCategory().getCategoryName() : null);
+	        return dto;
+	    }).toList();
+
+	    return ResponseEntity.ok(bookDtos);
 	}
 
 	@GetMapping("/author/{authorId}")
@@ -129,6 +144,24 @@ public class BookController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(bookService.addBookToAuthor(authorId, book));
 	}
 
+	@PostMapping("/createWithAuthorAndCategory")
+	public ResponseEntity<Book> createBookWithAuthorAndCategory(@RequestParam Long authorId,
+			@RequestParam Long categoryId, @Valid @RequestBody Book book, BindingResult bindingResult) {
+
+		logger.info("POST: Creating book with author ID {} and category ID {}", authorId, categoryId);
+
+		if (bindingResult.hasErrors()) {
+			throw new IllegalArgumentException("Invalid book data");
+		}
+
+		Book savedBook = bookService.addBook(book);
+
+		bookService.assignBookToAuthor(authorId, savedBook.getBookId());
+		bookService.assignBook(categoryId, savedBook.getBookId());
+
+		return ResponseEntity.status(HttpStatus.CREATED).body(savedBook);
+	}
+
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, path = "/profile")
 	public ResponseEntity<Book> uploadImage(@RequestParam Long bookId, @RequestParam MultipartFile image)
 			throws IOException {
@@ -158,5 +191,26 @@ public class BookController {
 		book.setBookCover(null);
 		bookRepository.save(book);
 		return ResponseEntity.ok().build();
+	}
+
+	@GetMapping("/categoryCount")
+	public ResponseEntity<List<Object[]>> getCategoryBookCounts() {
+		logger.info("GET: Fetching book counts by category");
+		return ResponseEntity.ok(bookService.getCategoryBookCounts());
+	}
+
+	@GetMapping("/count")
+	public ResponseEntity<Long> getTotalBookCount() {
+		return ResponseEntity.ok(bookRepository.count());
+	}
+
+	@GetMapping("/adminData")
+	public ResponseEntity<AdminDashboardDto> getAdminDashBoardData() {
+		return ResponseEntity.status(200).body(bookService.dashBoardDto());
+	}
+
+	@GetMapping("/userData")
+	public ResponseEntity<List<TrendingBookForUserDto>> getUserDisplayData() {
+		return ResponseEntity.status(200).body(bookService.getTrendingBooksForUser());
 	}
 }

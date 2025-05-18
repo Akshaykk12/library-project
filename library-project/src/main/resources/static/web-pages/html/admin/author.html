@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Author table</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="container my-5 border p-4">
+    <h2 class="mb-4">Authors Registration Form:</h2>
+
+    <form id="authorForm" class="mb-4">
+      <div class="mb-3">
+        <input
+          type="file"
+          class="form-control"
+          id="authorImage"
+          accept="image/*"
+        />
+
+        <input type="hidden" id="existingImage" />
+      </div>
+      <div class="mb-3">
+        <label for="authorName" class="form-label">Author Name</label>
+        <input type="text" class="form-control" id="authorName" required />
+        <div class="invalid-feedback">At least 5 characters required.</div>
+        <div class="text-danger d-none" id="authorExists">
+          Author already exists
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="authorBio" class="form-label">Author Bio</label>
+        <input type="text" class="form-control" id="authorBio" required />
+        <div class="invalid-feedback">At least 5 characters required.</div>
+      </div>
+      <div class="mb-3">
+        <label for="authorSocial" class="form-label">Author Social</label>
+        <input type="text" class="form-control" id="authorSocial" required />
+        <div class="invalid-feedback">At least 5 characters required.</div>
+      </div>
+      <button type="submit" class="btn btn-primary" id="submitBtn">
+        Add Author
+      </button>
+    </form>
+
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Author Photo</th>
+          <th>Author Name <i class="bi bi-arrow-down-up"></i></th>
+          <th>Author Details</th>
+          <th>Author Social</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="authorTableBody"></tbody>
+    </table>
+    <script src="../../js/script.js"></script>
+    <script>
+      (function () {
+
+        let allauthors = [];
+        let sortDirection = 1;
+        let editId = null;
+        let authorNameInput = document.getElementById("authorName");
+        let authorBioInput = document.getElementById("authorBio");
+        let authorSocialInput = document.getElementById("authorSocial");
+        let form = document.getElementById("authorForm");
+        let submitBtn = document.getElementById("submitBtn");
+        let searchInput = document.createElement("input");
+        const imageInput = document.getElementById("authorImage");
+
+        async function fetchAndRenderAuthor() {
+          allauthors = await fetch(`${BASE_URL}/api/authors`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: getAuthorization(),
+            },
+          }).then((response) => {
+            if (!response.ok) {
+              alert("pls login first");
+            }
+            return response.json();
+          });
+          console.log(allauthors);
+          renderAuthor(allauthors);
+        }
+
+        function renderAuthor(allauthors) {
+          const tbody = document.getElementById("authorTableBody");
+          tbody.innerHTML = "";
+          console.log(allauthors);
+
+          allauthors.forEach((author) => {
+            function appendAuthorRow(imageUrl = null) {
+              const row = document.createElement("tr");
+              row.innerHTML = `
+        <td>${
+          imageUrl
+            ? `<img src="${imageUrl}" alt="Author Image" width="40" height="40" class="me-2 rounded-circle" />`
+            : `<i class="bi bi-person-circle fs-4 me-2"></i>`
+        }</td>
+        <td>${author.authorName}</td>
+        <td>${author.authorBio}</td>
+        <td>${author.authorSocial}</td>
+        <td>
+          <button class="btn btn-sm btn-outline-primary me-1 edit-btn" data-id="${
+            author.authorId
+          }">
+            <i class="bi bi-pencil-square"></i>
+          </button>
+          <button class="btn btn-sm btn-outline-danger delete-btn" data-id="${
+            author.authorId
+          }">
+            <i class="bi bi-trash"></i>
+          </button>
+        </td>
+      `;
+              tbody.appendChild(row);
+
+              row.querySelector(".delete-btn").addEventListener("click", () => {
+                deleteAuthor(author.authorId);
+              });
+
+              row.querySelector(".edit-btn").addEventListener("click", () => {
+                loadAndEditAuthor(author.authorId);
+              });
+            }
+
+            if (author.authorImage) {
+              fetch(`${BASE_URL}/api/authors/images/${author.authorImage}`, {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: getAuthorization(),
+                },
+              })
+                .then((response) => {
+                  if (!response.ok) {
+                    throw new Error("Image not found");
+                  }
+                  return response.blob();
+                })
+                .then((blob) => {
+                  const reader = new FileReader();
+                  reader.onloadend = function () {
+                    const imageUrl = reader.result;
+                    appendAuthorRow(imageUrl);
+                  };
+                  reader.readAsDataURL(blob);
+                })
+                .catch((error) => {
+                  console.warn("Image load failed:", error);
+                  appendAuthorRow(null);
+                });
+            } else {
+              appendAuthorRow(null);
+            }
+          });
+        }
+
+        function deleteAuthor(Id) {
+          console.log("id received " + Id);
+          if (confirm("Are you sure?")) {
+            console.log("in if condn");
+            fetch(`${BASE_URL}/api/authors/${Id}`, {
+              method: "DELETE",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: getAuthorization(),
+              },
+            }).then(() => fetchAndRenderAuthor());
+          }
+
+          console.log("out if condn");
+        }
+
+        function loadAndEditAuthor(id) {
+          fetch(`${BASE_URL}/api/authors/${id}`, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: getAuthorization(),
+            },
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              document.getElementById("existingImage").value = data.authorImage;
+
+              authorNameInput.value = data.authorName;
+              authorBioInput.value = data.authorBio;
+              authorSocialInput.value = data.authorSocial;
+              editId = id;
+              submitBtn.textContent = "Update Author";
+            });
+        }
+
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+          if (!validateForm()) return;
+          const author = new FormData();
+
+          author.append("authorName", authorNameInput.value.trim());
+          author.append("authorBio", authorBioInput.value.trim());
+          author.append("authorSocial", authorSocialInput.value.trim());
+
+          if (imageInput.files.length > 0) {
+            author.append("authorImage", imageInput.files[0]);
+          }
+          const url = editId
+            ? `${BASE_URL}/api/authors/${editId}`
+            : `${BASE_URL}/api/authors`;
+          const method = editId ? "PUT" : "POST";
+
+          fetch(`${url}`, {
+            method,
+            headers: {
+              Authorization: getAuthorization(),
+            },
+            body: author,
+          }).then(() => {
+            const last = sessionStorage.getItem("lastPageVisited");
+            if (typeof loadPage === "function" && last) {
+              loadPage(last);
+            } else {
+              fetchAndRenderAuthor();
+              form.reset();
+              clearValidation();
+              editId = null;
+              submitBtn.textContent = "Add Author";
+            }
+          });
+        });
+
+        function clearValidation() {
+          authorNameInput.classList.remove("is-valid", "is-invalid");
+          authorBioInput.classList.remove("is-valid", "is-invalid");
+        }
+
+        document.querySelector("th:nth-child(1)").style.cursor = "pointer";
+        document
+          .querySelector("th:nth-child(1)")
+          .addEventListener("click", () => {
+            console.log("All Authors: " + allauthors);
+            const sorted = [...allauthors].sort(
+              (a, b) => a.authorName.localeCompare(b.authorName) * sortDirection
+            );
+            sortDirection *= -1;
+            renderAuthor(sorted);
+          });
+
+        searchInput.setAttribute("type", "text");
+        searchInput.setAttribute("placeholder", "Search by Author Name...");
+        searchInput.classList.add("form-control", "mb-3");
+        document
+          .querySelector(".table")
+          .parentNode.insertBefore(
+            searchInput,
+            document.querySelector(".table")
+          );
+
+        searchInput.addEventListener("input", () => {
+          console.log(allauthors);
+          const searchTerm = searchInput.value.toLowerCase();
+          const filtered = allauthors.filter(
+            (auth) =>
+              auth.authorName.toLowerCase().includes(searchTerm) ||
+              auth.authorBio.toLowerCase().includes(searchTerm)
+          );
+          renderAuthor(filtered);
+        });
+
+        function validateForm() {
+          let isValid = true;
+
+          authorNameInput.addEventListener("blur", () => {
+            let authorExists = document.getElementById("authorExists");
+            if (
+              allauthors.some((ele) => ele.authorName === authorNameInput.value)
+            ) {
+              authorExists.classList.remove("d-none");
+              authorNameInput.classList.remove("is-invalid");
+              authorNameInput.classList.add("is-valid");
+              isValid = false;
+            } else if (!authorNameInput.value.trim()) {
+              authorExists.classList.add("d-none");
+              authorNameInput.classList.add("is-invalid");
+              authorNameInput.classList.remove("is-valid");
+              isValid = false;
+            } else {
+              authorExists.classList.add("d-none");
+              authorNameInput.classList.remove("is-invalid");
+              authorNameInput.classList.add("is-valid");
+            }
+          });
+          authorBioInput.addEventListener("blur", () => {
+            if (authorBioInput.value.trim().length < 5) {
+              authorBioInput.classList.add("is-invalid");
+              authorBioInput.classList.remove("is-valid");
+              isValid = false;
+            } else {
+              authorBioInput.classList.remove("is-invalid");
+              authorBioInput.classList.add("is-valid");
+            }
+          });
+          return isValid;
+        }
+
+        validateForm();
+        fetchAndRenderAuthor();
+      })();
+    </script>
+  </body>
+</html>
