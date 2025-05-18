@@ -190,10 +190,15 @@ public class BookController {
 		return ResponseEntity.ok().build();
 	}
 
-	@GetMapping("/categoryCount")
-	public ResponseEntity<Map<String, Long>> findGenreCount() {
-		return ResponseEntity.status(200).body(bookService.findCategoryCount());
+  @GetMapping("/categoryCount")
+	public ResponseEntity<List<Object[]>> getCategoryBookCounts() {
+	    logger.info("GET: Fetching book counts by category");
+	    return ResponseEntity.ok(bookService.getCategoryBookCounts());
 	}
+	
+	@GetMapping("/count")
+	public ResponseEntity<Long> getTotalBookCount() {
+	    return ResponseEntity.ok(bookRepository.count());
 
 	@GetMapping("/adminData")
 	public ResponseEntity<AdminDashboardDto> getAdminDashBoardData() {
