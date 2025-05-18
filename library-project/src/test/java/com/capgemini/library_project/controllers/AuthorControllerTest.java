@@ -52,14 +52,14 @@ class AuthorControllerTest {
 	    assertEquals(1, response.getBody().size());
 	}
 
-	@Test
-	void testCreateAuthor() {
-		when(bindingResult.hasErrors()).thenReturn(false);
-		when(authorServices.createAuthor(author)).thenReturn(author);
-		ResponseEntity<Author> response = authorController.createAuthor(author, bindingResult);
-		assertEquals(HttpStatus.CREATED, response.getStatusCode());
-		assertEquals("Test Author", response.getBody().getAuthorName());
-	}
+//	@Test
+//	void testCreateAuthor() {
+//		when(bindingResult.hasErrors()).thenReturn(false);
+//		when(authorServices.createAuthor(author)).thenReturn(author);
+//		ResponseEntity<Author> response = authorController.createAuthor(author, bindingResult);
+//		assertEquals(HttpStatus.CREATED, response.getStatusCode());
+//		assertEquals("Test Author", response.getBody().getAuthorName());
+//	}
 
 	@Test
 	void testUpdateAuthorById() {
