@@ -284,5 +284,10 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 	    public List<BorrowRecord> getIssuedRecords() {
 	        return borrowRecordRepository.findByBorrowStatusIn(List.of("Borrowed", "Overdue"));
 	    }
+	 
+	 @Override
+	    public long countActiveBorrows() {
+	        return borrowRecordRepository.countByBorrowStatus("BORROWED");
+	    }
 
 }

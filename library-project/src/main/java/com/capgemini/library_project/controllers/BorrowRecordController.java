@@ -29,12 +29,12 @@ public class BorrowRecordController {
 
 	private final BorrowRecordServices borrowRecordServices;
 	
-	private final BorrowRecordRepository borrowRecordRepository;
+	
 
 	@Autowired
-	public BorrowRecordController(BorrowRecordServices borrowRecordServices, BorrowRecordRepository borrowRecordRepository) {
+	public BorrowRecordController(BorrowRecordServices borrowRecordServices) {
 		this.borrowRecordServices = borrowRecordServices;
-		this.borrowRecordRepository = borrowRecordRepository;
+	
 	}
 
 	// issue a book
@@ -147,10 +147,9 @@ public class BorrowRecordController {
 	}
 	
 	@GetMapping("/activeCount")
-	public ResponseEntity<Long> countActiveBorrows() {
-	    // Change from countByStatus() to countByBorrowStatus()
-	    return ResponseEntity.ok(borrowRecordRepository.countByBorrowStatus("BORROWED"));
-	}
+    public ResponseEntity<Long> countActiveBorrows() {
+        return ResponseEntity.ok(borrowRecordServices.countActiveBorrows());
+    }
 	
 	// In BorrowRecordController.java
 	 @PatchMapping("/{id}")
