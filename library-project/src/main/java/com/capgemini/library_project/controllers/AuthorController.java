@@ -48,13 +48,13 @@ public class AuthorController {
 		return ResponseEntity.status(HttpStatus.OK).body(allAuthors);
 	}
 
-	@PostMapping
-	public ResponseEntity<Author> createAuthor(@Valid @RequestBody Author author, BindingResult bindingResult) {
+	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<Author> createAuthor(@Valid @RequestParam String authorName, @RequestParam String authorBio, @RequestParam String authorSocial, @RequestParam("authorImage") MultipartFile authorImage) throws IOException {
 		logger.info("POST request received: create author");
-		if (bindingResult.hasErrors()) {
-			throw new IllegalArgumentException("Invalid Data");
-		}
-		return ResponseEntity.status(HttpStatus.CREATED).body(authorServices.createAuthor(author));
+//		if (bindingResult.hasErrors()) {
+//			throw new IllegalArgumentException("Invalid Data");
+//		}
+		return ResponseEntity.status(HttpStatus.CREATED).body(authorServices.createAuthor(authorName, authorBio, authorSocial, authorImage));
 	}
 
 	@PutMapping("/{id}")

@@ -12,9 +12,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.*;
 import java.util.List;
 import java.util.UUID;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 @Service
 public class AuthorServicesImpl implements AuthorServices {
@@ -33,12 +36,25 @@ public class AuthorServicesImpl implements AuthorServices {
 	}
 
 	@Override
-	public Author createAuthor(Author a) {
-		if(authorRepository.findByAuthorName(a.getAuthorName()).isPresent()) {
+	public Author createAuthor(String authorName, String authorBio, String authorSocial, MultipartFile authorImage) throws IOException{
+		Files.createDirectories(Paths.get(UPLOAD_DIR));
+		
+		String fileName = UUID.randomUUID() + "_" + authorImage.getOriginalFilename();
+		Path filePath = Paths.get(UPLOAD_DIR, fileName);
+		Files.copy(authorImage.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+		
+		if(authorRepository.findByAuthorName(authorName).isPresent()) {
 			throw new AuthorAlreadyExistsException("Author Already Exists");
 		}
-		logger.info("Creating new author: {}", a.getAuthorName());
-		return authorRepository.save(a);
+		
+		Author author = new Author();
+		author.setAuthorBio(authorBio);
+		author.setAuthorName(authorName);
+		author.setAuthorSocial(authorSocial);
+		author.setAuthorImage(fileName);
+		
+		logger.info("Creating new author: {}", authorName);
+		return authorRepository.save(author);
 	}
 
 	@Override
@@ -118,4 +134,10 @@ public class AuthorServicesImpl implements AuthorServices {
 			return new AuthorNotFoundException(authorid);
 		});
 	}
+
+//	@Override
+//	public Author createAuthor(Author author) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 }
