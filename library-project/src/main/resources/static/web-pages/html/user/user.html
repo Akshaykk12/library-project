@@ -100,7 +100,7 @@
       <table class="table table-bordered" id="booksTable">
         <thead>
           <tr>
-            <th>ID</th>
+            <th>Book Cover</th>
             <th>Title</th>
             <th>Author Name</th>
             <th>Category</th>
@@ -148,7 +148,13 @@
         for (const book of books) {
           const row = document.createElement("tr");
           row.innerHTML = `
-            <td>${book.bookId}</td>
+        	  <td>
+              ${
+                imageUrl
+                  ? `<img src="${imageUrl}" width="60" height="80" style="object-fit: cover;" onerror="this.onerror=null;this.outerHTML='<i class=\\'bi bi-book fs-3\\'></i>';" />`
+                  : `<i class="bi bi-book fs-3"></i>`
+              }
+            </td>
             <td>${book.bookTitle}</td>
             <td>${book.authorName}</td>
             <td>${book.categoryName}</td>
@@ -162,23 +168,27 @@
         }
       }
 
-      async function fetchAndDisplayBooks() {
-        try {
-          const res = await fetch(`${apiUrl}/books`, {
-            headers: { "Content-Type": "application/json", Authorization: getAuthorization() },
-          });
-          if (!res.ok) throw new Error();
-          const books = await res.json();
-          displayBooksInTable(books);
-        } catch {
-          alert("Failed to load books");
-        }
-      }
+      function fetchAndDisplayBooks() {
+    	  fetch(`${BASE_URL}/api/books`, {
+    	    headers: {
+    	      "Content-Type": "application/json",
+    	      Authorization: getAuthorization(),
+    	    },
+    	  })
+    	    .then((res) => {
+    	      if (!res.ok) throw new Error("Failed to fetch books");
+    	      return res.json();
+    	    })
+    	    .then((books) => {
+    	      displayBooksInTable(books);
+    	    })
+    	    .catch((error) => {
+    	      console.error("Error fetching books:", error);
+    	      alert("Failed to load books");
+    	    });
+    	}
 
-      function getAuthorization() {
-        // Implement your token retrieval or auth logic here if needed
-        return "Bearer your-auth-token";
-      }      // Placeholder function for issuing a book
+
       async function issueBook(bookId) {
   try {
     const borrowDate = new Date().toISOString().split("T")[0]; // Format: YYYY-MM-DD
@@ -187,7 +197,7 @@
       borrowDate: borrowDate,
       borrowReturnDate: borrowReturnDate,
       bookId: bookId,
-      userId: getUserId() // Replace this with your logic to get the logged-in user ID
+      userId: getUserId()
     };
 
     const res = await fetch(`${apiUrl}/borrowRecords/borrow`, {
@@ -211,6 +221,5 @@
 
       window.addEventListener("DOMContentLoaded", fetchAndDisplayBooks);
     </script>
-    <script src="script.js"></script>
   </body>
 </html>
