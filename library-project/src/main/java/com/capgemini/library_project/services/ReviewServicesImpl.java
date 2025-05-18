@@ -19,6 +19,8 @@ import com.capgemini.library_project.repositories.UserRepository;
 
 @Service
 public class ReviewServicesImpl implements ReviewServices {
+	
+	private static final String REVIEW_NOT_FOUND_MSG = "Review with ID {} not found";
 
     private static final Logger logger = LoggerFactory.getLogger(ReviewServicesImpl.class);
 
@@ -46,8 +48,8 @@ public class ReviewServicesImpl implements ReviewServices {
         logger.info("Fetching review by ID: {}", id);
         return reviewRepository.findById(id)
                 .orElseThrow(() -> {
-                    logger.error("Review with ID {} not found", id);
-                    return new ReviewNotFoundException("Review with Id " + id + " not found");
+                    logger.error(REVIEW_NOT_FOUND_MSG, id);
+                    return new RuntimeException("Review with Id " + id + " not found");
                 });
     }
 
@@ -77,6 +79,7 @@ public class ReviewServicesImpl implements ReviewServices {
             reviewRepository.deleteById(id);
             logger.info("Review with ID {} successfully deleted", id);
             return true;
+            
         } else {
             logger.warn("Review with ID {} not found for deletion", id);
             return false;
@@ -108,7 +111,7 @@ public class ReviewServicesImpl implements ReviewServices {
 
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> {
-                    logger.error("Review with ID {} not found", reviewId);
+                    logger.error(REVIEW_NOT_FOUND_MSG, reviewId);
                     return new ReviewNotFoundException("Review with Id " + reviewId + " not found");
                 });
 
@@ -142,12 +145,42 @@ public class ReviewServicesImpl implements ReviewServices {
 
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> {
-                    logger.error("Review with ID {} not found", reviewId);
+                    logger.error(REVIEW_NOT_FOUND_MSG, reviewId);
                     return new ReviewNotFoundException("Review with Id " + reviewId + " not found");
+
                 });
 
         user.getReviews().add(review);
         review.setUser(user);
         userRepository.save(user);
     }
+  @Override
+	public List<Review> getReviewsByBookId(Long bookId) {
+		logger.info("Fetching reviews for book ID: {}", bookId);
+		return reviewRepository.findByBookId(bookId);
+	}
+
+	@Override
+	public List<Review> getReviewsByUserId(Long userId) {
+		logger.info("Fetching reviews for user ID: {}", userId);
+		return reviewRepository.findByUserId(userId);
+	}
+
+	@Override
+	public Double getAverageRatingByBookId(Long bookId) {
+		logger.info("Calculating average rating for book ID: {}", bookId);
+		return reviewRepository.findAverageRatingByBookId(bookId);
+	}
+
+	@Override
+	public List<Review> getReviewsWithMinRating(int minRating) {
+		logger.info("Fetching reviews with minimum rating of: {}", minRating);
+		return reviewRepository.findReviewsWithMinRating(minRating);
+	}
+
+	@Override
+	public Long countReviewsByBookId(Long bookId) {
+		logger.info("Counting reviews for book ID: {}", bookId);
+		return reviewRepository.countReviewsByBookId(bookId);
+	}
 }

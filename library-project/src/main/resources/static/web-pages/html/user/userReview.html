@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Submit Review</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <h2 class="mb-4 text-center">Submit Your Book Review</h2>
+
+    <nav class="navbar navbar-dark bg-white">
+        <div class="container-fluid">
+            <a href="User.html" class="btn btn-outline-light bg-primary">Back to Dashboard</a>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Review Form -->
+            <div class="col-md-7">
+                <div class="card shadow p-4">
+                    <form id="reviewForm">
+                        <div class="mb-3">
+                            <label for="userName" class="form-label">Your Name</label>
+                            <input type="text" class="form-control" id="userName" readonly required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="bookSelect" class="form-label">Select Book</label>
+                            <select class="form-select" id="bookSelect" required>
+                                <option value="">Choose a Book...</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="rating" class="form-label">Rating (1-5)</label>
+                            <select class="form-select" id="rating" required>
+                                <option value="">Choose...</option>
+                                <option value="1">1 - Poor</option>
+                                <option value="2">2 - Fair</option>
+                                <option value="3">3 - Good</option>
+                                <option value="4">4 - Very Good</option>
+                                <option value="5">5 - Excellent</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="reviewText" class="form-label">Your Review</label>
+                            <textarea class="form-control" id="reviewText" rows="5" required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Submit Review</button>
+                    </form>
+
+                    <div id="responseMsg" class="alert alert-success mt-3 d-none">Thank you for your feedback!</div>
+                </div>
+            </div>
+
+            <!-- Info Card -->
+            <div class="col-md-5">
+                <div class="card p-4 shadow bg-light">
+                    <h5 class="mb-3">Why Your Review Matters</h5>
+                    <p>Your feedback helps others choose books and helps us improve our collection.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src = "script.js"></script>
+    <script>
+        const apiUrl = "http://localhost:8080/api";
+        const token = localStorage.getItem("token");
+
+        function getAuthorization() {
+            return `Bearer ${token}`;
+        }
+
+        function parseJwt(token) {
+            if (!token) return {};
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+
+            return JSON.parse(jsonPayload);
+        }
+
+        function getUserIdFromToken() {
+            const payload = parseJwt(token);
+            return payload.userid;
+        }
+
+
+        // Set username in input
+        const userName = getUserName();
+        if (userName) {
+            document.getElementById("userName").value = userName;
+        } else {
+            alert("User not logged in!");
+        }
+
+        // Load book options
+        fetch(`${apiUrl}/books`, {
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": getAuthorization()
+            }
+        })
+            .then(response => {
+                if (!response.ok) throw new Error("Failed to fetch books.");
+                return response.json();
+            })
+            .then(books => {
+                const bookSelect = document.getElementById("bookSelect");
+                books.forEach(book => {
+                    const option = document.createElement("option");
+                    option.value = book.bookId;
+                    option.textContent = book.bookTitle;
+                    bookSelect.appendChild(option);
+                });
+            })
+            .catch(error => {
+                console.error("Error fetching books:", error);
+                alert("Failed to load books. Please try again later.");
+            });
+
+        // Handle form submission
+        document.getElementById("reviewForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const reviewData = {
+                rating: parseInt(document.getElementById("rating").value),
+                feedback: document.getElementById("reviewText").value
+            };
+
+            try {
+                const response = await fetch(`${apiUrl}/reviews`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": getAuthorization()
+                    },
+                    body: JSON.stringify(reviewData)
+                });
+
+                if (!response.ok) throw new Error("Failed to submit review.");
+
+                const data = await response.json();
+                const reviewId = data.reviewId;
+                const userId = getUserIdFromToken();
+                const bookId = parseInt(document.getElementById("bookSelect").value);
+
+                // Assign to book
+                const bookAssign = await fetch(`${apiUrl}/reviews/${bookId}/assignBook/${reviewId}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": getAuthorization()
+                    }
+                });
+
+                if (!bookAssign.ok) throw new Error("Failed to assign review to book.");
+
+                // Assign to user
+                const userAssign = await fetch(`${apiUrl}/reviews/${userId}/assignUser/${reviewId}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": getAuthorization()
+                    }
+                });
+
+                if (!userAssign.ok) throw new Error("Failed to assign review to user.");
+
+                document.getElementById("responseMsg").classList.remove("d-none");
+                document.getElementById("reviewForm").reset();
+                document.getElementById("userName").value = getUserName();
+
+            } catch (error) {
+                console.error("Error submitting review:", error);
+                alert("Error submitting review. Please try again later.");
+            }
+        });
+    </script>
+</body>
+
+</html>

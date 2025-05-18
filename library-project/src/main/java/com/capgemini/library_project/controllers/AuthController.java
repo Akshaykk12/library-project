@@ -3,6 +3,8 @@ package com.capgemini.library_project.controllers;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +33,7 @@ public class AuthController {
 	UserServices userService;
 	PasswordEncoder passwordEncoder;
 	JwtUtils jwtService;
+	private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
 	@Autowired
 	public AuthController(AuthenticationManager authenticationManager, UserServices userService,
@@ -51,6 +54,7 @@ public class AuthController {
 			Map<String, Object> claims = new HashMap<>();
 			claims.put("username",user.getUserName());
 			claims.put("email", user.getUserEmail());
+			claims.put("name", user.getUserName());
 			claims.put("userid", user.getUserId());
 			claims.put("usertype", user.getUserType());
 			claims.put("phone",user.getUserContact());
@@ -67,8 +71,8 @@ public class AuthController {
 
 	@PostMapping("/register")
 	public ResponseEntity<User> registerUser(@RequestBody User user) {
-		System.err.println("in register api ");
-		if ((userService.existsByUserEmail(user.getUserName()) || userService.existsByUserEmail(user.getUserEmail())))
+		logger.warn("in register api");
+		if ((userService.existsByUserName(user.getUserName()) || userService.existsByUserEmail(user.getUserEmail())))
 			throw new UserNotFoundException("Username or Email Exists !");
 		user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
 

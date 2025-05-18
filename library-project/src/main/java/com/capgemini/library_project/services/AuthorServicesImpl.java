@@ -12,15 +12,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.*;
 import java.util.List;
 import java.util.UUID;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 @Service
 public class AuthorServicesImpl implements AuthorServices {
+	
+	private static final String AUTHOR_NOT_FOUND_MSG = "Author with ID {} not found";
+
 
 	private static final Logger logger = LoggerFactory.getLogger(AuthorServicesImpl.class);
-	private final String UPLOAD_DIR = "uploads/";
+	private static final String UPLOAD_DIR = "uploads/";
 
 	private final AuthorRepository authorRepository;
 
@@ -30,13 +36,25 @@ public class AuthorServicesImpl implements AuthorServices {
 	}
 
 	@Override
-	public Author createAuthor(Author a) {
-		// TODO Auto-generated method stub
-		if(authorRepository.findByAuthorName(a.getAuthorName()).isPresent()) {
+	public Author createAuthor(String authorName, String authorBio, String authorSocial, MultipartFile authorImage) throws IOException{
+		Files.createDirectories(Paths.get(UPLOAD_DIR));
+		
+		String fileName = UUID.randomUUID() + "_" + authorImage.getOriginalFilename();
+		Path filePath = Paths.get(UPLOAD_DIR, fileName);
+		Files.copy(authorImage.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+		
+		if(authorRepository.findByAuthorName(authorName).isPresent()) {
 			throw new AuthorAlreadyExistsException("Author Already Exists");
 		}
-		logger.info("Creating new author: {}", a.getAuthorName());
-		return authorRepository.save(a);
+		
+		Author author = new Author();
+		author.setAuthorBio(authorBio);
+		author.setAuthorName(authorName);
+		author.setAuthorSocial(authorSocial);
+		author.setAuthorImage(fileName);
+		
+		logger.info("Creating new author: {}", authorName);
+		return authorRepository.save(author);
 	}
 
 	@Override
@@ -50,7 +68,7 @@ public class AuthorServicesImpl implements AuthorServices {
 		logger.info("Updating author with ID: {}", id);
 		Author author = authorRepository.findById(id)
 				.orElseThrow(() -> {
-					logger.error("Author with ID {} not found", id);
+					logger.error(AUTHOR_NOT_FOUND_MSG, id);
 					return new AuthorNotFoundException(id);
 				});
 		author.setAuthorName(a.getAuthorName());
@@ -64,7 +82,7 @@ public class AuthorServicesImpl implements AuthorServices {
 		logger.info("Fetching author with ID: {}", id);
 		return authorRepository.findById(id)
 				.orElseThrow(() -> {
-					logger.error("Author with ID {} not found", id);
+					logger.error(AUTHOR_NOT_FOUND_MSG, id);
 					return new AuthorNotFoundException(id);				
 					});
 	}
@@ -74,7 +92,7 @@ public class AuthorServicesImpl implements AuthorServices {
 		logger.info("Deleting author with ID: {}", id);
 		Author author = authorRepository.findById(id)
 				.orElseThrow(() -> {
-					logger.error("Author with ID {} not found", id);
+					logger.error(AUTHOR_NOT_FOUND_MSG, id);
 					return new AuthorNotFoundException(id);
 				});
 		authorRepository.delete(author);
@@ -116,4 +134,10 @@ public class AuthorServicesImpl implements AuthorServices {
 			return new AuthorNotFoundException(authorid);
 		});
 	}
+
+//	@Override
+//	public Author createAuthor(Author author) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 }

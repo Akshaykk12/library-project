@@ -2,7 +2,8 @@ package com.capgemini.library_project.entities;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -19,6 +20,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIdentityInfo(
+		  generator = ObjectIdGenerators.PropertyGenerator.class,
+		  property = "authorId"
+		)
 public class Author {
 
     @Id
@@ -35,6 +40,5 @@ public class Author {
     private String authorImage;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.PERSIST)
-    @JsonManagedReference(value = "author-book")
     private List<Book> books;
 }
