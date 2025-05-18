@@ -38,4 +38,13 @@ public interface BorrowRecordServices {
 	
 	
 
+	List<Object[]> findTopBorrowedBooks();
+	
+	List<Object[]> getMonthlyBorrowCounts();
+	
+	List<BorrowRecord> getIssuedRecords();
+	
+    BorrowRecord updateStatus(Long borrowId, String status);
+    
+    long countActiveBorrows();
 }

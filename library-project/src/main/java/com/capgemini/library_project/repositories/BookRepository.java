@@ -20,6 +20,9 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 	@Query("UPDATE Book b SET b.bookCover = :image WHERE b.id = :bookId")
 	int updateImage(@Param("image") String image, @Param("bookId") Long bookId);
 	
+	@Query("SELECT c.categoryName, COUNT(b) FROM Book b JOIN b.category c GROUP BY c.categoryName")
+	List<Object[]> countBooksByCategory();
+  
 	List<Book> findByAuthor_AuthorId(Long authorId);
 	
 	Optional<List<Book>> findByCategory_CategoryName(String categoryName);

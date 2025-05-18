@@ -1,10 +1,332 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Books Master Table</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="container my-5 border p-4">
+    <h2 class="mb-4">Books :</h2>
 
-</body>
+    <!-- Form -->
+    <form id="BookForm" class="mb-4 needs-validation" novalidate>
+      <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input
+          type="text"
+          class="form-control"
+          id="title"
+          required
+          minlength="3"
+        />
+        <div class="invalid-feedback">Enter at least 3 characters.</div>
+      </div>
+
+      <div class="mb-3">
+        <label for="authorId" class="form-label">Author</label>
+        <select class="form-select" id="authorId" required>
+          <option value="">-- Select Author --</option>
+        </select>
+        <div class="invalid-feedback">Please select an author.</div>
+      </div>
+
+      <div class="mb-3">
+        <label for="categoryId" class="form-label">Category</label>
+        <select class="form-select" id="categoryId" required>
+          <option value="">-- Select Category --</option>
+        </select>
+        <div class="invalid-feedback">Please select a category.</div>
+      </div>
+
+     <div class="mb-3">
+  <label for="bookCover" class="form-label">Book Cover</label>
+  <input type="file" class="form-control" id="bookCover" accept="image/*" />
+</div>
+ 
+
+        <div class="invalid-feedback">Please enter a Book Cover.</div>
+      </div>
+
+      <div class="mb-3">
+        <label for="totalCopies" class="form-label">Total Copies</label>
+        <input
+          type="number"
+          class="form-control"
+          id="totalCopies"
+          required
+          min="1"
+        />
+        <div class="invalid-feedback">Enter a valid number.</div>
+      </div>
+
+      <div class="mb-3">
+        <label for="availableCopies" class="form-label">Available Copies</label>
+        <input
+          type="number"
+          class="form-control"
+          id="availableCopies"
+          required
+          min="0"
+        />
+        <div class="invalid-feedback">Enter a valid number.</div>
+      </div>
+
+      <button type="submit" class="btn btn-primary" id="submitBtn">
+        Add Book
+      </button>
+    </form>
+
+    <!-- Search -->
+    <div class="mb-4">
+      <input
+        type="text"
+        id="searchInput"
+        class="form-control"
+        placeholder="Search by title..."
+      />
+    </div>
+
+    <!-- Table -->
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Book ID</th>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Category</th>
+          <th>Total</th>
+          <th>Available</th>
+          <th>Cover</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="bookTableBody"></tbody>
+    </table>
+
+    <script src="script.js"></script>
+    <script>
+const bookapi = "http://localhost:8080/api/books";
+const authorapi = "http://localhost:8080/api/authors";
+const categoryapi = "http://localhost:8080/api/categories";
+const bookForm = document.getElementById("BookForm");
+const bookList = document.getElementById("bookTableBody");
+const titleInput = document.getElementById("title");
+const authorIdInput = document.getElementById("authorId");
+const categoryIdInput = document.getElementById("categoryId");
+const bookCoverInput = document.getElementById("bookCover");
+const totalCopiesInput = document.getElementById("totalCopies");
+const availableCopiesInput = document.getElementById("availableCopies");
+const submitBtn = document.getElementById("submitBtn");
+
+let editId = null;
+
+function fetchBooks() {
+  fetch(bookapi, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: getAuthorization(),
+            },
+          })
+    .then(response => response.json())
+    .then(data => renderBooks(data))
+    .catch(error => console.error("Error fetching books:", error));
+}
+
+function renderBooks(books) {
+  bookList.innerHTML = "";
+  books.forEach(book => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${book.bookId}</td>
+      <td>${book.bookTitle}</td>
+      <td>${book.author ? book.author.authorName : "—"}</td>
+      <td>${book.category ? book.category.categoryName : "—"}</td>
+      <td>${book.totalCopies}</td>
+      <td>${book.availableCopies}</td>
+      <td><img src="${book.bookCover}" width="60" height="80" style="object-fit: cover;" /></td>
+      <td>
+        <button class="btn btn-sm btn-primary edit-btn">Edit</button>
+        <button class="btn btn-sm btn-danger delete-btn">Delete</button>
+      </td>
+    `;
+    const editBtn = row.querySelector(".edit-btn");
+    const deleteBtn = row.querySelector(".delete-btn");
+
+    editBtn.addEventListener("click", () => {
+      titleInput.value = book.bookTitle;
+      authorIdInput.value = book.author?.authorId || "";
+      categoryIdInput.value = book.category?.categoryId || "";
+      bookCoverInput.value = book.bookCover;
+      totalCopiesInput.value = book.totalCopies;
+      availableCopiesInput.value = book.availableCopies;
+      editId = book.bookId;
+      submitBtn.textContent = "Update Book";
+    });
+
+    deleteBtn.addEventListener("click", () => {
+      if (confirm("Are you sure you want to delete this book?")) {
+        fetch(`${bookapi}/${book.bookId}`, {
+          method: "DELETE"
+        }).then(() => {
+          fetchBooks();
+        });
+      }
+    });
+
+    bookList.appendChild(row);
+  });
+}
+
+// bookForm.addEventListener("submit", function (event) {
+//   event.preventDefault();
+
+//   const book = {
+//     bookTitle: titleInput.value,
+//     totalCopies: parseInt(totalCopiesInput.value),
+//     availableCopies: parseInt(availableCopiesInput.value),
+//     bookCover: bookCoverInput.value,
+//     author: {
+//       authorId: parseInt(authorIdInput.value)
+//     },
+//     category: {
+//       categoryId: parseInt(categoryIdInput.value)
+//     }
+//   };
+
+//   const url = editId ? `${bookapi}/${editId}` : bookapi;
+//   const method = editId ? "PUT" : "POST";
+
+//   fetch(url, {
+//     method: method,
+//      headers: {
+              
+//               Authorization: getAuthorization(),
+//             },
+//     body: FormData
+//   })
+//     .then(response => {
+//       if (!response.ok) {
+//         return response.text().then(err => {
+//           throw new Error(err);
+//         });
+//       }
+//       return response.json();
+//     })
+//     .then(() => {
+//       bookForm.reset();
+//       editId = null;
+//       submitBtn.textContent = "Add Book";
+//       fetchBooks();
+//     })
+//     .catch(error => {
+//       console.error("Error saving book:", error);
+//       alert("Error: " + error.message);
+//     });
+// });
+
+// const bookCoverInput = document.getElementById("bookCover");
+// const categoryIdInput = document.getElementById("categoryId"); // Add this if you haven’t
+
+bookForm.addEventListener("submit", function (event) {
+  event.preventDefault();
+
+  const formData = new FormData();
+  formData.append("bookTitle", titleInput.value);
+  formData.append("totalCopies", totalCopiesInput.value);
+  formData.append("availableCopies", availableCopiesInput.value);
+  formData.append("authorId", authorIdInput.value);
+  formData.append("categoryId", categoryIdInput.value);
+
+  if (bookCoverInput.files.length > 0) {
+    formData.append("bookCover", bookCoverInput.files[0]); // actual file
+  }
+
+  const url = editId ? `${bookapi}/${editId}` : bookapi;
+  const method = editId ? "PUT" : "POST";
+
+  fetch(url, {
+    method: method,
+    headers: {
+      Authorization: getAuthorization(), // no Content-Type header
+    },
+    body: formData,
+  })
+    // .then((response) => {
+    //   if (!response.ok) {
+    //     return response.text().then((err) => {
+    //       throw new Error(err);
+    //     });
+    //   }
+    //   return response.json();
+   // })
+    .then(() => {
+
+      bookForm.reset();
+      editId = null;
+      submitBtn.textContent = "Add Book";
+      fetchBooks();
+    })
+    .catch((error) => {
+      console.error("Error saving book:", error);
+      alert("Error: " + error.message);
+    });
+});
+
+
+function loadAuthors() {
+   fetch(authorapi, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: getAuthorization(),
+            },
+          })
+    .then(response => response.json())
+    .then(authors => {
+      authorIdInput.innerHTML = '<option value="">Select Author</option>';
+      authors.forEach(author => {
+        const option = document.createElement("option");
+        option.value = author.authorId;
+        option.textContent = author.authorName;
+        authorIdInput.appendChild(option);
+      });
+    });
+}
+
+function loadCategories() {
+   fetch(categoryapi, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: getAuthorization(),
+            },
+          })
+    .then(response => response.json())
+    .then(categories => {
+      categoryIdInput.innerHTML = '<option value="">Select Category</option>';
+      categories.forEach(category => {
+        const option = document.createElement("option");
+        option.value = category.categoryId;
+        option.textContent = category.categoryName;
+        categoryIdInput.appendChild(option);
+      });
+    });
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  loadAuthors();
+  loadCategories();
+  fetchBooks();
+});
+</script>
+  </body>
 </html>
