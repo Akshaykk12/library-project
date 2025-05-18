@@ -27,22 +27,25 @@ public interface BorrowRecordServices {
 
 //	// fine based on return date
 	Integer calculateFine(Long borrowId);
+
 	// Count Records by Status (like "Returned", "Borrowed")
 	long countBorrowRecordsByStatus(String status);
 
 	BorrowRecord updateBorrowRecord(Long borrowId, BorrowRecord updatedBorrowRecord);
 
 	void deleteBorrowRecord(Long borrowId);
-	
+
 	BorrowRecord borrowBook(BorrowRequest dto);
 
 	List<Object[]> findTopBorrowedBooks();
-	
+
 	List<Object[]> getMonthlyBorrowCounts();
-	
+
 	List<BorrowRecord> getIssuedRecords();
-	
-    BorrowRecord updateStatus(Long borrowId, String status);
-    
-    long countActiveBorrows();
+
+	BorrowRecord updateStatus(Long borrowId, String status);
+
+	long countActiveBorrows();
+
+	long countOverdueRecords();
 }

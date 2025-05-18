@@ -33,7 +33,7 @@ public class BorrowRecordController {
 	private final BorrowRecordServices borrowRecordServices;
 	private BookRepository bookRepository;
 	private UserRepository userRepository;
-	
+
 	@Autowired
 	public BorrowRecordController(BorrowRecordServices borrowRecordServices, BookRepository bookRepository,
 			UserRepository userRepository) {
@@ -42,17 +42,14 @@ public class BorrowRecordController {
 		this.bookRepository = bookRepository;
 		this.userRepository = userRepository;
 	}
-	
-	 @PostMapping("/borrow")
-	    public ResponseEntity<BorrowRecord> borrowBook(
-	            @Valid @RequestBody BorrowRequest dto
-	    ) {
-	        logger.info("POST: Borrowing book {} to user {}", dto.getBookId(), dto.getUserId());
-	        BorrowRecord saved = borrowRecordServices.borrowBook(dto);
-	        return ResponseEntity.ok(saved);
-	    }
-	 
-	 
+
+	@PostMapping("/borrow")
+	public ResponseEntity<BorrowRecord> borrowBook(@Valid @RequestBody BorrowRequest dto) {
+		logger.info("POST: Borrowing book {} to user {}", dto.getBookId(), dto.getUserId());
+		BorrowRecord saved = borrowRecordServices.borrowBook(dto);
+		return ResponseEntity.ok(saved);
+	}
+
 	// display all issued book records
 	@GetMapping
 	public ResponseEntity<List<BorrowRecord>> getAllBorrowRecords() {
@@ -123,7 +120,7 @@ public class BorrowRecordController {
 	public ResponseEntity<BorrowRecord> updateBorrowRecord(@PathVariable Long borrowId,
 			@Valid @RequestBody BorrowRecord updatedBorrowRecord, BindingResult bindingResult) {
 		logger.info("PUT: Updating borrow record {}", borrowId);
-		
+
 		return ResponseEntity.ok(borrowRecordServices.updateBorrowRecord(borrowId, updatedBorrowRecord));
 	}
 
@@ -134,31 +131,39 @@ public class BorrowRecordController {
 		borrowRecordServices.deleteBorrowRecord(borrowId);
 		return ResponseEntity.noContent().build();
 	}
+
 	// GET: Top 5 most borrowed books
 	@GetMapping("/topBooks")
 	public ResponseEntity<List<Object[]>> getTopBorrowedBooks() {
-	    logger.info("GET: Fetching top 5 most borrowed books");
-	    List<Object[]> topBooks = borrowRecordServices.findTopBorrowedBooks();
-	    return ResponseEntity.ok(topBooks);
+		logger.info("GET: Fetching top 5 most borrowed books");
+		List<Object[]> topBooks = borrowRecordServices.findTopBorrowedBooks();
+		return ResponseEntity.ok(topBooks);
 	}
-	
+
 	// Add this endpoint for monthly borrowing activity
 	@GetMapping("/monthlyCount")
 	public ResponseEntity<List<Object[]>> getMonthlyBorrowCounts() {
-	    logger.info("GET: Fetching monthly borrow counts");
-	    return ResponseEntity.ok(borrowRecordServices.getMonthlyBorrowCounts());
+		logger.info("GET: Fetching monthly borrow counts");
+		return ResponseEntity.ok(borrowRecordServices.getMonthlyBorrowCounts());
+	}
+
+	@GetMapping("/activeCount")
+	public ResponseEntity<Long> countActiveBorrows() {
+		return ResponseEntity.ok(borrowRecordServices.countActiveBorrows());
+	}
+
+	// In BorrowRecordController.java
+	@PatchMapping("/{id}")
+	public BorrowRecord updateStatus(@PathVariable Long id, @RequestBody Map<String, String> body) {
+		String status = body.get("status");
+		return borrowRecordServices.updateStatus(id, status);
 	}
 	
-	@GetMapping("/activeCount")
-    public ResponseEntity<Long> countActiveBorrows() {
-        return ResponseEntity.ok(borrowRecordServices.countActiveBorrows());
-    }
-	
-	// In BorrowRecordController.java
-	 @PatchMapping("/{id}")
-	    public BorrowRecord updateStatus(@PathVariable Long id, @RequestBody Map<String, String> body) {
-	        String status = body.get("status");
-	        return borrowRecordServices.updateStatus(id, status);
-	    }
-	
+	//count of overdue borrow records
+	@GetMapping("/overdue/count")
+	public ResponseEntity<Long> countOverdueRecords() {
+		logger.info("GET: Counting overdue borrow records");
+		return ResponseEntity.ok(borrowRecordServices.countOverdueRecords());
+	}
+
 }
