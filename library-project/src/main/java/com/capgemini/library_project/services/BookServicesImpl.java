@@ -148,7 +148,12 @@ public class BookServicesImpl implements BookServices {
 	}
 	
 	@Override
-	public Map<String,Long> findCategoryCount() {
+	public List<Object[]> getCategoryBookCounts() {
+	    return bookRepository.countBooksByCategory();
+	}
+
+  @Override
+  public Map<String,Long> findCategoryCount() {
 		return bookRepository.findCategoryCount().stream().collect(Collectors.toMap(ele -> (String) ele[0],ele -> ((Long) ele[1])));
 	}
 
