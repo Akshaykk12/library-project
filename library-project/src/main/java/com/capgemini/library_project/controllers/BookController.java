@@ -24,7 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -149,10 +148,8 @@ public class BookController {
 			throw new IllegalArgumentException("Invalid book data");
 		}
 
-		// Save the book first
 		Book savedBook = bookService.addBook(book);
 
-		// Assign author and category
 		bookService.assignBookToAuthor(authorId, savedBook.getBookId());
 		bookService.assignBook(categoryId, savedBook.getBookId());
 
@@ -190,15 +187,16 @@ public class BookController {
 		return ResponseEntity.ok().build();
 	}
 
-  @GetMapping("/categoryCount")
+	@GetMapping("/categoryCount")
 	public ResponseEntity<List<Object[]>> getCategoryBookCounts() {
-	    logger.info("GET: Fetching book counts by category");
-	    return ResponseEntity.ok(bookService.getCategoryBookCounts());
+		logger.info("GET: Fetching book counts by category");
+		return ResponseEntity.ok(bookService.getCategoryBookCounts());
 	}
-	
+
 	@GetMapping("/count")
 	public ResponseEntity<Long> getTotalBookCount() {
-	    return ResponseEntity.ok(bookRepository.count());
+		return ResponseEntity.ok(bookRepository.count());
+	}
 
 	@GetMapping("/adminData")
 	public ResponseEntity<AdminDashboardDto> getAdminDashBoardData() {
