@@ -1,10 +1,186 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+  <meta charset="UTF-8" />
+  <title>Admin Profile</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    #userImageDisplay {
+      max-width: 150px;
+      max-height: 150px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+  </style>
 </head>
-<body>
+<body class="container mt-5">
+  <h2 class="mb-4">Admin Profile Settings</h2>
 
+  <nav class="navbar navbar-light bg-white mb-4">
+    <div class="container-fluid">
+      <a href="userDashboard.html" class="btn btn-outline-light bg-primary text-white">
+        Back to Dashboard
+      </a>
+    </div>
+  </nav>
+
+  <div id="userProfileContainer">
+    <!-- Name -->
+    <div class="mb-3">
+      <label class="form-label">Name</label>
+      <div id="userNameField" class="border rounded p-2">
+        <span id="userNameValue"></span>
+      </div>
+    </div>
+
+    <!-- Phone -->
+    <div class="mb-3">
+      <label class="form-label">Phone</label>
+      <div id="userContactField" class="border rounded p-2">
+        <span id="userContactValue"></span>
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div class="mb-3">
+      <label class="form-label">Email</label>
+      <div id="userEmailField" class="border rounded p-2">
+        <span id="userEmailValue"></span>
+      </div>
+    </div>
+
+    <!-- Image -->
+    <div class="mb-3">
+      <label class="form-label">Profile Image</label>
+      <div id="userImageField" class="border rounded p-2">
+        <img id="userImageDisplay" src="" alt="Profile Image" />
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="mb-3">
+      <button id="editBtn" class="btn btn-primary">Edit</button>
+      <button id="saveBtn" class="btn btn-success d-none">Save</button>
+      <button id="cancelBtn" class="btn btn-secondary d-none">Cancel</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    (function () {
+      const currId = getUserId(); // Extracted from JWT
+      const apiUrl = "http://localhost:8080/api/users";
+      let currentUser = null;
+      let isEditing = false;
+
+      // DOM Elements
+      const editBtn = document.getElementById("editBtn");
+      const saveBtn = document.getElementById("saveBtn");
+      const cancelBtn = document.getElementById("cancelBtn");
+
+      const nameField = document.getElementById("userNameField");
+      const contactField = document.getElementById("userContactField");
+      const emailField = document.getElementById("userEmailField");
+      const imageField = document.getElementById("userImageField");
+
+      function renderViewMode() {
+        nameField.innerHTML = `<span id="userNameValue">${currentUser.userName || ""}</span>`;
+        contactField.innerHTML = `<span id="userContactValue">${currentUser.userContact || ""}</span>`;
+        emailField.innerHTML = `<span id="userEmailValue">${currentUser.userEmail || ""}</span>`;
+        imageField.innerHTML = `<img id="userImageDisplay" src="${currentUser.userImage || 'https://via.placeholder.com/150'}" alt="Profile Image" />`;
+
+        editBtn.classList.remove("d-none");
+        saveBtn.classList.add("d-none");
+        cancelBtn.classList.add("d-none");
+        isEditing = false;
+      }
+
+      function renderEditMode() {
+        nameField.innerHTML = `<input type="text" id="userNameInput" class="form-control" value="${currentUser.userName || ""}">`;
+        contactField.innerHTML = `<input type="text" id="userContactInput" class="form-control" value="${currentUser.userContact || ""}">`;
+        emailField.innerHTML = `<input type="email" id="userEmailInput" class="form-control" value="${currentUser.userEmail || ""}">`;
+        imageField.innerHTML = `
+          <input type="url" id="userImageInput" class="form-control mb-2" placeholder="Image URL" value="${currentUser.userImage || ""}">
+          <img id="userImagePreview" src="${currentUser.userImage || 'https://via.placeholder.com/150'}" alt="Image Preview" style="max-width: 150px; max-height: 150px; border-radius: 8px; object-fit: cover;">
+        `;
+
+        document.getElementById("userImageInput").addEventListener("input", (e) => {
+          document.getElementById("userImagePreview").src = e.target.value || 'https://via.placeholder.com/150';
+        });
+
+        editBtn.classList.add("d-none");
+        saveBtn.classList.remove("d-none");
+        cancelBtn.classList.remove("d-none");
+        isEditing = true;
+      }
+
+      async function loadUser() {
+        try {
+          const response = await fetch(`${apiUrl}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": getAuthorization(),
+            },
+          });
+
+          if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+          const users = await response.json();
+          currentUser = users.find(u => u.userId?.toString() === currId.toString());
+
+          if (!currentUser) {
+            alert("User not found!");
+            return;
+          }
+
+          renderViewMode();
+        } catch (err) {
+          console.error("Error loading user:", err);
+          alert("Failed to load user details.");
+        }
+      }
+
+      async function saveUser() {
+        const updatedUser = {
+          ...currentUser,
+          userName: document.getElementById("userNameInput").value.trim(),
+          userContact: document.getElementById("userContactInput").value.trim(),
+          userEmail: document.getElementById("userEmailInput").value.trim(),
+          userImage: document.getElementById("userImageInput").value.trim(),
+        };
+
+        try {
+          const response = await fetch(`${apiUrl}/${currentUser.userId}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": getAuthorization(),
+            },
+            body: JSON.stringify(updatedUser),
+          });
+
+          if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+          currentUser = updatedUser;
+          renderViewMode();
+          alert("Profile updated successfully!");
+        } catch (err) {
+          console.error("Failed to update user:", err);
+          alert("Failed to update profile.");
+        }
+      }
+
+      editBtn.addEventListener("click", () => {
+        if (!isEditing) renderEditMode();
+      });
+
+      saveBtn.addEventListener("click", saveUser);
+
+      cancelBtn.addEventListener("click", renderViewMode);
+
+      loadUser();
+    })();
+  </script>
 </body>
 </html>
