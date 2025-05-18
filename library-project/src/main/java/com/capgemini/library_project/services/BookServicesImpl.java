@@ -141,4 +141,9 @@ public class BookServicesImpl implements BookServices {
 	public Book getImage(Long bookId) {
 		return bookRepository.findById(bookId).orElseThrow(() -> new BookNotFoundException("Book Not Found"));
 	}
+	
+	@Override
+	public List<Object[]> getCategoryBookCounts() {
+	    return bookRepository.countBooksByCategory();
+	}
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import com.capgemini.library_project.entities.BorrowRecord;
 
@@ -21,4 +22,17 @@ public interface BorrowRecordRepository extends JpaRepository<BorrowRecord, Long
 	// Count Records by Status (like "Returned", "Borrowed")
 	long countByBorrowStatus(String status);
 
+	@Query("SELECT br.book.bookTitle, COUNT(br) as borrowCount " +
+		       "FROM BorrowRecord br " +
+		       "GROUP BY br.book.bookTitle " +
+		       "ORDER BY borrowCount DESC")
+		List<Object[]> findTopBorrowedBooks();
+
+		
+		@Query("SELECT DATE_FORMAT(br.borrowDate, '%Y-%m') as month, COUNT(br) as count " +
+			       "FROM BorrowRecord br " +
+			       "GROUP BY DATE_FORMAT(br.borrowDate, '%Y-%m')")
+			List<Object[]> countBorrowRecordsByMonth();
+			
+			List<BorrowRecord> findByBorrowStatusIn(List<String> statuses);
 }

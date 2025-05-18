@@ -1,8 +1,10 @@
 package com.capgemini.library_project.controllers;
 
 import java.util.List;
+import java.util.Map;
 
 import com.capgemini.library_project.entities.BorrowRecord;
+import com.capgemini.library_project.repositories.BorrowRecordRepository;
 import com.capgemini.library_project.services.BorrowRecordServices;
 
 import jakarta.validation.Valid;
@@ -26,10 +28,13 @@ public class BorrowRecordController {
 	private static final Logger logger = LoggerFactory.getLogger(BorrowRecordController.class);
 
 	private final BorrowRecordServices borrowRecordServices;
+	
+	private final BorrowRecordRepository borrowRecordRepository;
 
 	@Autowired
-	public BorrowRecordController(BorrowRecordServices borrowRecordServices) {
+	public BorrowRecordController(BorrowRecordServices borrowRecordServices, BorrowRecordRepository borrowRecordRepository) {
 		this.borrowRecordServices = borrowRecordServices;
+		this.borrowRecordRepository = borrowRecordRepository;
 	}
 
 	// issue a book
@@ -126,4 +131,32 @@ public class BorrowRecordController {
 		borrowRecordServices.deleteBorrowRecord(borrowId);
 		return ResponseEntity.noContent().build();
 	}
+	// GET: Top 5 most borrowed books
+	@GetMapping("/topBooks")
+	public ResponseEntity<List<Object[]>> getTopBorrowedBooks() {
+	    logger.info("GET: Fetching top 5 most borrowed books");
+	    List<Object[]> topBooks = borrowRecordServices.findTopBorrowedBooks();
+	    return ResponseEntity.ok(topBooks);
+	}
+	
+	// Add this endpoint for monthly borrowing activity
+	@GetMapping("/monthlyCount")
+	public ResponseEntity<List<Object[]>> getMonthlyBorrowCounts() {
+	    logger.info("GET: Fetching monthly borrow counts");
+	    return ResponseEntity.ok(borrowRecordServices.getMonthlyBorrowCounts());
+	}
+	
+	@GetMapping("/activeCount")
+	public ResponseEntity<Long> countActiveBorrows() {
+	    // Change from countByStatus() to countByBorrowStatus()
+	    return ResponseEntity.ok(borrowRecordRepository.countByBorrowStatus("BORROWED"));
+	}
+	
+	// In BorrowRecordController.java
+	 @PatchMapping("/{id}")
+	    public BorrowRecord updateStatus(@PathVariable Long id, @RequestBody Map<String, String> body) {
+	        String status = body.get("status");
+	        return borrowRecordServices.updateStatus(id, status);
+	    }
+	
 }

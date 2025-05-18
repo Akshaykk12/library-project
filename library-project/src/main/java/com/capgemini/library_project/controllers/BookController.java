@@ -153,4 +153,15 @@ public class BookController {
 		bookRepository.save(book);
 		return ResponseEntity.ok().build();
 	}
+	// Add this endpoint to fetch category counts
+	@GetMapping("/categoryCount")
+	public ResponseEntity<List<Object[]>> getCategoryBookCounts() {
+	    logger.info("GET: Fetching book counts by category");
+	    return ResponseEntity.ok(bookService.getCategoryBookCounts());
+	}
+	
+	@GetMapping("/count")
+	public ResponseEntity<Long> getTotalBookCount() {
+	    return ResponseEntity.ok(bookRepository.count());
+	}
 }
