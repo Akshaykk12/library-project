@@ -20,25 +20,22 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIdentityInfo(
-		  generator = ObjectIdGenerators.PropertyGenerator.class,
-		  property = "authorId"
-		)
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "authorId")
 public class Author {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long authorId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long authorId;
 
-    @NotBlank(message = "Author Name is required")
-    private String authorName;
-    
-    @NotBlank(message = "Author Bio is required")
-    private String authorBio;
-    @NotBlank(message = "Author Social is required")
-    private String authorSocial;
-    private String authorImage;
+	@NotBlank(message = "Author Name is required")
+	private String authorName;
 
-    @OneToMany(mappedBy = "author", cascade = CascadeType.PERSIST)
-    private List<Book> books;
+	@NotBlank(message = "Author Bio is required")
+	private String authorBio;
+	@NotBlank(message = "Author Social is required")
+	private String authorSocial;
+	private String authorImage;
+
+	@OneToMany(mappedBy = "author", cascade = CascadeType.PERSIST)
+	private List<Book> books;
 }

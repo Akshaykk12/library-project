@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TrendingBookForUserDto {
 
-	 	private Long bookId;
-	 	 private String authorName;
-	    private String title;
-	    private String category;
-	    private Long availableCopies;
-	    private Long issueCount;
+	private Long bookId;
+	private String authorName;
+	private String title;
+	private String category;
+	private Long availableCopies;
+	private Long issueCount;
 }

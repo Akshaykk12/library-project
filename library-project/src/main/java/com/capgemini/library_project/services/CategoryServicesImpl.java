@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class CategoryServicesImpl implements CategoryServices {
 
-
 	private static final Logger logger = LoggerFactory.getLogger(CategoryServicesImpl.class);
 
 	private final CategoryRepository categoryRepository;

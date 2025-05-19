@@ -291,7 +291,7 @@ bookForm.addEventListener("submit", function (event) {
     formData.append("bookCover", bookCoverInput.files[0]); // actual file
   }
 
-  const url = editId ? `${BASE_URL}/api/books/${editId}` : bookapi;
+  const url = editId ? `${BASE_URL}/api/books/${editId}` : `${BASE_URL}/api/books`;
   const method = editId ? "PUT" : "POST";
 
   fetch(url, {

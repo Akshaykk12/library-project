@@ -14,7 +14,7 @@ import com.capgemini.library_project.exceptions.BookNotFoundException;
 import com.capgemini.library_project.exceptions.BorrowRecordNotFoundException;
 import com.capgemini.library_project.exceptions.InvalidBorrowDateException;
 import com.capgemini.library_project.exceptions.InvalidStatusException;
-import com.capgemini.library_project.exceptions.UserNotFoundException;
+
 import com.capgemini.library_project.repositories.BookRepository;
 import com.capgemini.library_project.repositories.BorrowRecordRepository;
 import com.capgemini.library_project.repositories.UserRepository;
@@ -63,10 +63,8 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 		User user = userRepository.findById(dto.getUserId())
 				.orElseThrow(() -> new RuntimeException("User not found: " + dto.getUserId()));
 
-//	    logger.info("Creating borrow record for user ID {} and book ID {}", userId, bookId);
-
 		if (book.getAvailableCopies() <= 0) {
-			throw new RuntimeException("No available copies for book ID " + dto.getBookId());
+			throw new BookNotFoundException("No available copies for book ID " + dto.getBookId());
 		}
 		book.setAvailableCopies(book.getAvailableCopies() - 1);
 		bookRepository.save(book);
@@ -75,64 +73,56 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 		rec.setBook(book);
 		rec.setUser(user);
 		rec.setBorrowDate(dto.getBorrowDate() != null ? dto.getBorrowDate() : LocalDate.now());
-		rec.setBorrowReturnDate(dto.getBorrowReturnDate() != null ? dto.getBorrowReturnDate() : rec.getBorrowDate().plusDays(7));
+		rec.setBorrowReturnDate(
+				dto.getBorrowReturnDate() != null ? dto.getBorrowReturnDate() : rec.getBorrowDate().plusDays(7));
 		rec.setBorrowStatus(STATUS_BORROWED);
-
-//	    logger.debug("Borrow record created: {}", borrowRecord);
 
 		return borrowRecordRepository.save(rec);
 
 	}
 
-	// display all issued book records
 	@Override
 	public List<BorrowRecord> getAllBorrowRecord() {
 		logger.info("Fetching all borrow records");
-		return borrowRecordRepository.findAll();
+		return borrowRecordRepository.findActiveBorrows();
 	}
 
-	// display a single issue by borrowId
 	@Override
 	public BorrowRecord getBorrowRecordById(Long borrowId) {
 		logger.info("Fetching borrow record with ID: {}", borrowId);
-		return borrowRecordRepository.findById(borrowId)
-				.orElseThrow(() -> {
-					logger.error("No borrow record available for ID {}", borrowId);
-					return new BorrowRecordNotFoundException("Borrow Record with Id "+borrowId+"not found ");
-				});
+		return borrowRecordRepository.findById(borrowId).orElseThrow(() -> {
+			logger.error("No borrow record available for ID {}", borrowId);
+			return new BorrowRecordNotFoundException("Borrow Record with Id " + borrowId + "not found ");
+		});
 	}
 
-	// display all issue records of a single user by userId
 	@Override
 	public List<BorrowRecordDto> getAllBorrowRecordByUser(Long userId) {
-	    logger.info("Fetching all borrow records for user ID {}", userId);
+		logger.info("Fetching all borrow records for user ID {}", userId);
 
-	    List<BorrowRecord> records = borrowRecordRepository.findAllByUser_UserId(userId);
-	    List<BorrowRecordDto> dtos = new ArrayList<>();
+		List<BorrowRecord> records = borrowRecordRepository.findAllByUser_UserId(userId);
+		List<BorrowRecordDto> dtos = new ArrayList<>();
 
-	    for (BorrowRecord record : records) {
-	        BorrowRecordDto dto = new BorrowRecordDto();
-	        dto.setBorrowId(record.getBorrowId());
-	        dto.setUserId(record.getUser().getUserId());
-	        dto.setBookId(record.getBook().getBookId());
-	        dto.setBookTitle(record.getBook().getBookTitle());  // fetch book title here
-	        dto.setBorrowDate(record.getBorrowDate());
-	        dto.setBorrowReturnDate(record.getBorrowReturnDate());
-	        dto.setBorrowStatus(record.getBorrowStatus());
-	        dtos.add(dto);
-	    }
-	    return dtos;
+		for (BorrowRecord brecord : records) {
+			BorrowRecordDto dto = new BorrowRecordDto();
+			dto.setBorrowId(brecord.getBorrowId());
+			dto.setUserId(brecord.getUser().getUserId());
+			dto.setBookId(brecord.getBook().getBookId());
+			dto.setBookTitle(brecord.getBook().getBookTitle()); // fetch book title here
+			dto.setBorrowDate(brecord.getBorrowDate());
+			dto.setBorrowReturnDate(brecord.getBorrowReturnDate());
+			dto.setBorrowStatus(brecord.getBorrowStatus());
+			dtos.add(dto);
+		}
+		return dtos;
 	}
 
-
-	// how many times a book was borrowed
 	@Override
 	public List<BorrowRecord> getAllBorrowRecordByBook(Long bookId) {
 		logger.info("Fetching all borrow records for book ID {}", bookId);
 		return borrowRecordRepository.findAllByBook_BookId(bookId);
 	}
 
-	// Show all "Returned" or "Overdue" records
 	@Override
 	public List<BorrowRecord> getBorrowRecordsByStatus(String status) {
 		logger.info("Fetching all borrow records with status: {}", status);
@@ -144,7 +134,6 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 		return borrowRecordRepository.findAllByBorrowStatus(status);
 	}
 
-	// get all borrow records that are overdue
 	@Override
 	public List<BorrowRecord> getAllOverdueRecords() {
 		logger.info("Fetching all overdue borrow records");
@@ -153,10 +142,9 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 				.filter(brecord -> brecord.getBorrowReturnDate() != null
 						&& brecord.getBorrowReturnDate().isBefore(today)
 						&& STATUS_BORROWED.equalsIgnoreCase(brecord.getBorrowStatus()))
-				.toList(); // simpler and more modern
+				.toList();
 	}
 
-	// quick mark as returned
 	@Override
 	@Transactional
 	public BorrowRecord markAsReturned(Long borrowId) {
@@ -179,19 +167,24 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 			brecord.setFine(0);
 		}
 
+		Book book = brecord.getBook();
+		book.setAvailableCopies(book.getAvailableCopies() + 1);
+		bookRepository.save(book);
+
+		logger.info("Incremented available copies for book {} (ID: {}). New count: {}", book.getBookTitle(),
+				book.getBookId(), book.getAvailableCopies());
+
 		return borrowRecordRepository.save(brecord);
 	}
 
-	// fine based on return date
 	@Override
 	public Integer calculateFine(Long borrowId) {
 		logger.info("Calculating fine for borrow record ID {}", borrowId);
-		BorrowRecord brecord = borrowRecordRepository.findById(borrowId)
-				.orElseThrow(() -> {
-					logger.error("Borrow record not found for fine calculation");
-					return new BorrowRecordNotFoundException("Borrow Record with Id "+borrowId+"not found ");
-					
-				});
+		BorrowRecord brecord = borrowRecordRepository.findById(borrowId).orElseThrow(() -> {
+			logger.error("Borrow record not found for fine calculation");
+			return new BorrowRecordNotFoundException("Borrow Record with Id " + borrowId + "not found ");
+
+		});
 
 		LocalDate dueDate = brecord.getBorrowDate().plusDays(allowedReturnDays);
 		LocalDate returnDate = brecord.getBorrowReturnDate() != null ? brecord.getBorrowReturnDate() : LocalDate.now();
@@ -205,7 +198,6 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 		return 0;
 	}
 
-	// Count Records by Status (like "Returned", "Borrowed")
 	@Override
 	public long countBorrowRecordsByStatus(String status) {
 
@@ -218,14 +210,13 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 		return borrowRecordRepository.countByBorrowStatus(status);
 	}
 
-	// manually update all the details of any issue
 	@Override
 	public BorrowRecord updateBorrowRecord(Long borrowId, BorrowRecord updatedBorrowRecord) {
 		logger.info("Updating borrow record ID {}", borrowId);
 		BorrowRecord borrowRecord = getBorrowRecordById(borrowId);
-		
-		if(borrowRecord==null) {
-			throw new BorrowRecordNotFoundException("Borrow Record with Id "+borrowId+"not found ");
+
+		if (borrowRecord == null) {
+			throw new BorrowRecordNotFoundException("Borrow Record with Id " + borrowId + "not found ");
 		}
 		String status = updatedBorrowRecord.getBorrowStatus();
 		if (status != null && !status.equalsIgnoreCase(STATUS_BORROWED) && !status.equalsIgnoreCase(STATUS_RETURNED)
@@ -244,43 +235,51 @@ public class BorrowRecordServicesImpl implements BorrowRecordServices {
 		return borrowRecordRepository.save(borrowRecord);
 	}
 
-	// delete a borrow record
 	@Override
 	public void deleteBorrowRecord(Long borrowId) {
 		logger.info("Deleting borrow record with ID {}", borrowId);
-		BorrowRecord record = getBorrowRecordById(borrowId);
-		
-		if(record==null) {
-			throw new BorrowRecordNotFoundException("Borrow Record with Id "+borrowId+"not found ");
+		BorrowRecord brecord = getBorrowRecordById(borrowId);
+
+		if (brecord == null) {
+			throw new BorrowRecordNotFoundException("Borrow Record with Id " + borrowId + "not found ");
 		}
 		borrowRecordRepository.deleteById(borrowId);
 	}
-	
+
 	public List<Object[]> findTopBorrowedBooks() {
-	    return borrowRecordRepository.findTopBorrowedBooks();
+		return borrowRecordRepository.findTopBorrowedBooks();
 	}
-	
+
 	@Override
 	public List<Object[]> getMonthlyBorrowCounts() {
-	    return borrowRecordRepository.countBorrowRecordsByMonth();
+		return borrowRecordRepository.countBorrowRecordsByMonth();
 	}
-	
-	 @Override
-	    public BorrowRecord updateStatus(Long borrowId, String newStatus) {
-	        BorrowRecord record = borrowRecordRepository.findById(borrowId)
-	            .orElseThrow(() -> new BorrowRecordNotFoundException("Borrow record not found with id: " + borrowId));
-	        
-	        record.setBorrowStatus(newStatus);
-	        return borrowRecordRepository.save(record);
-	    }
-	 
-	 @Override
-	    public List<BorrowRecord> getIssuedRecords() {
-	        return borrowRecordRepository.findByBorrowStatusIn(List.of("Borrowed", "Overdue"));
-	    }
-	 
-	 @Override
-	    public long countActiveBorrows() {
-	        return borrowRecordRepository.countByBorrowStatus("BORROWED");
-	    }
+
+	@Override
+	public BorrowRecord updateStatus(Long borrowId, String newStatus) {
+		BorrowRecord brecord = borrowRecordRepository.findById(borrowId)
+				.orElseThrow(() -> new BorrowRecordNotFoundException("Borrow record not found with id: " + borrowId));
+
+		brecord.setBorrowStatus(newStatus);
+		return borrowRecordRepository.save(brecord);
+	}
+
+	@Override
+	public List<BorrowRecord> getIssuedRecords() {
+		return borrowRecordRepository.findByBorrowStatusIn(List.of(STATUS_BORROWED, STATUS_OVERDUE));
+	}
+
+	@Override
+	public long countActiveBorrows() {
+		return borrowRecordRepository.countByBorrowStatus("BORROWED");
+	}
+
+	@Override
+	public long countOverdueRecords() {
+		LocalDate today = LocalDate.now();
+		return borrowRecordRepository.findAll().stream()
+				.filter(brecord -> brecord.getBorrowStatus().equalsIgnoreCase(STATUS_BORROWED)
+						&& brecord.getBorrowReturnDate() != null && brecord.getBorrowReturnDate().isBefore(today))
+				.count();
+	}
 }

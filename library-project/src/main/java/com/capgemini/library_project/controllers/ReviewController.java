@@ -94,8 +94,8 @@ public class ReviewController {
 		}
 		Review updated = reviewServices.updateReview(id, newReview);
 		if (updated == null) {
-	        return ResponseEntity.notFound().build();  
-	    }
+			return ResponseEntity.notFound().build();
+		}
 		return ResponseEntity.ok(updated);
 	}
 

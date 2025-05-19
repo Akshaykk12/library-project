@@ -23,8 +23,6 @@ import com.capgemini.library_project.exceptions.UserNotFoundException;
 import com.capgemini.library_project.security.JwtUtils;
 import com.capgemini.library_project.services.UserServices;
 
-
-
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -52,21 +50,21 @@ public class AuthController {
 		if (authentication.isAuthenticated()) {
 			User user = userService.findByUserNameOrUserEmail(loginDto.getUserName(), loginDto.getUserName());
 			Map<String, Object> claims = new HashMap<>();
-			claims.put("username",user.getUserName());
+			claims.put("username", user.getUserName());
 			claims.put("email", user.getUserEmail());
 			claims.put("name", user.getUserName());
 			claims.put("userid", user.getUserId());
 			claims.put("usertype", user.getUserType());
-			claims.put("phone",user.getUserContact());
-			String token = jwtService.generateToken(loginDto.getUserName(),claims);
+			claims.put("phone", user.getUserContact());
+			String token = jwtService.generateToken(loginDto.getUserName(), claims);
 			Map<String, String> response = new HashMap<>();
-	        response.put("token", token);
+			response.put("token", token);
 
-	        return ResponseEntity.status(HttpStatus.OK).body(response);
+			return ResponseEntity.status(HttpStatus.OK).body(response);
 		}
 		Map<String, String> error = new HashMap<>();
-	    error.put("error", "You are not Authorized !!");
-	    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+		error.put("error", "You are not Authorized !!");
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
 	}
 
 	@PostMapping("/register")
