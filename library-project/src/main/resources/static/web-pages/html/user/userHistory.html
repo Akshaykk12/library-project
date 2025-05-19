@@ -1,10 +1,89 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+  <meta charset="UTF-8" />
+  <title>My Borrowing History</title>
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
 </head>
-<body>
+<body class="container mt-5">
+  <h2 class="mb-4">My Borrowing History</h2>
+  <nav class="navbar navbar-dark bg-white mb-4">
+    <div class="container-fluid">
+      <a href="User.html" class="btn btn-outline-light bg-primary">Back to Dashboard</a>
+    </div>
+  </nav>
 
+  <div id="historyContainer" class="row"></div>
+  <div id="noHistoryMsg" class="alert alert-info d-none">No books borrowed yet.</div>
+
+  <script>
+    (function () {
+      const userId = getUserId(); // your existing function to get current user id
+      const apiUrl = "http://localhost:8080/api/borrowRecords";
+
+      async function loadHistory() {
+        try {
+          // 1) Hit the user‑specific endpoint
+          const res = await fetch(`${apiUrl}/user/${userId}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": getAuthorization(),
+            },
+          });
+          if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+
+          // 2) Server now only returns this user's records
+          const userRecords = await res.json();
+
+          // 3) No need to filter again
+          if (userRecords.length === 0) {
+            document.getElementById("noHistoryMsg").classList.remove("d-none");
+            return;
+          }
+
+          const container = document.getElementById("historyContainer");
+          container.innerHTML = ""; // clear container before appending
+
+          for (const record of userRecords) {
+            const book = record.book || {};
+            const borrowDate = record.borrowDate
+              ? new Date(record.borrowDate).toLocaleDateString()
+              : "N/A";
+            const returnDate = record.borrowReturnDate
+              ? new Date(record.borrowReturnDate).toLocaleDateString()
+              : "Not Returned Yet";
+            const fine = record.fine != null ? record.fine : 0;
+            const status = record.borrowStatus || "Unknown";
+
+            const card = document.createElement("div");
+            card.className = "col-md-4 mb-3";
+            card.innerHTML = `
+              <div class="card h-100">
+                <div class="card-body">
+                  <h5 class="card-title">${record.bookTitle || book.bookId || "Book"}</h5>
+                  <p class="card-text"><strong>Borrow Date:</strong> ${borrowDate}</p>
+                  <p class="card-text"><strong>Returned On:</strong> ${returnDate}</p>
+                  <p class="card-text"><strong>Fine:</strong> $${fine}</p>
+                  <span class="badge bg-${status === "Returned" ? "success" : "warning"}">
+                    ${status}
+                  </span>
+                </div>
+              </div>
+            `;
+            container.appendChild(card);
+          }
+        } catch (err) {
+          console.error("Error loading borrowing history:", err);
+          alert("Error loading borrowing history.");
+        }
+      }
+
+      loadHistory();
+    })();
+  </script>
 </body>
 </html>
