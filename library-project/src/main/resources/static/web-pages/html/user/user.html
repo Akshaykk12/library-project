@@ -2,41 +2,13 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>User Dashboard - Library Management System</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-      rel="stylesheet" />
-    <link rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
-    <style>
-      body {
-        padding-top: 56px;
-      }
-      .offcanvas-sidebar {
-        width: 250px;
-      }
-      .list-group-item {
-        transition: background-color 0.3s ease;
-        cursor: pointer;
-      }
-      .list-group-item:hover {
-        background-color: #f8f9fa;
-      }
-      td[contenteditable="true"] {
-        background-color: #fffbe6;
-        outline: none;
-      }
-      td[contenteditable="true"]:focus {
-        background-color: #ffffcc;
-      }
-      img.book-cover {
-        height: 60px;
-      }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Books Master Table</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet"/>
   </head>
-  <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+  <body class="container my-5 border p-4">
+   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <div class="container-fluid">
         <button id="sidebarToggle" class="btn btn-outline-light me-3"
           type="button" data-bs-toggle="offcanvas"
@@ -82,6 +54,8 @@
             class="list-group-item list-group-item-action">Return Book</a>
           <a href="#" onclick="loadPage('UserHistory.html')"
             class="list-group-item list-group-item-action">History</a>
+            <a href="#" onclick="loadPage('UserReports.html')"
+            class="list-group-item list-group-item-action">Reports</a>
           <a href="#" onclick="loadPage('UserContact.html')"
             class="list-group-item list-group-item-action">Contact</a>
           <a href="#" onclick="LogOut('home.html')"
@@ -89,45 +63,50 @@
         </div>
       </div>
     </div>
-
-    <main class="container mt-4" id="main-content">
+    
+    <!-- Table -->
+<main class="container mt-4" id="main-content">
       <h1>Welcome, Explore Our Library</h1>
 
       <!-- Books Table -->
       <h2>Books List</h2>
-      <table class="table table-bordered" id="booksTable">
+      <table class="table table-bordered">
         <thead>
           <tr>
             <th>ID</th>
+            <th>Cover</th>
             <th>Title</th>
             <th>Author Name</th>
             <th>Category</th>
-            <th>Available Copies</th>
             <th>Total Copies</th>
+            <th>Available Copies</th>
             <th>Actions</th>
           </tr>
         </thead>
-        <tbody></tbody>
+        <tbody id="bookTableBody"></tbody>
       </table>
     </main>
 
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	
+	<script src="../../js/script.js"></script>
     <script>
-      const apiUrl = "http://localhost:8080/api";
-      const booksTableBody = document.querySelector("#booksTable tbody");
+  (() => {
+    const bookList = document.getElementById("bookTableBody");
 
-      function loadPage(page) {
-        window.location.href = page;
-      }
-
-      function LogOut(redirectPage) {
-        sessionStorage.clear();
-        localStorage.clear();
-        window.location.href = redirectPage;
-      }
-
-      async function handleSearch() {
+    function fetchBooks() {
+      fetch(`${BASE_URL}/api/books`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: getAuthorization(),
+        },
+      })
+        .then(response => response.json())
+        .then(data => renderBooks(data))
+        .catch(error => console.error("Error fetching books:", error));
+    }
+    
+    async function handleSearch() {
         const query = document.getElementById("searchInput").value.trim();
         if (!query) return alert("Please enter a search term");
 
@@ -141,74 +120,98 @@
         }
       }
 
-      function displayBooksInTable(books) {
-        booksTableBody.innerHTML = "";
-        for (const book of books) {
-          const row = document.createElement("tr");
-          row.innerHTML = `
-            <td>${book.bookId}</td>
-            <td>${book.bookTitle}</td>
-            <td>${book.authorName}</td>
-            <td>${book.categoryName}</td>
-            <td>${book.availableCopies}</td>
-            <td>${book.totalCopies}</td>
-            <td>
-              <button class="btn btn-success btn-sm" onclick="issueBook(${book.bookId})">Borrow Book</button>
-            </td>
-          `;
-          booksTableBody.appendChild(row);
+    function renderBooks(books) {
+      bookList.innerHTML = "";
+
+      books.forEach(book => {
+        // Load book cover image if available
+        if (book.bookCover) {
+          fetch(`${BASE_URL}/api/books/images/${book.bookCover}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: getAuthorization(),
+            },
+          })
+            .then(response => {
+              if (!response.ok) throw new Error("Cover image not found");
+              return response.blob();
+            })
+            .then(blob => {
+              const reader = new FileReader();
+              reader.onloadend = () => {
+                appendBookRow(book, reader.result);
+              };
+              reader.readAsDataURL(blob);
+            })
+            .catch(() => appendBookRow(book, null));
+        } else {
+          appendBookRow(book, null);
         }
-      }
+      });
+    }
 
-      async function fetchAndDisplayBooks() {
-        try {
-          const res = await fetch(`${apiUrl}/books`, {
-            headers: { "Content-Type": "application/json", Authorization: getAuthorization() },
-          });
-          if (!res.ok) throw new Error();
-          const books = await res.json();
-          displayBooksInTable(books);
-        } catch {
-          alert("Failed to load books");
-        }
-      }
+    function appendBookRow(book, imageUrl = null) {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${book.bookId}</td>
+        <td>
+          ${
+            imageUrl
+              ? `<img src="${imageUrl}" width="60" height="80" style="object-fit: cover;" onerror="this.onerror=null;this.outerHTML='<i class=\\'bi bi-book fs-3\\'></i>';" />`
+              : `<i class="bi bi-book fs-3"></i>`
+          }
+        </td>
+        <td>${book.bookTitle}</td>
+        <td>${book.authorName || "—"}</td>
+        <td>${book.categoryName || "—"}</td>
+        <td>${book.totalCopies}</td>
+        <td>${book.availableCopies}</td>
+        <td>
+          <button class="btn btn-sm btn-primary borrow-btn">Borrow</button>
+        </td>
+      `;
 
-      function getAuthorization() {
-        // Implement your token retrieval or auth logic here if needed
-        return "Bearer your-auth-token";
-      }      // Placeholder function for issuing a book
-      async function issueBook(bookId) {
-  try {
-    const borrowDate = new Date().toISOString().split("T")[0]; // Format: YYYY-MM-DD
-    const borrowReturnDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0]; // 14 days later
-    const borrowRecord = {
-      borrowDate: borrowDate,
-      borrowReturnDate: borrowReturnDate,
-      bookId: bookId,
-      userId: getUserId() // Replace this with your logic to get the logged-in user ID
-    };
+      row.querySelector(".borrow-btn").addEventListener("click", () => {
+        issueBook(book.bookId);
+      });
 
-    const res = await fetch(`${apiUrl}/borrowRecords/borrow`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: getAuthorization()
-      },
-      body: JSON.stringify(borrowRecord)
-    });
+      bookList.appendChild(row);
+    }
+    async function issueBook(bookId) {
+    	  try {
+    	    const borrowDate = new Date().toISOString().split("T")[0]; // Format: YYYY-MM-DD
+    	    const borrowReturnDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0]; // 14 days later
+    	    const borrowRecord = {
+    	      borrowDate: borrowDate,
+    	      borrowReturnDate: borrowReturnDate,
+    	      bookId: bookId,
+    	      userId: getUserId() // Replace this with your logic to get the logged-in user ID
+    	    };
 
-    if (!res.ok) throw new Error("Failed to issue book");
+    	    const res = await fetch(`${BASE_URL}/api/borrowRecords/borrow`, {
+    	      method: "POST",
+    	      headers: {
+    	        "Content-Type": "application/json",
+    	        Authorization: getAuthorization()
+    	      },
+    	      body: JSON.stringify(borrowRecord)
+    	    });
 
-    alert("Book issued successfully!");
-    fetchAndDisplayBooks();
-  } catch (error) {
-    alert(error.message);
-  }
-}
+    	    if (!res.ok) throw new Error("Failed to issue book");
 
+    	    alert("Book issued successfully!");
+    	    fetchAndDisplayBooks();
+    	  } catch (error) {
+    	    alert(error.message);
+    	  }
+    	}
 
-      window.addEventListener("DOMContentLoaded", fetchAndDisplayBooks);
-    </script>
-    <script src="script.js"></script>
+    fetchBooks();
+  })();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
   </body>
 </html>
