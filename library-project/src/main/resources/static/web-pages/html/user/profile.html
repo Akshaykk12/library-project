@@ -94,7 +94,6 @@
   <script>
 
     (function () {
-      const apiUrl = "http://localhost:8080/api";
       let currentUser = null;
       let isEditing = false;
 
@@ -111,7 +110,11 @@
         userNameField.innerHTML = `<span id="userNameValue">${currentUser.userName || ""}</span>`;
         userContactField.innerHTML = `<span id="userContactValue">${currentUser.userContact || ""}</span>`;
         userEmailField.innerHTML = `<span id="userEmailValue">${currentUser.userEmail || ""}</span>`;
-        userImageField.innerHTML = `<img id="userImageDisplay" src="${currentUser.userImage || 'https://via.placeholder.com/150'}" alt="Profile Image" />`;
+        const imageUrl = currentUser.userImage.startsWith('data:')
+  ? currentUser.userImage
+  : `${BASE_URL}/api/users/images/${currentUser.userImage}`;
+userImageField.innerHTML = `<img id="userImageDisplay" src="${imageUrl}" alt="Profile Image" />`;
+
 
         editBtn.classList.remove("d-none");
         saveBtn.classList.add("d-none");
@@ -124,10 +127,11 @@
         userContactField.innerHTML = `<input type="text" id="userContactInput" class="form-control" value="${currentUser.userContact || ""}">`;
         userEmailField.innerHTML = `<input type="email" id="userEmailInput" class="form-control" value="${currentUser.userEmail || ""}">`;
 
-        userImageField.innerHTML = `
-          <input type="file" id="userImageInput" accept="image/*" class="form-control mb-2" />
-          <img id="userImagePreview" src="${currentUser.userImage || 'https://via.placeholder.com/150'}" alt="Image Preview" />
-        `;
+        const imageUrl = currentUser.userImage.startsWith('data:')
+  ? currentUser.userImage
+  : `${BASE_URL}/api/users/images/${currentUser.userImage}`;
+userImageField.innerHTML = `<img id="userImageDisplay" src="${imageUrl}" alt="Profile Image" />`;
+
 
         document.getElementById("userImageInput").addEventListener("change", (e) => {
           const file = e.target.files[0];
@@ -154,7 +158,7 @@
             return;
           }
 
-          const response = await fetch(`${apiUrl}/users`, {
+          const response = await fetch(`${BASE_URL}/api/users`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
@@ -176,6 +180,7 @@
           console.error("Error loading user:", err);
           alert("Failed to load user details.");
         }
+        console.log(currentUser.userImage);
       }
 
       async function saveUser() {
@@ -213,7 +218,7 @@
             userImage: imageData,
           };
 
-          const response = await fetch(`${apiUrl}/users/${currentUser.userId}`, {
+          const response = await fetch(`${BASE_URL}/api/users/${currentUser.userId}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
