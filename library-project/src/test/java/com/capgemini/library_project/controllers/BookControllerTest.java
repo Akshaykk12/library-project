@@ -1,6 +1,8 @@
 package com.capgemini.library_project.controllers;
 
+import com.capgemini.library_project.dto.AdminDashboardDto;
 import com.capgemini.library_project.dto.BookDto;
+import com.capgemini.library_project.dto.TrendingBookForUserDto;
 import com.capgemini.library_project.entities.Author;
 import com.capgemini.library_project.entities.Book;
 import com.capgemini.library_project.entities.Category;
@@ -14,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
@@ -53,47 +56,44 @@ class BookControllerTest {
 
 	@Test
 	void testAddBook() throws Exception {
-	    // Mock input data
-	    String bookTitle = "Test Book";
-	    Long totalCopies = 10L;
-	    Long availableCopies = 5L;
-	    Long authorId = 1L;
-	    Long categoryId = 2L;
+		// Mock input data
+		String bookTitle = "Test Book";
+		Long totalCopies = 10L;
+		Long availableCopies = 5L;
+		Long authorId = 1L;
+		Long categoryId = 2L;
 
-	    // Mock MultipartFile
-	    MockMultipartFile mockFile = new MockMultipartFile(
-	            "bookCover", "cover.jpg", "image/jpeg", "dummy image content".getBytes()
-	    );
+		// Mock MultipartFile
+		MockMultipartFile mockFile = new MockMultipartFile("bookCover", "cover.jpg", "image/jpeg",
+				"dummy image content".getBytes());
 
-	    // Mock Author and Category
-	    Author mockAuthor = new Author();
-	    mockAuthor.setAuthorId(authorId);
-	    mockAuthor.setAuthorName("Test Author");
+		// Mock Author and Category
+		Author mockAuthor = new Author();
+		mockAuthor.setAuthorId(authorId);
+		mockAuthor.setAuthorName("Test Author");
 
-	    Category mockCategory = new Category();
-	    mockCategory.setCategoryId(categoryId);
-	    mockCategory.setCategoryName("Fiction");
+		Category mockCategory = new Category();
+		mockCategory.setCategoryId(categoryId);
+		mockCategory.setCategoryName("Fiction");
 
-	    Book mockBook = new Book();
-	    mockBook.setBookTitle(bookTitle);
-	    mockBook.setTotalCopies(totalCopies);
-	    mockBook.setAvailableCopies(availableCopies);
-	    mockBook.setAuthor(mockAuthor);
-	    mockBook.setCategory(mockCategory);
+		Book mockBook = new Book();
+		mockBook.setBookTitle(bookTitle);
+		mockBook.setTotalCopies(totalCopies);
+		mockBook.setAvailableCopies(availableCopies);
+		mockBook.setAuthor(mockAuthor);
+		mockBook.setCategory(mockCategory);
 
-	    when(authorService.findAuthorById(authorId)).thenReturn(mockAuthor);
-	    when(categoryServices.getCategoryById(categoryId)).thenReturn(mockCategory);
-	    when(bookService.addBook(bookTitle, totalCopies, availableCopies, mockAuthor, mockCategory, mockFile))
-	            .thenReturn(mockBook);
+		when(authorService.findAuthorById(authorId)).thenReturn(mockAuthor);
+		when(categoryServices.getCategoryById(categoryId)).thenReturn(mockCategory);
+		when(bookService.addBook(bookTitle, totalCopies, availableCopies, mockAuthor, mockCategory, mockFile))
+				.thenReturn(mockBook);
 
-	    ResponseEntity<Book> response = bookController.addBook(
-	            bookTitle, totalCopies, availableCopies, authorId, categoryId, mockFile
-	    );
+		ResponseEntity<Book> response = bookController.addBook(bookTitle, totalCopies, availableCopies, authorId,
+				categoryId, mockFile);
 
-	    assertEquals(HttpStatus.OK, response.getStatusCode());
-	    assertEquals(mockBook, response.getBody());
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertEquals(mockBook, response.getBody());
 	}
-
 
 	@Test
 	void testUpdateBook() {
@@ -139,32 +139,32 @@ class BookControllerTest {
 
 	@Test
 	void testGetAllBooks() {
-	    Book book1 = new Book();
-	    book1.setBookId(1L);
-	    book1.setBookTitle("Book One");
-	    book1.setTotalCopies(10L);
-	    book1.setAvailableCopies(5L);
+		Book book1 = new Book();
+		book1.setBookId(1L);
+		book1.setBookTitle("Book One");
+		book1.setTotalCopies(10L);
+		book1.setAvailableCopies(5L);
 
-	    Book book2 = new Book();
-	    book2.setBookId(2L);
-	    book2.setBookTitle("Book Two");
-	    book2.setTotalCopies(8L);
-	    book2.setAvailableCopies(4L);
+		Book book2 = new Book();
+		book2.setBookId(2L);
+		book2.setBookTitle("Book Two");
+		book2.setTotalCopies(8L);
+		book2.setAvailableCopies(4L);
 
-	    List<Book> books = Arrays.asList(book1, book2);
-	    when(bookService.getAllBooks()).thenReturn(books);
+		List<Book> books = Arrays.asList(book1, book2);
+		when(bookService.getAllBooks()).thenReturn(books);
 
-	    ResponseEntity<List<BookDto>> response = bookController.getAllBooks();
+		ResponseEntity<List<BookDto>> response = bookController.getAllBooks();
 
-	    assertEquals(HttpStatus.OK, response.getStatusCode());
-	    assertNotNull(response.getBody());
-	    assertEquals(2, response.getBody().size());
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertNotNull(response.getBody());
+		assertEquals(2, response.getBody().size());
 
-	    BookDto dto1 = response.getBody().get(0);
-	    assertEquals("Book One", dto1.getBookTitle());
+		BookDto dto1 = response.getBody().get(0);
+		assertEquals("Book One", dto1.getBookTitle());
 
-	    BookDto dto2 = response.getBody().get(1);
-	    assertEquals("Book Two", dto2.getBookTitle());
+		BookDto dto2 = response.getBody().get(1);
+		assertEquals("Book Two", dto2.getBookTitle());
 	}
 
 	@Test
@@ -242,4 +242,96 @@ class BookControllerTest {
 		verify(bookRepository).save(book);
 		assertEquals(HttpStatus.OK, response.getStatusCode());
 	}
+
+	@Test
+	void testCreateBookWithAuthorAndCategory_ValidationError() {
+		Book book = new Book();
+		when(bindingResult.hasErrors()).thenReturn(true);
+
+		assertThrows(IllegalArgumentException.class, () -> {
+			bookController.createBookWithAuthorAndCategory(1L, 2L, book, bindingResult);
+		});
+	}
+
+	@Test
+	void testGetCategoryBookCounts() {
+		Object[] count1 = new Object[] { "Fiction", 10L };
+		Object[] count2 = new Object[] { "Non-Fiction", 5L };
+		when(bookService.getCategoryBookCounts()).thenReturn(Arrays.asList(count1, count2));
+
+		ResponseEntity<List<Object[]>> response = bookController.getCategoryBookCounts();
+
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertEquals(2, response.getBody().size());
+		assertEquals("Fiction", response.getBody().get(0)[0]);
+		assertEquals(10L, response.getBody().get(0)[1]);
+	}
+
+	@Test
+	void testGetAdminDashBoardData() {
+		AdminDashboardDto mockDto = new AdminDashboardDto();
+		mockDto.setBookCount(50);
+		mockDto.setAuthorCount(20);
+		when(bookService.dashBoardDto()).thenReturn(mockDto);
+
+		ResponseEntity<AdminDashboardDto> response = bookController.getAdminDashBoardData();
+
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertEquals(50, response.getBody().getBookCount());
+		assertEquals(20, response.getBody().getAuthorCount());
+	}
+
+	@Test
+	void testGetUserDisplayData() {
+		TrendingBookForUserDto book1 = new TrendingBookForUserDto(1L, "Book 1", "Author 1", "Fiction", 10L, 5L);
+		TrendingBookForUserDto book2 = new TrendingBookForUserDto(2L, "Book 2", "Author 2", "Non-Fiction", 8L, 3L);
+		when(bookService.getTrendingBooksForUser()).thenReturn(Arrays.asList(book1, book2));
+
+		ResponseEntity<List<TrendingBookForUserDto>> response = bookController.getUserDisplayData();
+
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertEquals(2, response.getBody().size());
+		assertEquals(1L, response.getBody().get(0).getBookId());
+	}
+
+	@Test
+	void testGetTotalBookCount() {
+		when(bookRepository.count()).thenReturn(100L);
+
+		ResponseEntity<Long> response = bookController.getTotalBookCount();
+
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertEquals(100L, response.getBody());
+	}
+
+	@Test
+	void testUpdateBook_ValidationError() {
+		Book book = new Book();
+		when(bindingResult.hasErrors()).thenReturn(true);
+
+		assertThrows(IllegalArgumentException.class, () -> {
+			bookController.updateBook(1L, book, bindingResult);
+		});
+	}
+
+	@Test
+	void testAssignBook_ValidationError() {
+		Book book = new Book();
+		when(bindingResult.hasErrors()).thenReturn(true);
+
+		assertThrows(IllegalArgumentException.class, () -> {
+			bookController.assignBook(1L, book, bindingResult);
+		});
+	}
+
+	@Test
+	void testAssignBookToAuthor_ValidationError() {
+		Book book = new Book();
+		when(bindingResult.hasErrors()).thenReturn(true);
+
+		assertThrows(IllegalArgumentException.class, () -> {
+			bookController.assignBookToAuthor(1L, book, bindingResult);
+		});
+	}
+
 }
