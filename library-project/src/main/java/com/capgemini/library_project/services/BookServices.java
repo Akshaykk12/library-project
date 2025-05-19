@@ -50,5 +50,4 @@ public interface BookServices {
 	List<TrendingBookForUserDto> getTrendingBooksForUser();
 	
 	List<TrendingBookForUserDto> topBorrowedBooks();
-	
 }
