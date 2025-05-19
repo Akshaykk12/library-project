@@ -43,20 +43,17 @@ class BorrowRecordControllerTest {
 
 	@Test
 	void testBorrowBook() {
-	    BorrowRecordDto sampleRequest = new BorrowRecordDto();
-	    sampleRequest.setUserId(1L);
-	    sampleRequest.setBookId(2L);
+		BorrowRecordDto sampleRequest = new BorrowRecordDto();
+		sampleRequest.setUserId(1L);
+		sampleRequest.setBookId(2L);
 
-	    when(borrowRecordServices.borrowBook(sampleRequest))
-	        .thenReturn(sampleRecord);
+		when(borrowRecordServices.borrowBook(sampleRequest)).thenReturn(sampleRecord);
 
-	    ResponseEntity<BorrowRecord> response = 
-	        borrowRecordController.borrowBook(sampleRequest);
+		ResponseEntity<BorrowRecord> response = borrowRecordController.borrowBook(sampleRequest);
 
-	    assertEquals(HttpStatus.OK, response.getStatusCode());
-	    assertEquals(sampleRecord, response.getBody());
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertEquals(sampleRecord, response.getBody());
 	}
-
 
 	@Test
 	void testGetAllBorrowRecords() {
@@ -77,16 +74,6 @@ class BorrowRecordControllerTest {
 		assertEquals(HttpStatus.OK, response.getStatusCode());
 		assertEquals(sampleRecord, response.getBody());
 	}
-
-//	@Test
-//	void testGetAllBorrowRecordByUser() {
-//		when(borrowRecordServices.getAllBorrowRecordByUser(101L)).thenReturn(List.of(sampleRecord));
-//
-//		ResponseEntity<List<BorrowRecordDto>> response = borrowRecordController.getAllBorrowRecordByUser(101L);
-//
-//		assertEquals(HttpStatus.OK, response.getStatusCode());
-//		assertEquals(1, response.getBody().size());
-//	}
 
 	@Test
 	void testGetAllBorrowRecordByBook() {

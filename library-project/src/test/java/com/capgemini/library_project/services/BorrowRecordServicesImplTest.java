@@ -1,5 +1,3 @@
-// borrowRecordServicesImplTest.java
-
 package com.capgemini.library_project.services;
 
 import com.capgemini.library_project.dto.BorrowRecordDto;
@@ -23,125 +21,122 @@ import static org.mockito.Mockito.*;
 
 class BorrowRecordServicesImplTest {
 
-    @Mock
-    private BorrowRecordRepository borrowRecordRepository;
+	@Mock
+	private BorrowRecordRepository borrowRecordRepository;
 
-    @Mock
-    private UserRepository userRepository;
+	@Mock
+	private UserRepository userRepository;
 
-    @Mock
-    private BookRepository bookRepository;
+	@Mock
+	private BookRepository bookRepository;
 
-    @InjectMocks
-    private BorrowRecordServicesImpl borrowRecordServices;
+	@InjectMocks
+	private BorrowRecordServicesImpl borrowRecordServices;
 
-    private BorrowRecord brecord;
-    private User user;
-    private Book book;
+	private BorrowRecord brecord;
+	private User user;
+	private Book book;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
+	@BeforeEach
+	void setUp() {
+		MockitoAnnotations.openMocks(this);
 
-        user = new User();
-        user.setUserId(1L);
+		user = new User();
+		user.setUserId(1L);
 
-        book = new Book();
-        book.setBookId(1L);
-        book.setAvailableCopies(3L);
+		book = new Book();
+		book.setBookId(1L);
+		book.setAvailableCopies(3L);
 
-        brecord = new BorrowRecord();
-        brecord.setBorrowId(1L);
-        brecord.setBorrowDate(LocalDate.now().minusDays(10));
-        brecord.setBorrowStatus("Borrowed");
-        brecord.setUser(user);
-        brecord.setBook(book);
+		brecord = new BorrowRecord();
+		brecord.setBorrowId(1L);
+		brecord.setBorrowDate(LocalDate.now().minusDays(10));
+		brecord.setBorrowStatus("Borrowed");
+		brecord.setUser(user);
+		brecord.setBook(book);
 
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
-        when(borrowRecordRepository.save(any(BorrowRecord.class))).thenReturn(brecord);
+		when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+		when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
+		when(borrowRecordRepository.save(any(BorrowRecord.class))).thenReturn(brecord);
 
-        borrowRecordServices.allowedReturnDays = 7;
-        borrowRecordServices.finePerDay = 10;
-    }
+		borrowRecordServices.allowedReturnDays = 7;
+		borrowRecordServices.finePerDay = 10;
+	}
 
-    @Test
-    void testCreateBorrowRecord() {
-        BorrowRecordDto dto = new BorrowRecordDto();
-        dto.setUserId(user.getUserId());
-        dto.setBookId(book.getBookId());
+	@Test
+	void testCreateBorrowRecord() {
+		BorrowRecordDto dto = new BorrowRecordDto();
+		dto.setUserId(user.getUserId());
+		dto.setBookId(book.getBookId());
 
-        book.setAvailableCopies(1L);
+		book.setAvailableCopies(1L);
 
-        when(bookRepository.findById(book.getBookId()))
-            .thenReturn(Optional.of(book));
-        when(userRepository.findById(user.getUserId()))
-            .thenReturn(Optional.of(user));
+		when(bookRepository.findById(book.getBookId())).thenReturn(Optional.of(book));
+		when(userRepository.findById(user.getUserId())).thenReturn(Optional.of(user));
 
-        BorrowRecord result = borrowRecordServices.borrowBook(dto);
+		BorrowRecord result = borrowRecordServices.borrowBook(dto);
 
-        assertNotNull(result);
-        assertEquals("Borrowed", result.getBorrowStatus());
-        assertEquals(user, result.getUser());
-        assertEquals(book, result.getBook());
-        verify(bookRepository).save(book);
-    }
+		assertNotNull(result);
+		assertEquals("Borrowed", result.getBorrowStatus());
+		assertEquals(user, result.getUser());
+		assertEquals(book, result.getBook());
+		verify(bookRepository).save(book);
+	}
 
+	@Test
+	void testGetBorrowRecordById() {
+		when(borrowRecordRepository.findById(1L)).thenReturn(Optional.of(brecord));
+		BorrowRecord found = borrowRecordServices.getBorrowRecordById(1L);
+		assertEquals(1L, found.getBorrowId());
+	}
 
-    @Test
-    void testGetBorrowRecordById() {
-        when(borrowRecordRepository.findById(1L)).thenReturn(Optional.of(brecord));
-        BorrowRecord found = borrowRecordServices.getBorrowRecordById(1L);
-        assertEquals(1L, found.getBorrowId());
-    }
+	@Test
+	void testMarkAsReturned_WithFine() {
+		when(borrowRecordRepository.findById(1L)).thenReturn(Optional.of(brecord));
+		when(borrowRecordRepository.save(any())).thenReturn(brecord);
 
-    @Test
-    void testMarkAsReturned_WithFine() {
-        when(borrowRecordRepository.findById(1L)).thenReturn(Optional.of(brecord));
-        when(borrowRecordRepository.save(any())).thenReturn(brecord);
+		BorrowRecord result = borrowRecordServices.markAsReturned(1L);
+		assertEquals("Returned", result.getBorrowStatus());
+		assertTrue(result.getFine() > 0);
+	}
 
-        BorrowRecord result = borrowRecordServices.markAsReturned(1L);
-        assertEquals("Returned", result.getBorrowStatus());
-        assertTrue(result.getFine() > 0);
-    }
+	@Test
+	void testCalculateFine_WithOverdue() {
+		brecord.setBorrowReturnDate(LocalDate.now());
+		when(borrowRecordRepository.findById(1L)).thenReturn(Optional.of(brecord));
 
-    @Test
-    void testCalculateFine_WithOverdue() {
-        brecord.setBorrowReturnDate(LocalDate.now());
-        when(borrowRecordRepository.findById(1L)).thenReturn(Optional.of(brecord));
+		Integer fine = borrowRecordServices.calculateFine(1L);
+		assertEquals(30, fine); // (10 days - 7 allowed) * 10 fine/day = 30
+	}
 
-        Integer fine = borrowRecordServices.calculateFine(1L);
-        assertEquals(30, fine); // (10 days - 7 allowed) * 10 fine/day = 30
-    }
+	@Test
+	void testDeleteBorrowRecord() {
+		when(borrowRecordRepository.findById(1L)).thenReturn(Optional.of(brecord));
+		borrowRecordServices.deleteBorrowRecord(1L);
+		verify(borrowRecordRepository).deleteById(1L);
+	}
 
-    @Test
-    void testDeleteBorrowRecord() {
-        when(borrowRecordRepository.findById(1L)).thenReturn(Optional.of(brecord));
-        borrowRecordServices.deleteBorrowRecord(1L);
-        verify(borrowRecordRepository).deleteById(1L);
-    }
+	@Test
+	void testUpdateBorrowRecord() {
+		when(borrowRecordRepository.findById(1L)).thenReturn(Optional.of(brecord));
+		when(borrowRecordRepository.save(any())).thenReturn(brecord);
 
-    @Test
-    void testUpdateBorrowRecord() {
-        when(borrowRecordRepository.findById(1L)).thenReturn(Optional.of(brecord));
-        when(borrowRecordRepository.save(any())).thenReturn(brecord);
+		BorrowRecord updated = new BorrowRecord();
+		updated.setBorrowStatus("Returned");
+		updated.setBorrowReturnDate(LocalDate.now());
+		updated.setFine(0);
+		updated.setUser(user);
+		updated.setBook(book);
 
-        BorrowRecord updated = new BorrowRecord();
-        updated.setBorrowStatus("Returned");
-        updated.setBorrowReturnDate(LocalDate.now());
-        updated.setFine(0);
-        updated.setUser(user);
-        updated.setBook(book);
+		BorrowRecord result = borrowRecordServices.updateBorrowRecord(1L, updated);
+		assertEquals("Returned", result.getBorrowStatus());
+	}
 
-        BorrowRecord result = borrowRecordServices.updateBorrowRecord(1L, updated);
-        assertEquals("Returned", result.getBorrowStatus());
-    }
-
-    @Test
-    void testGetAllOverdueRecords() {
-        brecord.setBorrowReturnDate(LocalDate.now().minusDays(5));
-        when(borrowRecordRepository.findAll()).thenReturn(Collections.singletonList(brecord));
-        List<BorrowRecord> result = borrowRecordServices.getAllOverdueRecords();
-        assertEquals(1, result.size());
-    }
+	@Test
+	void testGetAllOverdueRecords() {
+		brecord.setBorrowReturnDate(LocalDate.now().minusDays(5));
+		when(borrowRecordRepository.findAll()).thenReturn(Collections.singletonList(brecord));
+		List<BorrowRecord> result = borrowRecordServices.getAllOverdueRecords();
+		assertEquals(1, result.size());
+	}
 }
