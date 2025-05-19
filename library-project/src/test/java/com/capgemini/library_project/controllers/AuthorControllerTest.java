@@ -46,20 +46,11 @@ class AuthorControllerTest {
 
 	@Test
 	void testGetAllAuthors() {
-	    when(authorServices.findAllAuthors()).thenReturn(Arrays.asList(author));
-	    ResponseEntity<List<Author>> response = authorController.getAllAuthors();
-	    assertEquals(HttpStatus.OK, response.getStatusCode());
-	    assertEquals(1, response.getBody().size());
+		when(authorServices.findAllAuthors()).thenReturn(Arrays.asList(author));
+		ResponseEntity<List<Author>> response = authorController.getAllAuthors();
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertEquals(1, response.getBody().size());
 	}
-
-//	@Test
-//	void testCreateAuthor() {
-//		when(bindingResult.hasErrors()).thenReturn(false);
-//		when(authorServices.createAuthor(author)).thenReturn(author);
-//		ResponseEntity<Author> response = authorController.createAuthor(author, bindingResult);
-//		assertEquals(HttpStatus.CREATED, response.getStatusCode());
-//		assertEquals("Test Author", response.getBody().getAuthorName());
-//	}
 
 	@Test
 	void testUpdateAuthorById() {
@@ -78,10 +69,10 @@ class AuthorControllerTest {
 
 	@Test
 	void testDeleteAuthorById() {
-	    when(authorServices.deleteAuthorById(1L)).thenReturn(true);
-	    ResponseEntity<Boolean> response = authorController.deleteAuthorById(1L);
-	    assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-	    assertTrue(response.getBody());
+		when(authorServices.deleteAuthorById(1L)).thenReturn(true);
+		ResponseEntity<Boolean> response = authorController.deleteAuthorById(1L);
+		assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+		assertTrue(response.getBody());
 	}
 
 	@Test

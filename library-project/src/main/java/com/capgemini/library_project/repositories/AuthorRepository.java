@@ -12,12 +12,11 @@ import com.capgemini.library_project.entities.Author;
 
 import jakarta.transaction.Transactional;
 
-
 @Repository
 public interface AuthorRepository extends JpaRepository<Author, Long> {
 
-  Optional<Author> findByAuthorName(String authorName);
-	
+	Optional<Author> findByAuthorName(String authorName);
+
 	@Modifying
 	@Transactional
 	@Query("UPDATE Author a SET a.authorImage = :image WHERE a.id = :authorId")

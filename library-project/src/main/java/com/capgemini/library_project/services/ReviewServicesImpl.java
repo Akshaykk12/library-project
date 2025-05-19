@@ -19,142 +19,136 @@ import com.capgemini.library_project.repositories.UserRepository;
 
 @Service
 public class ReviewServicesImpl implements ReviewServices {
-	
-	private static final String REVIEW_NOT_FOUND_MSG = "Review with ID {} not found";
 
-    private static final Logger logger = LoggerFactory.getLogger(ReviewServicesImpl.class);
+	private static final String REVIEW_STATUS = " not found";
 
-    private final ReviewRepository reviewRepository;
-    private final BookRepository bookRepository;
-    private final UserRepository userRepository;
+	private static final String REVIEW_NOT_FOUND_MSG = "Review with ID ";
 
-    @Autowired
-    public ReviewServicesImpl(ReviewRepository reviewRepository,
-                              BookRepository bookRepository,
-                              UserRepository userRepository) {
-        this.reviewRepository = reviewRepository;
-        this.bookRepository = bookRepository;
-        this.userRepository = userRepository;
-    }
+	private static final Logger logger = LoggerFactory.getLogger(ReviewServicesImpl.class);
 
-    @Override
-    public List<Review> getAllReviews() {
-        logger.info("Fetching all reviews");
-        return reviewRepository.findAll();
-    }
+	private final ReviewRepository reviewRepository;
+	private final BookRepository bookRepository;
+	private final UserRepository userRepository;
 
-    @Override
-    public Review getReviewById(Long id) {
-        logger.info("Fetching review by ID: {}", id);
-        return reviewRepository.findById(id)
-                .orElseThrow(() -> {
-                    logger.error(REVIEW_NOT_FOUND_MSG, id);
-                    return new RuntimeException("Review with Id " + id + " not found");
-                });
-    }
+	@Autowired
+	public ReviewServicesImpl(ReviewRepository reviewRepository, BookRepository bookRepository,
+			UserRepository userRepository) {
+		this.reviewRepository = reviewRepository;
+		this.bookRepository = bookRepository;
+		this.userRepository = userRepository;
+	}
 
-    @Override
-    public Review createReview(Review review) {
-        logger.info("Creating new review");
-        return reviewRepository.save(review);
-    }
+	@Override
+	public List<Review> getAllReviews() {
+		logger.info("Fetching all reviews");
+		return reviewRepository.findAll();
+	}
 
-    @Override
-    public Review updateReview(Long id, Review updated) {
-        logger.info("Updating review with ID: {}", id);
-        Review exist = reviewRepository.findById(id)
-                .orElseThrow(() -> {
-                    logger.error("Review with ID {} not found for update", id);
-                    return new ReviewNotFoundException("Review with Id " + id + " not found");
-                });
-        exist.setFeedback(updated.getFeedback());
-        exist.setRating(updated.getRating());
-        return reviewRepository.save(exist);
-    }
+	@Override
+	public Review getReviewById(Long id) {
+		logger.info("Fetching review by ID: {}", id);
+		return reviewRepository.findById(id).orElseThrow(() -> {
+			logger.error(REVIEW_NOT_FOUND_MSG, id);
+			return new RuntimeException(REVIEW_NOT_FOUND_MSG + id + REVIEW_STATUS);
+		});
+	}
 
-    @Override
-    public boolean deleteReview(Long id) {
-        logger.info("Deleting review with ID: {}", id);
-        if (reviewRepository.existsById(id)) {
-            reviewRepository.deleteById(id);
-            logger.info("Review with ID {} successfully deleted", id);
-            return true;
-            
-        } else {
-            logger.warn("Review with ID {} not found for deletion", id);
-            return false;
-        }
-    }
+	@Override
+	public Review createReview(Review review) {
+		logger.info("Creating new review");
+		return reviewRepository.save(review);
+	}
 
-    @Override
-    public Review addReviewToBook(Long bookId, Review review) {
-        logger.info("Adding review to book ID: {}", bookId);
-        Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> {
-                    logger.error("Book with ID {} not found", bookId);
-                    return new BookNotFoundException("Book with ID " + bookId + " not found.");
-                });
+	@Override
+	public Review updateReview(Long id, Review updated) {
+		logger.info("Updating review with ID: {}", id);
+		Review exist = reviewRepository.findById(id).orElseThrow(() -> {
+			logger.error("Review with ID {} not found for update", id);
+			return new ReviewNotFoundException(REVIEW_NOT_FOUND_MSG + id + REVIEW_STATUS);
+		});
+		exist.setFeedback(updated.getFeedback());
+		exist.setRating(updated.getRating());
+		return reviewRepository.save(exist);
+	}
 
-        review.setBook(book);
-        book.getReviews().add(review);
-        return reviewRepository.save(review);
-    }
+	@Override
+	public boolean deleteReview(Long id) {
+		logger.info("Deleting review with ID: {}", id);
+		if (reviewRepository.existsById(id)) {
+			reviewRepository.deleteById(id);
+			logger.info("Review with ID {} successfully deleted", id);
+			return true;
 
-    @Override
-    public void assignReviewToBook(Long bookId, Long reviewId) {
-        logger.info("Assigning review ID {} to book ID {}", reviewId, bookId);
-        Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> {
-                    logger.error("Book with ID {} not found", bookId);
-                    return new BookNotFoundException("Book with ID " + bookId + " not found.");
-                });
+		} else {
+			logger.warn("Review with ID {} not found for deletion", id);
+			return false;
+		}
+	}
 
-        Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> {
-                    logger.error(REVIEW_NOT_FOUND_MSG, reviewId);
-                    return new ReviewNotFoundException("Review with Id " + reviewId + " not found");
-                });
+	@Override
+	public Review addReviewToBook(Long bookId, Review review) {
+		logger.info("Adding review to book ID: {}", bookId);
+		Book book = bookRepository.findById(bookId).orElseThrow(() -> {
+			logger.error("Book with ID {} not found", bookId);
+			return new BookNotFoundException("Book with ID " + bookId + REVIEW_STATUS);
+		});
 
-        book.getReviews().add(review);
-        review.setBook(book);
-        bookRepository.save(book);
-    }
+		review.setBook(book);
+		book.getReviews().add(review);
+		return reviewRepository.save(review);
+	}
 
-    @Override
-    public Review addReviewToUser(Long userId, Review review) {
-        logger.info("Adding review to user ID: {}", userId);
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> {
-                    logger.error("User with ID {} not found", userId);
-                    return new UserNotFoundException("User with id : " + userId + " not found.");
-                });
+	@Override
+	public void assignReviewToBook(Long bookId, Long reviewId) {
+		logger.info("Assigning review ID {} to book ID {}", reviewId, bookId);
+		Book book = bookRepository.findById(bookId).orElseThrow(() -> {
+			logger.error("Book with ID {} not found", bookId);
+			return new BookNotFoundException("Book with ID " + bookId + REVIEW_STATUS);
+		});
 
-        review.setUser(user);
-        user.getReviews().add(review);
-        return reviewRepository.save(review);
-    }
+		Review review = reviewRepository.findById(reviewId).orElseThrow(() -> {
+			logger.error(REVIEW_NOT_FOUND_MSG, reviewId);
+			return new ReviewNotFoundException(REVIEW_NOT_FOUND_MSG + reviewId + REVIEW_STATUS);
+		});
 
-    @Override
-    public void assignReviewToUser(Long userId, Long reviewId) {
-        logger.info("Assigning review ID {} to user ID {}", reviewId, userId);
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> {
-                    logger.error("User with ID {} not found", userId);
-                    return new UserNotFoundException("User with id : " + userId + " not found.");
-                });
+		book.getReviews().add(review);
+		review.setBook(book);
+		bookRepository.save(book);
+	}
 
-        Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> {
-                    logger.error(REVIEW_NOT_FOUND_MSG, reviewId);
-                    return new ReviewNotFoundException("Review with Id " + reviewId + " not found");
+	@Override
+	public Review addReviewToUser(Long userId, Review review) {
+		logger.info("Adding review to user ID: {}", userId);
+		User user = userRepository.findById(userId).orElseThrow(() -> {
+			logger.error("User with ID {} not found", userId);
+			return new UserNotFoundException("User with id : " + userId + REVIEW_STATUS);
+		});
 
-                });
+		review.setUser(user);
+		user.getReviews().add(review);
+		return reviewRepository.save(review);
+	}
 
-        user.getReviews().add(review);
-        review.setUser(user);
-        userRepository.save(user);
-    }
-  @Override
+	@Override
+	public void assignReviewToUser(Long userId, Long reviewId) {
+		logger.info("Assigning review ID {} to user ID {}", reviewId, userId);
+		User user = userRepository.findById(userId).orElseThrow(() -> {
+			logger.error("User with ID {} not found", userId);
+			return new UserNotFoundException("User with id : " + userId + REVIEW_STATUS);
+		});
+
+		Review review = reviewRepository.findById(reviewId).orElseThrow(() -> {
+			logger.error(REVIEW_NOT_FOUND_MSG, reviewId);
+			return new ReviewNotFoundException(REVIEW_NOT_FOUND_MSG + reviewId + REVIEW_STATUS);
+
+		});
+
+		user.getReviews().add(review);
+		review.setUser(user);
+		userRepository.save(user);
+	}
+
+	@Override
 	public List<Review> getReviewsByBookId(Long bookId) {
 		logger.info("Fetching reviews for book ID: {}", bookId);
 		return reviewRepository.findByBookId(bookId);
