@@ -20,22 +20,19 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIdentityInfo(
-		  generator = ObjectIdGenerators.PropertyGenerator.class,
-		  property = "categoryId"
-		)
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "categoryId")
 public class Category {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long categoryId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long categoryId;
 
-    @NotBlank(message = "Category Name is required")
-    private String categoryName;
-    
-    @NotBlank(message = "Category Description is required")
-    private String categoryDescription;
+	@NotBlank(message = "Category Name is required")
+	private String categoryName;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.PERSIST)
-    private List<Book> books;
+	@NotBlank(message = "Category Description is required")
+	private String categoryDescription;
+
+	@OneToMany(mappedBy = "category", cascade = CascadeType.PERSIST)
+	private List<Book> books;
 }

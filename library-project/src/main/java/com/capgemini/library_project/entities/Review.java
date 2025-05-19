@@ -21,24 +21,23 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Review {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long reviewId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long reviewId;
 
-    @NotNull(message = "Rating is required")
-    private Integer rating;
-    
-    @NotBlank(message = "Feedback is required")
-    private String feedback;
+	@NotNull(message = "Rating is required")
+	private Integer rating;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "book_id")
-    @JsonBackReference(value = "book-review")
-    private Book book;
+	@NotBlank(message = "Feedback is required")
+	private String feedback;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "user_id")
-    @JsonBackReference(value = "user-review")
-    private User user;
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "book_id")
+	@JsonBackReference(value = "book-review")
+	private Book book;
+
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "user_id")
+	@JsonBackReference(value = "user-review")
+	private User user;
 }
-

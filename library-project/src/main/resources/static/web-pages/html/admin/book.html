@@ -99,23 +99,21 @@
       <thead>
         <tr>
           <th>Book ID</th>
+          <th>Cover</th>
           <th>Title</th>
           <th>Author</th>
           <th>Category</th>
           <th>Total</th>
           <th>Available</th>
-          <th>Cover</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody id="bookTableBody"></tbody>
     </table>
-
-    <script src="script.js"></script>
     <script>
-const bookapi = "http://localhost:8080/api/books";
-const authorapi = "http://localhost:8080/api/authors";
-const categoryapi = "http://localhost:8080/api/categories";
+    
+      (() => {
+    	  console.log("Working");
 const bookForm = document.getElementById("BookForm");
 const bookList = document.getElementById("bookTableBody");
 const titleInput = document.getElementById("title");
@@ -129,7 +127,7 @@ const submitBtn = document.getElementById("submitBtn");
 let editId = null;
 
 function fetchBooks() {
-  fetch(bookapi, {
+  fetch(`${BASE_URL}/api/books`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
@@ -143,48 +141,91 @@ function fetchBooks() {
 
 function renderBooks(books) {
   bookList.innerHTML = "";
+
   books.forEach(book => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
+    function appendBookRow(imageUrl = null) {
+      const row = document.createElement("tr");
+      row.innerHTML = `
       <td>${book.bookId}</td>
-      <td>${book.bookTitle}</td>
-      <td>${book.author ? book.author.authorName : "—"}</td>
-      <td>${book.category ? book.category.categoryName : "—"}</td>
-      <td>${book.totalCopies}</td>
-      <td>${book.availableCopies}</td>
-      <td><img src="${book.bookCover}" width="60" height="80" style="object-fit: cover;" /></td>
       <td>
-        <button class="btn btn-sm btn-primary edit-btn">Edit</button>
-        <button class="btn btn-sm btn-danger delete-btn">Delete</button>
+        ${
+          imageUrl
+            ? `<img src="${imageUrl}" width="60" height="80" style="object-fit: cover;" onerror="this.onerror=null;this.outerHTML='<i class=\\'bi bi-book fs-3\\'></i>';" />`
+            : `<i class="bi bi-book fs-3"></i>`
+        }
       </td>
-    `;
-    const editBtn = row.querySelector(".edit-btn");
-    const deleteBtn = row.querySelector(".delete-btn");
+        <td>${book.bookTitle}</td>
+        <td>${book.authorName || "—"}</td>
+        <td>${book.categoryName || "—"}</td>
+        <td>${book.totalCopies}</td>
+        <td>${book.availableCopies}</td>
+        <td>
+          <button class="btn btn-sm btn-primary edit-btn">Edit</button>
+          <button class="btn btn-sm btn-danger delete-btn">Delete</button>
+        </td>
+      `;
 
-    editBtn.addEventListener("click", () => {
-      titleInput.value = book.bookTitle;
-      authorIdInput.value = book.author?.authorId || "";
-      categoryIdInput.value = book.category?.categoryId || "";
-      bookCoverInput.value = book.bookCover;
-      totalCopiesInput.value = book.totalCopies;
-      availableCopiesInput.value = book.availableCopies;
-      editId = book.bookId;
-      submitBtn.textContent = "Update Book";
-    });
+      // Add event listeners after row is created
+      row.querySelector(".edit-btn").addEventListener("click", () => {
+        titleInput.value = book.bookTitle;
+        authorIdInput.value = book.author?.authorId || "";
+        categoryIdInput.value = book.category?.categoryId || "";
+        bookCoverInput.value = book.bookCover?.bookCover || "";
+        totalCopiesInput.value = book.totalCopies;
+        availableCopiesInput.value = book.availableCopies;
+        editId = book.bookId;
+        submitBtn.textContent = "Update Book";
+      });
 
-    deleteBtn.addEventListener("click", () => {
-      if (confirm("Are you sure you want to delete this book?")) {
-        fetch(`${bookapi}/${book.bookId}`, {
-          method: "DELETE"
-        }).then(() => {
-          fetchBooks();
+      row.querySelector(".delete-btn").addEventListener("click", () => {
+        if (confirm("Are you sure you want to delete this book?")) {
+          fetch(`${BASE_URL}/api/books/${book.bookId}`, {
+            method: "DELETE",
+            headers: {
+              Authorization: getAuthorization()
+            }
+          }).then(() => {
+            fetchBooks();
+          });
+        }
+      });
+
+      bookList.appendChild(row);
+    }
+
+    // Fetch and display image if cover is defined
+    if (book.bookCover) {
+      fetch(`${BASE_URL}/api/books/images/${book.bookCover}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: getAuthorization()
+        }
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error("Cover image not found");
+          }
+          return response.blob();
+        })
+        .then(blob => {
+          const reader = new FileReader();
+          reader.onloadend = function () {
+            const imageUrl = reader.result;
+            appendBookRow(imageUrl);
+          };
+          reader.readAsDataURL(blob);
+        })
+        .catch(error => {
+          console.warn("Cover image load failed:", error);
+          appendBookRow(null); // fallback
         });
-      }
-    });
-
-    bookList.appendChild(row);
+    } else {
+      appendBookRow(null); // fallback if no image
+    }
   });
 }
+
 
 // bookForm.addEventListener("submit", function (event) {
 //   event.preventDefault();
@@ -250,7 +291,7 @@ bookForm.addEventListener("submit", function (event) {
     formData.append("bookCover", bookCoverInput.files[0]); // actual file
   }
 
-  const url = editId ? `${bookapi}/${editId}` : bookapi;
+  const url = editId ? `${BASE_URL}/api/books/${editId}` : `${BASE_URL}/api/books`;
   const method = editId ? "PUT" : "POST";
 
   fetch(url, {
@@ -283,7 +324,7 @@ bookForm.addEventListener("submit", function (event) {
 
 
 function loadAuthors() {
-   fetch(authorapi, {
+   fetch(`${BASE_URL}/api/authors`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
@@ -303,7 +344,7 @@ function loadAuthors() {
 }
 
 function loadCategories() {
-   fetch(categoryapi, {
+   fetch(`${BASE_URL}/api/categories`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
@@ -322,11 +363,10 @@ function loadCategories() {
     });
 }
 
-document.addEventListener("DOMContentLoaded", function () {
   loadAuthors();
   loadCategories();
   fetchBooks();
-});
+})();
 </script>
   </body>
 </html>
