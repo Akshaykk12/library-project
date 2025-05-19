@@ -5,7 +5,6 @@ import java.util.Map;
 
 import com.capgemini.library_project.dto.BorrowRecordDto;
 import com.capgemini.library_project.entities.BorrowRecord;
-import com.capgemini.library_project.repositories.BorrowRecordRepository;
 import com.capgemini.library_project.repositories.BookRepository;
 import com.capgemini.library_project.repositories.UserRepository;
 import com.capgemini.library_project.services.BorrowRecordServices;
@@ -31,9 +30,9 @@ public class BorrowRecordController {
 	private static final Logger logger = LoggerFactory.getLogger(BorrowRecordController.class);
 
 	private final BorrowRecordServices borrowRecordServices;
-	private BookRepository bookRepository;
-	private UserRepository userRepository;
-	
+	BookRepository bookRepository;
+	UserRepository userRepository;
+
 	@Autowired
 	public BorrowRecordController(BorrowRecordServices borrowRecordServices, BookRepository bookRepository,
 			UserRepository userRepository) {
@@ -42,60 +41,50 @@ public class BorrowRecordController {
 		this.bookRepository = bookRepository;
 		this.userRepository = userRepository;
 	}
-	
-	 @PostMapping("/borrow")
-	    public ResponseEntity<BorrowRecord> borrowBook(
-	            @Valid @RequestBody BorrowRecordDto dto
-	    ) {
-	        logger.info("POST: Borrowing book {} to user {}", dto.getBookId(), dto.getUserId());
-	        BorrowRecord saved = borrowRecordServices.borrowBook(dto);
-	        return ResponseEntity.ok(saved);
-	    }
-	 
-	 
-	// display all issued book records
+
+	@PostMapping("/borrow")
+	public ResponseEntity<BorrowRecord> borrowBook(@Valid @RequestBody BorrowRecordDto dto) {
+		logger.info("POST: Borrowing book {} to user {}", dto.getBookId(), dto.getUserId());
+		BorrowRecord saved = borrowRecordServices.borrowBook(dto);
+		return ResponseEntity.ok(saved);
+	}
+
 	@GetMapping
 	public ResponseEntity<List<BorrowRecord>> getAllBorrowRecords() {
 		logger.info("GET: Fetching all borrow records");
 		return ResponseEntity.ok(borrowRecordServices.getAllBorrowRecord());
 	}
 
-	// display a single issue by borrowId
 	@GetMapping("/{borrowId}")
 	public ResponseEntity<BorrowRecord> getBorrowRecordById(@PathVariable Long borrowId) {
 		logger.info("GET: Fetching borrow record by ID {}", borrowId);
 		return ResponseEntity.ok(borrowRecordServices.getBorrowRecordById(borrowId));
 	}
 
-	// display all issue records of a single user by userId
 	@GetMapping("/user/{userId}")
 	public ResponseEntity<List<BorrowRecordDto>> getAllBorrowRecordByUser(@PathVariable Long userId) {
 		logger.info("GET: Fetching borrow records for user ID {}", userId);
 		return ResponseEntity.ok(borrowRecordServices.getAllBorrowRecordByUser(userId));
 	}
 
-	// how many times a book was borrowed
 	@GetMapping("/book/{bookId}")
 	public ResponseEntity<List<BorrowRecord>> getAllBorrowRecordByBook(@PathVariable Long bookId) {
 		logger.info("GET: Fetching borrow records for book ID {}", bookId);
 		return ResponseEntity.ok(borrowRecordServices.getAllBorrowRecordByBook(bookId));
 	}
 
-	// Show all "Returned" or "Overdue" records
 	@GetMapping("/status/{status}")
 	public ResponseEntity<List<BorrowRecord>> getBorrowRecordsByStatus(@PathVariable String status) {
 		logger.info("GET: Fetching records by status '{}'", status);
 		return ResponseEntity.ok(borrowRecordServices.getBorrowRecordsByStatus(status));
 	}
 
-	// get all borrow records that are overdue
 	@GetMapping("/overdue")
 	public ResponseEntity<List<BorrowRecord>> getAllOverdueRecords() {
 		logger.info("GET: Fetching all overdue borrow records");
 		return ResponseEntity.ok(borrowRecordServices.getAllOverdueRecords());
 	}
 
-	// quick mark as returned
 	@PutMapping("/markReturned/{borrowId}")
 	public ResponseEntity<BorrowRecord> markAsReturned(@PathVariable Long borrowId) {
 		logger.info("PUT: Marking borrow record {} as returned", borrowId);
@@ -103,14 +92,12 @@ public class BorrowRecordController {
 		return ResponseEntity.ok(updatedRecord);
 	}
 
-	// fine based on return date
 	@GetMapping("/calculateFine/{borrowId}")
 	public ResponseEntity<Integer> calculateFine(@PathVariable Long borrowId) {
 		logger.info("GET: Calculating fine for borrow ID {}", borrowId);
 		return ResponseEntity.ok(borrowRecordServices.calculateFine(borrowId));
 	}
 
-	// Count Records by Status (like "Returned", "Borrowed")
 	@GetMapping("/countByStatus/{status}")
 	public ResponseEntity<Long> countByStatus(@PathVariable String status) {
 		logger.info("GET: Counting borrow records with status '{}'", status);
@@ -118,47 +105,49 @@ public class BorrowRecordController {
 		return ResponseEntity.ok(count);
 	}
 
-	// manually update all the details of any issue
 	@PutMapping("/{borrowId}")
 	public ResponseEntity<BorrowRecord> updateBorrowRecord(@PathVariable Long borrowId,
 			@Valid @RequestBody BorrowRecord updatedBorrowRecord, BindingResult bindingResult) {
 		logger.info("PUT: Updating borrow record {}", borrowId);
-		
+
 		return ResponseEntity.ok(borrowRecordServices.updateBorrowRecord(borrowId, updatedBorrowRecord));
 	}
 
-	// delete a borrow record
 	@DeleteMapping("/{borrowId}")
 	public ResponseEntity<Void> deleteBorrowRecord(@PathVariable Long borrowId) {
 		logger.info("DELETE: Deleting borrow record with ID {}", borrowId);
 		borrowRecordServices.deleteBorrowRecord(borrowId);
 		return ResponseEntity.noContent().build();
 	}
-	// GET: Top 5 most borrowed books
+
 	@GetMapping("/topBooks")
 	public ResponseEntity<List<Object[]>> getTopBorrowedBooks() {
-	    logger.info("GET: Fetching top 5 most borrowed books");
-	    List<Object[]> topBooks = borrowRecordServices.findTopBorrowedBooks();
-	    return ResponseEntity.ok(topBooks);
+		logger.info("GET: Fetching top 5 most borrowed books");
+		List<Object[]> topBooks = borrowRecordServices.findTopBorrowedBooks();
+		return ResponseEntity.ok(topBooks);
 	}
-	
-	// Add this endpoint for monthly borrowing activity
+
 	@GetMapping("/monthlyCount")
 	public ResponseEntity<List<Object[]>> getMonthlyBorrowCounts() {
-	    logger.info("GET: Fetching monthly borrow counts");
-	    return ResponseEntity.ok(borrowRecordServices.getMonthlyBorrowCounts());
+		logger.info("GET: Fetching monthly borrow counts");
+		return ResponseEntity.ok(borrowRecordServices.getMonthlyBorrowCounts());
 	}
-	
+
 	@GetMapping("/activeCount")
-    public ResponseEntity<Long> countActiveBorrows() {
-        return ResponseEntity.ok(borrowRecordServices.countActiveBorrows());
-    }
-	
-	// In BorrowRecordController.java
-	 @PatchMapping("/{id}")
-	    public BorrowRecord updateStatus(@PathVariable Long id, @RequestBody Map<String, String> body) {
-	        String status = body.get("status");
-	        return borrowRecordServices.updateStatus(id, status);
-	    }
-	
+	public ResponseEntity<Long> countActiveBorrows() {
+		return ResponseEntity.ok(borrowRecordServices.countActiveBorrows());
+	}
+
+	@PatchMapping("/{id}")
+	public BorrowRecord updateStatus(@PathVariable Long id, @RequestBody Map<String, String> body) {
+		String status = body.get("status");
+		return borrowRecordServices.updateStatus(id, status);
+	}
+
+	@GetMapping("/overdue/count")
+	public ResponseEntity<Long> countOverdueRecords() {
+		logger.info("GET: Counting overdue borrow records");
+		return ResponseEntity.ok(borrowRecordServices.countOverdueRecords());
+	}
+
 }

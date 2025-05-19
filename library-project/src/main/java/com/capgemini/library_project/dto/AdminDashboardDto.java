@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,6 +17,6 @@ public class AdminDashboardDto {
 	private Integer issueCount;
 	private Integer overdueCount;
 
-  private Map<String ,Long> categoryCount;
+	private Map<String, Long> categoryCount;
 	private List<TrendingBookForUserDto> topBooksCount;
 }
