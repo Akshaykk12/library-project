@@ -48,9 +48,9 @@ function verify() {
   console.log("Resolved User Type:", userType);
 
   if (userType && userType.toUpperCase() === "ADMIN") {
-    window.location.href = "../html/admin/Admin.html";
+    window.location.href = "../admin/Admin.html";
   } else{
-    window.location.href = "../html/user/User.html";
+    window.location.href = "../user/User.html";
   }
 })
 

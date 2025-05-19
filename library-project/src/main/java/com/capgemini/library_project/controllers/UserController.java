@@ -55,7 +55,7 @@ public class UserController {
 	@PostMapping
 	public ResponseEntity<User> createUser(@Valid @RequestBody User user, BindingResult bindingResult) {
 		logger.info("Received request to create user: {}", user.getUserName());
-		
+
 		User savedUser = userServices.createUser(user);
 		return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
 	}
@@ -64,15 +64,15 @@ public class UserController {
 	public ResponseEntity<User> updateUser(@PathVariable Long userId, @Valid @RequestBody User user,
 			BindingResult bindingResult) {
 		logger.info("Received request to update user ID: {}", userId);
-		
+
 		if (bindingResult.hasErrors()) {
 			throw new IllegalArgumentException("Invalid Data");
 		}
 		User updatedUser = userServices.updateUser(userId, user);
-		
+
 		if (updatedUser == null) {
-	        return ResponseEntity.notFound().build();  
-	    }
+			return ResponseEntity.notFound().build();
+		}
 		return ResponseEntity.ok(updatedUser);
 	}
 
@@ -85,7 +85,6 @@ public class UserController {
 		}
 		return ResponseEntity.noContent().build();
 	}
-
 
 	@PostMapping(value = "/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<User> uploadImage(@RequestParam Long userId, @RequestParam MultipartFile image)

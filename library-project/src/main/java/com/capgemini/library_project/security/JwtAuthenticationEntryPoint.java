@@ -1,5 +1,3 @@
-//JWTAuthenticationEntryPoint.java
-
 package com.capgemini.library_project.security;
 
 import java.io.IOException;

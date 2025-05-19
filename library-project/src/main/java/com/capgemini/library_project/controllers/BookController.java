@@ -27,9 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -45,7 +43,8 @@ public class BookController {
 	private final AuthorServices authorServices;
 
 	@Autowired
-	public BookController(BookServices bookService, BookRepository bookRepository, AuthorServices authorServices, CategoryServices categoryServices) {
+	public BookController(BookServices bookService, BookRepository bookRepository, AuthorServices authorServices,
+			CategoryServices categoryServices) {
 		this.bookRepository = bookRepository;
 		this.bookService = bookService;
 		this.authorServices = authorServices;
@@ -53,7 +52,9 @@ public class BookController {
 	}
 
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<Book> addBook(@RequestParam String bookTitle, @RequestParam Long totalCopies, @RequestParam Long availableCopies, @RequestParam Long authorId, @RequestParam Long categoryId, @RequestParam("bookCover") MultipartFile bookCover) throws IOException{
+	public ResponseEntity<Book> addBook(@RequestParam String bookTitle, @RequestParam Long totalCopies,
+			@RequestParam Long availableCopies, @RequestParam Long authorId, @RequestParam Long categoryId,
+			@RequestParam("bookCover") MultipartFile bookCover) throws IOException {
 		logger.info("POST: Adding new book");
 		Author author = authorServices.findAuthorById(authorId);
 		Category category = categoryServices.getCategoryById(categoryId);
@@ -83,31 +84,30 @@ public class BookController {
 	public ResponseEntity<Book> getBookById(@PathVariable("id") Long id) {
 		logger.info("GET: Fetching book with ID {}", id);
 		Book book = bookService.getBookById(id);
-		//return book.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-		
+
 		if (book != null) {
-	        return ResponseEntity.ok(book);
-	    } else {
-	    	return ResponseEntity.notFound().build();
-	    }
+			return ResponseEntity.ok(book);
+		} else {
+			return ResponseEntity.notFound().build();
+		}
 	}
 
 	@GetMapping
 	public ResponseEntity<List<BookDto>> getAllBooks() {
-	    List<Book> books = bookService.getAllBooks();
-	    List<BookDto> bookDtos = books.stream().map(book -> {
-	        BookDto dto = new BookDto();
-	        dto.setBookId(book.getBookId());
-	        dto.setBookTitle(book.getBookTitle());
-	        dto.setTotalCopies(book.getTotalCopies());
-	        dto.setAvailableCopies(book.getAvailableCopies());
-	        dto.setBookCover(book.getBookCover());
-	        dto.setAuthorName(book.getAuthor() != null ? book.getAuthor().getAuthorName() : null);
-	        dto.setCategoryName(book.getCategory() != null ? book.getCategory().getCategoryName() : null);
-	        return dto;
-	    }).toList();
+		List<Book> books = bookService.getAllBooks();
+		List<BookDto> bookDtos = books.stream().map(book -> {
+			BookDto dto = new BookDto();
+			dto.setBookId(book.getBookId());
+			dto.setBookTitle(book.getBookTitle());
+			dto.setTotalCopies(book.getTotalCopies());
+			dto.setAvailableCopies(book.getAvailableCopies());
+			dto.setBookCover(book.getBookCover());
+			dto.setAuthorName(book.getAuthor() != null ? book.getAuthor().getAuthorName() : null);
+			dto.setCategoryName(book.getCategory() != null ? book.getCategory().getCategoryName() : null);
+			return dto;
+		}).toList();
 
-	    return ResponseEntity.ok(bookDtos);
+		return ResponseEntity.ok(bookDtos);
 	}
 
 	@GetMapping("/author/{authorId}")

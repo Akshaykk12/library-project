@@ -95,7 +95,7 @@ class ReviewControllerTest {
 	}
 
 	@Test
-	public void testDeleteReview() {
+	void testDeleteReview() {
 		when(reviewServices.deleteReview(1L)).thenReturn(true);
 
 
